@@ -1,0 +1,14 @@
+'use strict';
+const assert = require('node:assert/strict');
+const { scaled, quote, decimal } = require('../htdocs/assets/app.js');
+assert.equal(scaled('٢.٠٣٥', 3), 2035n);
+assert.equal(scaled('0.001', 3), 1n);
+assert.equal(scaled('-1', 3), null);
+assert.equal(scaled('1e3', 3), null);
+assert.equal(scaled('1.2345', 3), null);
+const common = { grams: 2035000n, price: 120000n, local: true, localRate: 35000n, otherRate: 65000n, minimum: 50000n, bp: 0n, flat: 0n };
+assert.deepEqual(quote({ ...common, ownTransport: false }), { subtotal: 244200n, transport: 71225n, fee: 0n, total: 315425n });
+assert.deepEqual(quote({ ...common, ownTransport: true, bp: 125n, flat: 500n }), { subtotal: 244200n, transport: 0n, fee: 3553n, total: 247753n });
+assert.equal(quote({ ...common, grams: 1000n, ownTransport: false }).transport, 50000n);
+assert.equal(decimal(247753n), '2477.53');
+console.log('PASS: quote arithmetic, Arabic digits, transport, fee rounding and precision.');

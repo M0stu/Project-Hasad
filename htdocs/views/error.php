@@ -1,0 +1,1 @@
+<section class="container page-section"><div class="empty-state"><span class="step-icon"><?= icon('leaf') ?></span><h1><?= e($title) ?></h1><p><?= e($message) ?></p><a class="button button-green" href="<?= e(url()) ?>"><?= t('العودة للرئيسية','Back to home') ?></a><a class="text-link" href="<?= e(url('contact')) ?>"><?= t('تواصل مع الدعم','Contact support') ?></a></div></section>
