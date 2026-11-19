@@ -53,4 +53,4 @@ jobs:
       - name: Repository hygiene
         run: |
           test ! -f htdocs/config/config.php
-          ! git grep -nE '(dbhasad|FTP PW|if0_43096971|sql111\.infinityfree\.com)' -- ':!docs/FILE-MANIFEST.json'
+          ! git grep -nE '(dbhasad|FTP PW|if0_43096971|sql111\.infinityfree\.com)' -- ':!docs/FILE-MANIFEST.json' ':!.github/workflows/ci.yml'
