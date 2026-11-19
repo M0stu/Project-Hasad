@@ -1,0 +1,62 @@
+{
+  "slide_count": 20,
+  "width_inches": 13.333332239720034,
+  "height_inches": 7.5,
+  "files": {
+    "HASSAD_Graduation_Presentation.pptx": 678595,
+    "HASSAD_Graduation_Presentation.pdf": 777335,
+    "HASSAD_Defense_20min_Music.mp4": 42043792,
+    "HASSAD_Defense_20min_NoMusic.mp4": 23024725,
+    "HASSAD_Trailer_2min_Music.mp4": 4538819,
+    "HASSAD_Trailer_2min_NoMusic.mp4": 2637487
+  },
+  "checks": {
+    "exactly_20_slides": true,
+    "dimensions_16_9": true,
+    "team_order_locked": true,
+    "dates_locked": true,
+    "math_locked": true,
+    "four_live_proof_insets_labeled": true,
+    "required_live_sources_present": true,
+    "live_crops_no_detected_credentials_or_account_tokens": true,
+    "prohibited_terms_absent_from_slide_xml": true,
+    "media_duration_resolution_codecs_audio": true,
+    "powerpoint_text_overflow_zero": true,
+    "preview_png_count_20": true,
+    "contact_sheet_present": true
+  },
+  "live_prototype_evidence_labels": 4,
+  "privacy_token_hits": [],
+  "prohibited_hits": [],
+  "media": {
+    "HASSAD_Defense_20min_Music.mp4": {
+      "duration_seconds": 1200.0,
+      "resolution": "1920x1080",
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate_hz": 48000
+    },
+    "HASSAD_Defense_20min_NoMusic.mp4": {
+      "duration_seconds": 1200.0,
+      "resolution": "1920x1080",
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate_hz": 48000
+    },
+    "HASSAD_Trailer_2min_Music.mp4": {
+      "duration_seconds": 120.0,
+      "resolution": "1920x1080",
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate_hz": 48000
+    },
+    "HASSAD_Trailer_2min_NoMusic.mp4": {
+      "duration_seconds": 120.0,
+      "resolution": "1920x1080",
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate_hz": 48000
+    }
+  },
+  "visual_overflow_hits": []
+}

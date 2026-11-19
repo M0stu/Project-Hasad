@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     switch ($action) {
         case 'phone-start': start_phone_login();
         case 'phone-check': finish_phone_login();
+        case 'demo-login': login_demo_persona();
         case 'admin-login': login_staff();
         case 'setup-admin': setup_admin();
         case 'logout': if (post('area',20)==='staff') {unset($_SESSION['staff_id']);} else {unset($_SESSION['member_id'],$_SESSION['otp'],$_SESSION['local_code']);} session_regenerate_id(true);$_SESSION['csrf']=bin2hex(random_bytes(32));redirect('home');
@@ -27,11 +28,10 @@ if ($page==='proof') {
 }
 if ($page==='export') {
     permit('reports');$which=is_string($_GET['type']??null)?$_GET['type']:'stock';
-    $exports=['stock'=>"SELECT b.code,m.name_en AS material,p.name AS owner,h.name_en AS hub,b.grade,b.quantity_g,b.reserved_g,b.price_per_tonne,b.status FROM batches b JOIN materials m ON m.id=b.material_id JOIN parties p ON p.id=b.supplier_id JOIN hubs h ON h.id=b.hub_id ORDER BY b.id DESC LIMIT 5000",'orders'=>'SELECT code,quantity_g,subtotal,shipping,service_fee,total,status,created_at FROM orders ORDER BY id DESC LIMIT 5000','trial-balance'=>'SELECT a.code,a.name_en,a.type,COALESCE(SUM(l.debit),0) AS debit_piastres,COALESCE(SUM(l.credit),0) AS credit_piastres FROM accounts a LEFT JOIN journal_lines l ON l.account_id=a.id GROUP BY a.id,a.code,a.name_en,a.type ORDER BY a.id','stock-ledger'=>'SELECT b.code,s.kind,s.quantity_delta_g,s.reserved_delta_g,s.reference,s.created_at FROM stock_movements s JOIN batches b ON b.id=s.batch_id ORDER BY s.id DESC LIMIT 5000'];
+    $exports=['stock'=>"SELECT b.code,m.name_en AS material,b.subcategory,p.name AS owner,h.name_en AS hub,b.grade,b.quantity_g,b.reserved_g,b.price_per_tonne,b.status,b.listing_version FROM batches b JOIN materials m ON m.id=b.material_id JOIN parties p ON p.id=b.supplier_id JOIN hubs h ON h.id=b.hub_id ORDER BY b.id DESC LIMIT 5000",'orders'=>'SELECT code,quantity_g,subtotal,shipping,service_fee,total,status,created_at FROM orders ORDER BY id DESC LIMIT 5000','trial-balance'=>'SELECT a.code,a.name_en,a.type,COALESCE(SUM(l.debit),0) AS debit_piastres,COALESCE(SUM(l.credit),0) AS credit_piastres FROM accounts a LEFT JOIN journal_lines l ON l.account_id=a.id GROUP BY a.id,a.code,a.name_en,a.type ORDER BY a.id','stock-ledger'=>'SELECT b.code,s.kind,s.quantity_delta_g,s.reserved_delta_g,s.reference,s.created_at FROM stock_movements s JOIN batches b ON b.id=s.batch_id ORDER BY s.id DESC LIMIT 5000'];
     if (!isset($exports[$which])) {http_response_code(404);exit;}
-    $rows=Db::all($exports[$which]); audit('report_export','reports',0,['type'=>$which]);
-    header('Content-Type: text/csv; charset=UTF-8');header('Content-Disposition: attachment; filename="hasad-'.$which.'-'.date('Y-m-d').'.csv"');$out=fopen('php://output','w');fwrite($out,"\xEF\xBB\xBF");
-    if ($rows) {fputcsv($out,array_keys($rows[0]),',','"','');foreach($rows as $row){fputcsv($out,array_map('csv_cell',$row),',','"','');}}fclose($out);exit;
+    $rows=Db::all($exports[$which]);audit('report_export','reports',0,['type'=>$which,'format'=>'spreadsheetml']);
+    spreadsheetml_download($rows,'hasad-'.$which.'-'.date('Y-m-d').'.xls','Hasad '.$which);
 }
 switch ($page) {
     case 'home': render('home',['title'=>t('حصاد — من المخلفات إلى الفرص','Hasad — From residues to opportunity')]);break;

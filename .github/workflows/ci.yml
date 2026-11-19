@@ -1,0 +1,56 @@
+name: HASSAD quality gate
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  php-and-js-tests:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: hasad_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      HASAD_TEST_HOST: 127.0.0.1
+      HASAD_TEST_PORT: 3306
+      HASAD_TEST_DB: hasad_test
+      HASAD_TEST_USER: root
+      HASAD_TEST_PASSWORD: root
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_mysql, mbstring, curl, fileinfo
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: PHP syntax gate
+        run: find htdocs tests tools -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Release unit checks
+        run: php tests/release_unit.php
+      - name: Database workflow and security checks
+        run: php tests/workflows.php
+      - name: Quotation JavaScript checks
+        run: node tests/quote.test.cjs
+      - name: Repository hygiene
+        run: |
+          test ! -f htdocs/config/config.php
+          ! git grep -nE '(dbhasad|FTP PW|if0_43096971|sql111\.infinityfree\.com)' -- ':!docs/FILE-MANIFEST.json' ':!.github/workflows/ci.yml'

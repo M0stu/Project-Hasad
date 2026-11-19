@@ -66,7 +66,8 @@ Procurement covers Hasad operating costs, not ownership of agricultural consignm
 - Materials and parties are reference entities; public listing views deliberately omit the seller record and internal report.
 - Receipt files are private filesystem objects whose random paths and verified MIME are recorded in `payments`.
 - Quantities use `BIGINT` grams; monetary values use `BIGINT` piastres. Avoid changing them to floating-point columns.
-- `batches` checks enforce `0 <= reserved_g <= quantity_g`.
+- `batches` checks enforce `0 <= reserved_g <= quantity_g`; `listing_version` prevents lost updates and `subcategory` records preparation form.
+- The active presentation catalogue contains exactly rice straw, wheat straw, corn residues and sugarcane bagasse. Palm residues are retained only as inactive legacy reference data.
 - `journal_lines` checks require a positive amount on exactly one side.
 - A unique `(source, source_id, event)` prevents double posting the same accounting event.
 - Unique transfer references prevent re-accounting the same receipt/payout across supported workflows.

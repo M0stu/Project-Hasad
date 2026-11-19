@@ -7,7 +7,7 @@ function staff_required(): array { $u=staff(); if (!$u) { redirect('admin-login'
 function can(string $permission): bool {
     $u=staff(); if (!$u) { return false; }
     if ($u['role']==='super_admin') { return true; }
-    $permissions=['admin'=>['dashboard','supply','inspection','inventory','parties','orders','payments','logistics','finance','procurement','production','projects','tasks','people','support','reports'], 'support'=>['dashboard','supply','logistics','tasks','support']];
+    $permissions=['admin'=>['dashboard','analytics','supply','inspection','inventory','parties','orders','payments','logistics','finance','procurement','production','projects','tasks','people','support','reports'], 'support'=>['dashboard','supply','logistics','tasks','support']];
     return in_array($permission,$permissions[$u['role']] ?? [],true);
 }
 function permit(string $permission): array { $u=staff_required(); if (!can($permission)) { if(PHP_SAPI!=='cli'){http_response_code(403);} throw new DomainException(t('لا تملك صلاحية هذه العملية.','You do not have permission for this action.')); } return $u; }
@@ -76,6 +76,17 @@ function login_staff(): void {
     if (!$u || !$ok || !$u['active']) { throw new DomainException(t('بيانات الدخول غير صحيحة.','Login details are incorrect.')); }
     if (password_needs_rehash($u['password_hash'],PASSWORD_DEFAULT)) { Db::run('UPDATE users SET password_hash=? WHERE id=?',[password_hash($password,PASSWORD_DEFAULT),$u['id']]); }
     session_regenerate_id(true); $_SESSION['staff_id']=$u['id']; $_SESSION['csrf']=bin2hex(random_bytes(32)); audit('login','users',(int)$u['id']); redirect('admin');
+}
+function login_demo_persona(): void {
+    if (!demo_mode()) { throw new DomainException(t('الدخول التدريبي غير متاح.','Training sign-in is unavailable.')); }
+    $persona=choice('persona',['supplier','buyer']);$phone=phone(required('phone',30));$password=required('password',512);
+    rate_limit('demo-login-ip:'.($_SERVER['REMOTE_ADDR']??''),20,900);
+    $configured=cfg('demo_personas',[])[$persona]??[];
+    if (empty($configured['phone']) || !hash_equals(phone((string)$configured['phone']),$phone)) { throw new DomainException(t('بيانات الشخصية التدريبية غير صحيحة.','Training persona credentials are incorrect.')); }
+    $u=Db::one("SELECT * FROM users WHERE phone=? AND role='member' AND active=1",[$phone]);
+    $dummy='$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi';
+    if (!$u || !password_verify($password,$u['password_hash']??$dummy) || $u['account_type']!==($persona==='supplier'?'seller':'buyer')) { throw new DomainException(t('بيانات الشخصية التدريبية غير صحيحة.','Training persona credentials are incorrect.')); }
+    session_regenerate_id(true);$_SESSION['member_id']=$u['id'];$_SESSION['csrf']=bin2hex(random_bytes(32));audit('demo_persona_login','users',(int)$u['id'],['persona'=>$persona]);redirect('account');
 }
 function setup_admin(): void {
     if (!ready()) { throw new DomainException(t('استورد ملف schema.sql واضبط config.php أولاً.','Import schema.sql and configure config.php first.')); }

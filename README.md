@@ -4,16 +4,20 @@
 
 Hasad is the only customer contact point. The marketplace does not reveal suppliers; farmers do not see factory identities. Hasad staff coordinate inspection, consignment custody, payment review, logistics and settlements internally.
 
-This package contains a PHP/MySQL business-pilot application, an original visual identity, a bilingual interactive visual preview, installation instructions, a schema and automated tests. It is intended for your InfinityFree domain. It has not been uploaded to your hosting account.
+This package contains a PHP/MySQL business-pilot application, an original visual identity, a bilingual interactive visual preview, installation instructions, a schema, automated tests, and the complete graduation-defense media package. The current defense-demo release is deployed to the HASSAD domain on the configured InfinityFree account.
 
 ## Start here
 
 1. Open `preview/Hasad-Preview.html` to review the design and the ERP screens in Arabic or English. The preview uses clearly identified training data and does not submit requests or send SMS.
 2. Follow `docs/INSTALL-INFINITYFREE.md` to install the real application.
-3. Read `docs/TECHNICAL-GUIDE.md` for the workflow, database model and accounting examples.
+3. Read `docs/TECHNICAL-GUIDE.md` for the workflow, database model and accounting examples. For the defense walkthrough use `docs/DEMO-GUIDE-EN.md`.
 4. Use `docs/LAUNCH.md` to enter the real operator, hub, payment and SMS settings and perform the live acceptance steps.
 
-Only upload the **contents of `htdocs/`** to your domain's `htdocs` directory. Keep `tests/`, `tools/`, `docs/`, the preview and ZIP files off the public web root.
+Only upload the **contents of `htdocs/`** to your domain's `htdocs` directory. Keep `tests/`, `tools/`, `docs/`, `presentation/`, the preview and ZIP files off the public web root.
+
+## Graduation defense package
+
+The `presentation/` directory contains the 20-slide English PowerPoint and PDF, Arabic 20-minute speaking script, Arabic/English defense preparation guide, live-demo runbook, full 20-minute speaker-ready videos, two-minute trailers, and the reusable presentation generator. Modeled completion and EVM values are explicitly identified in the internal preparation material; live website screens are labeled as prototype evidence.
 
 ## Included application
 
@@ -25,7 +29,7 @@ Only upload the **contents of `htdocs/`** to your domain's `htdocs` directory. K
 | CRM | Seller, buyer, carrier and operating-vendor records; identifiers stay inside the staff workspace |
 | Inspection | Actual weight, A/B/C physical grade, recorded moisture, internal report, identity and seller authorization confirmations |
 | Consignment stock | Seller ownership, batch traceability, available/reserved balances, movements, quarantine, publication and audited adjustments |
-| Sales | Server-calculated quotations, stock reservation, immutable price snapshot, delivery stages and printable payment/order statement |
+| Sales | Multi-select marketplace filters, server-calculated quotations, transactional reservation, safely versioned listing updates and printable statements |
 | Payments | InstaPay and mobile-wallet transfer instructions, private optional receipts, actual-account staff review, globally unique transfer references |
 | Finance | Chart of accounts, balanced double-entry journals, bank balance, held buyer funds, seller/transport balances, partial settlements and refunds |
 | Logistics | Farm collections and paid factory deliveries, driver/vehicle assignment and shipment stages |
@@ -34,14 +38,14 @@ Only upload the **contents of `htdocs/`** to your domain's `htdocs` directory. K
 | Projects | Budgets, paid expenses, target dates and task progress |
 | Team | Staff roles, own-password changes, access controls and daily work-time records |
 | Tasks and support | Task board, ownership restrictions for support, customer support conversations and administrative cancellation handling |
-| Reporting | Delivered quantities, fee revenue, operating result, processing yield, CSV exports and audit trail |
+| Reporting | Separate executive analytics, delivered quantities, forecast/variance indicators, SpreadsheetML `.xls` exports and audit trail |
 
 This covers the requested ERP foundations. Specialized extensions such as payroll, tax-system integration, routing optimization, automated payout APIs and certified feed testing are separate integrations.
 
 ## Pilot defaults
 
 - One configurable pilot hub in Sharkia. Its address is intentionally blank until you enter a real location.
-- Rice straw, wheat straw, corn stalks, palm residues and sugarcane bagasse. Administrators can add processed products.
+- Exactly four presentation categories: rice straw, wheat straw, corn residues and sugarcane bagasse. Palm residues remain inactive legacy data only.
 - Weights entered in kg or tonnes and stored as integer grams.
 - Service fee: **0% + EGP 0** initially, editable by the super admin for new orders.
 - Proposed Hasad transport: EGP 350/tonne inside the hub governorate, EGP 650/tonne elsewhere, minimum EGP 500. These are starting assumptions to validate and edit, not researched market rates.

@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 function catalogue_materials(): array {
-    if (ready()) { return Db::all('SELECT * FROM materials WHERE active=1 ORDER BY id'); }
-    return [['id'=>1,'name_ar'=>'قش الأرز','name_en'=>'Rice straw','icon'=>'wheat','slug'=>'rice-straw'],['id'=>2,'name_ar'=>'تبن القمح','name_en'=>'Wheat straw','icon'=>'wheat','slug'=>'wheat-straw'],['id'=>3,'name_ar'=>'حطب الذرة','name_en'=>'Corn stalks','icon'=>'sprout','slug'=>'corn-stalks'],['id'=>4,'name_ar'=>'مخلفات النخيل','name_en'=>'Palm residues','icon'=>'leaf','slug'=>'palm-residues'],['id'=>5,'name_ar'=>'مصاصة القصب','name_en'=>'Sugarcane bagasse','icon'=>'layers','slug'=>'sugarcane-bagasse']];
+    // Exactly four approved presentation categories; legacy rows remain for history only.
+    if (ready()) { return Db::all("SELECT * FROM materials WHERE active=1 AND slug IN ('rice-straw','wheat-straw','corn-residues','sugarcane-bagasse') ORDER BY FIELD(slug,'rice-straw','wheat-straw','corn-residues','sugarcane-bagasse')"); }
+    return [['id'=>1,'name_ar'=>'قش الأرز','name_en'=>'Rice straw','icon'=>'wheat','slug'=>'rice-straw'],['id'=>2,'name_ar'=>'تبن القمح','name_en'=>'Wheat straw','icon'=>'wheat','slug'=>'wheat-straw'],['id'=>3,'name_ar'=>'مخلفات الذرة','name_en'=>'Corn residues','icon'=>'sprout','slug'=>'corn-residues'],['id'=>5,'name_ar'=>'مصاصة قصب السكر','name_en'=>'Sugarcane bagasse','icon'=>'layers','slug'=>'sugarcane-bagasse']];
 }
 function batch_detail(int $id, bool $lock=false): array {
     $r=Db::one('SELECT b.*,m.name_ar,m.name_en,m.icon,h.name_ar AS hub_ar,h.name_en AS hub_en,h.governorate FROM batches b JOIN materials m ON m.id=b.material_id JOIN hubs h ON h.id=b.hub_id WHERE b.id=?'.($lock?' FOR UPDATE':''),[$id]);
@@ -51,16 +52,16 @@ function create_supply(): int {
     return $id;
 }
 function inspect_supply(): void {
-    $u=permit('inspection'); $id=id_input('request_id'); $q=quantity_input(); $hub=id_input('hub_id'); $grade=choice('grade',['A','B','C']); $price=money_input('price'); $moisture=decimal_scaled(required('moisture',10),2,10000); $notes=required('inspection_notes',2000);
+    $u=permit('inspection'); $id=id_input('request_id'); $q=quantity_input(); $hub=id_input('hub_id'); $grade=choice('grade',['A','B','C']); $subcategory=post('subcategory',40)?:'loose';if(!isset(material_subcategories()[$subcategory])){throw new DomainException(t('اختر شكل تجهيز صالحاً.','Select a valid preparation form.'));} $price=money_input('price'); $moisture=decimal_scaled(required('moisture',10),2,10000); $notes=required('inspection_notes',2000);
     if (post('verified',4)!=='yes' || post('authorization',4)!=='yes') { throw new DomainException(t('تحقق من هوية البائع وموافقته على العرض والوساطة أولاً.','Confirm seller identity and permission to list and broker the material first.')); }
-    Db::tx(function () use ($u,$id,$q,$hub,$grade,$price,$moisture,$notes): void {
+    Db::tx(function () use ($u,$id,$q,$hub,$grade,$subcategory,$price,$moisture,$notes): void {
         $r=Db::one('SELECT * FROM supply_requests WHERE id=? FOR UPDATE',[$id]);
         if (!$r || !in_array($r['status'],['new','scheduled'],true)) { throw new DomainException(t('تمت معالجة هذا الطلب بالفعل.','This request has already been processed.')); }
         if (!Db::one('SELECT id FROM hubs WHERE id=? AND active=1',[$hub])) { throw new DomainException(t('اختر مركزاً نشطاً.','Select an active hub.')); }
         $party=Db::one("SELECT id FROM parties WHERE kind='seller' AND phone=? ORDER BY id LIMIT 1",[$r['contact_phone']]);
         $supplier=$party?(int)$party['id']:Db::insert("INSERT INTO parties(kind,name,phone,governorate,address,verified,user_id) VALUES('seller',?,?,?,?,1,?)",[$r['contact_name'],$r['contact_phone'],$r['governorate'],$r['location'],$r['user_id']]);
         Db::run('UPDATE parties SET verified=1 WHERE id=?',[$supplier]);
-        $batch=Db::insert("INSERT INTO batches(code,request_id,supplier_id,hub_id,material_id,grade,quantity_g,price_per_tonne,moisture_bp,inspection_notes,inspected_by) VALUES(?,?,?,?,?,?,?,?,?,?,?)",[code('B'),$id,$supplier,$hub,$r['material_id'],$grade,$q,$price,$moisture,$notes,$u['id']]);
+        $batch=Db::insert("INSERT INTO batches(code,request_id,supplier_id,hub_id,material_id,grade,subcategory,quantity_g,price_per_tonne,moisture_bp,inspection_notes,inspected_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",[code('B'),$id,$supplier,$hub,$r['material_id'],$grade,$subcategory,$q,$price,$moisture,$notes,$u['id']]);
         Db::run("UPDATE supply_requests SET status='inspected',contact_verified=1 WHERE id=?",[$id]);
         stock_move($batch,'inspection_received',$q,0,$r['public_code']); audit('inspection_accepted','batches',$batch,['seller_authorization'=>true]);
     });
@@ -92,6 +93,27 @@ function create_order(): int {
         $id=Db::insert('INSERT INTO orders(code,user_id,buyer_id,batch_id,quantity_g,price_per_tonne,subtotal,shipping,fee_bp,fee_flat,service_fee,total,shipping_mode,destination,governorate,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[code('O'),$u['id'],$buyer,$batch,$q,$b['price_per_tonne'],$t['subtotal'],$t['shipping'],$t['fee_bp'],$t['fee_flat'],$t['service_fee'],$t['total'],$shipping,$destination,$gov,gmdate('Y-m-d H:i:s',time()+(int)setting('order_hold_hours','48')*3600)]);
         Db::run('UPDATE batches SET reserved_g=reserved_g+? WHERE id=?',[$q,$batch]); stock_move($batch,'reserved',0,$q,'Order #'.$id); audit('order_created','orders',$id);
         return $id;
+    });
+}
+function update_listing(): void {
+    $u=permit('inventory');$id=id_input('batch_id');$version=id_input('listing_version');
+    $material=id_input('material_id');$hub=id_input('hub_id');$grade=choice('grade',['A','B','C']);$subcategory=choice('subcategory',array_keys(material_subcategories()));
+    $price=money_input('price');$moisture=decimal_scaled(required('moisture',10),2,10000);$reason=required('reason',500);
+    Db::tx(function () use ($u,$id,$version,$material,$hub,$grade,$subcategory,$price,$moisture,$reason): void {
+        $b=batch_detail($id,true);
+        if ((int)$b['listing_version']!==$version) { throw new DomainException(t('تم تحديث الإعلان بواسطة مستخدم آخر. أعد فتحه قبل الحفظ.','Another operator updated this listing. Reopen it before saving.')); }
+        if ((int)$b['reserved_g']>0) { throw new DomainException(t('لا يمكن تعديل إعلان مرتبط بحجز نشط. ألغِ الحجز أو أتممه أولاً.','A listing with an active reservation cannot be edited. Complete or cancel the reservation first.')); }
+        if (!Db::one("SELECT id FROM materials WHERE id=? AND active=1 AND slug IN ('rice-straw','wheat-straw','corn-residues','sugarcane-bagasse')",[$material])) { throw new DomainException(t('اختر إحدى فئات العرض الأربع المعتمدة.','Choose one of the four approved presentation categories.')); }
+        if (!Db::one('SELECT id FROM hubs WHERE id=? AND active=1',[$hub])) { throw new DomainException(t('اختر مركزاً نشطاً.','Select an active hub.')); }
+        $before=['material_id'=>(int)$b['material_id'],'hub_id'=>(int)$b['hub_id'],'grade'=>$b['grade'],'subcategory'=>$b['subcategory'],'price_per_tonne'=>(int)$b['price_per_tonne'],'moisture_bp'=>(int)$b['moisture_bp'],'status'=>$b['status'],'listing_version'=>(int)$b['listing_version']];
+        // Any commercial edit requires a new publication approval; quantities/reservations are untouched.
+        $changed=$before['material_id']!==$material || $before['hub_id']!==$hub || $before['grade']!==$grade || $before['subcategory']!==$subcategory || $before['price_per_tonne']!==$price || $before['moisture_bp']!==$moisture;
+        if (!$changed) { throw new DomainException(t('لم تتغير بيانات الإعلان.','No listing fields changed.')); }
+        $status=$b['status']==='depleted'?'depleted':'inspected';
+        $stmt=Db::run('UPDATE batches SET material_id=?,hub_id=?,grade=?,subcategory=?,price_per_tonne=?,moisture_bp=?,status=?,listing_version=listing_version+1 WHERE id=? AND listing_version=? AND reserved_g=0',[$material,$hub,$grade,$subcategory,$price,$moisture,$status,$id,$version]);
+        if ($stmt->rowCount()!==1) { throw new DomainException(t('تعذر حفظ الإعلان بأمان. أعد فتحه وحاول مجدداً.','The listing could not be saved safely. Reopen it and try again.')); }
+        $after=['material_id'=>$material,'hub_id'=>$hub,'grade'=>$grade,'subcategory'=>$subcategory,'price_per_tonne'=>$price,'moisture_bp'=>$moisture,'status'=>$status,'listing_version'=>$version+1];
+        audit('listing_updated','batches',$id,['reason'=>$reason,'before'=>$before,'after'=>$after,'reservation_unchanged'=>true,'quantity_unchanged'=>true]);
     });
 }
 function save_proof(): array {
@@ -254,6 +276,7 @@ function handle_admin_action(string $action): void {
         case 'batch-status':
             permit('inventory');$id=id_input('batch_id');$state=choice('status',['published','quarantined','inspected']);$note=required('note',500);
             Db::tx(function () use ($id,$state,$note): void { $b=batch_detail($id,true); if ((int)$b['reserved_g']>0 || (int)$b['quantity_g']===0) { throw new DomainException(t('لا يمكن تغيير دفعة محجوزة أو فارغة.','Reserved or empty batches cannot be changed.')); } if ($state==='published' && (!Db::one("SELECT id FROM hubs WHERE id=? AND active=1 AND address<>''",[$b['hub_id']]) || $b['status']!=='inspected')) { throw new DomainException(t('أعد اعتماد الفحص قبل نشر الدفعة.','Reapprove inspection before publishing the batch.')); } Db::run('UPDATE batches SET status=? WHERE id=?',[$state,$id]);audit('batch_'.$state,'batches',$id,['note'=>$note]); });break;
+        case 'listing-update': update_listing(); break;
         case 'stock-adjust':
             permit('inventory');$id=id_input('batch_id');$q=quantity_input();$direction=choice('direction',['add','remove']);$note=required('note',500);
             Db::tx(function () use ($id,$q,$direction,$note): void { $b=batch_detail($id,true); if ($direction==='remove' && $q>(int)$b['quantity_g']-(int)$b['reserved_g']) { throw new DomainException(t('التعديل يتجاوز الكمية غير المحجوزة.','Adjustment exceeds unreserved stock.')); } $delta=$direction==='add'?$q:-$q; if ((int)$b['quantity_g']+$delta>1000000000) { throw new DomainException(t('الكمية تتجاوز حد الدفعة.','Quantity exceeds the batch limit.')); } Db::run("UPDATE batches SET quantity_g=quantity_g+?,status='inspected' WHERE id=?",[$delta,$id]);stock_move($id,'adjustment',$delta,0,$note);audit('stock_adjusted','batches',$id,['delta_g'=>$delta,'note'=>$note]); });break;
@@ -334,5 +357,5 @@ function handle_admin_action(string $action): void {
     redirect('admin',['section'=>in_array($return,array_keys(admin_sections()),true)?$return:'dashboard']);
 }
 function admin_sections(): array {
-    return ['dashboard'=>[t('نظرة عامة','Overview'),'chart'], 'supply'=>[t('طلبات البائعين','Seller intake'),'wheat'], 'inspection'=>[t('الفحص والجودة','Inspection & quality'),'shield'], 'inventory'=>[t('المخزون والأمانات','Consignment stock'),'box'], 'orders'=>[t('المبيعات والطلبات','Sales & orders'),'layers'], 'payments'=>[t('مراجعة التحويلات','Transfer review'),'wallet'], 'logistics'=>[t('النقل والتجميع','Logistics'),'truck'], 'parties'=>[t('العلاقات والعملاء','CRM & partners'),'users'], 'procurement'=>[t('مشتريات التشغيل','Procurement'),'box'], 'production'=>[t('عمليات التدوير','Partner processing'),'recycle'], 'finance'=>[t('المالية والحسابات','Finance & accounting'),'wallet'], 'projects'=>[t('المشروعات','Projects'),'layers'], 'tasks'=>[t('المهام','Tasks'),'check'], 'people'=>[t('الفريق والحضور','Team & attendance'),'users'], 'support'=>[t('الدعم','Support'),'phone'], 'reports'=>[t('التقارير','Reports'),'chart'], 'settings'=>[t('الإعدادات','Settings'),'settings'], 'staff'=>[t('صلاحيات الإدارة','Admin access'),'shield'], 'audit'=>[t('سجل العمليات','Audit trail'),'clock']];
+    return ['dashboard'=>[t('مركز العمليات','Operations center'),'chart'], 'analytics'=>[t('التحليلات التنفيذية','Executive analytics'),'chart'], 'supply'=>[t('طلبات البائعين','Seller intake'),'wheat'], 'inspection'=>[t('الفحص والجودة','Inspection & quality'),'shield'], 'inventory'=>[t('المخزون والأمانات','Consignment stock'),'box'], 'orders'=>[t('المبيعات والطلبات','Sales & orders'),'layers'], 'payments'=>[t('مراجعة التحويلات','Transfer review'),'wallet'], 'logistics'=>[t('النقل والتجميع','Logistics'),'truck'], 'parties'=>[t('العلاقات والعملاء','CRM & partners'),'users'], 'procurement'=>[t('مشتريات التشغيل','Procurement'),'box'], 'production'=>[t('عمليات التدوير','Partner processing'),'recycle'], 'finance'=>[t('المالية والحسابات','Finance & accounting'),'wallet'], 'projects'=>[t('المشروعات','Projects'),'layers'], 'tasks'=>[t('المهام','Tasks'),'check'], 'people'=>[t('الفريق والحضور','Team & attendance'),'users'], 'support'=>[t('الدعم','Support'),'phone'], 'reports'=>[t('التقارير','Reports'),'chart'], 'settings'=>[t('الإعدادات','Settings'),'settings'], 'staff'=>[t('صلاحيات الإدارة','Admin access'),'shield'], 'audit'=>[t('سجل العمليات','Audit trail'),'clock']];
 }
