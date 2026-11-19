@@ -18,10 +18,11 @@ Then run:
 
 ```bash
 php tests/workflows.php
+php tests/release_unit.php
 node tests/quote.test.cjs
 ```
 
-The suite covers exact arithmetic, order/stock transactions, transfer review, accounting, partial settlements and refunds, concurrency, permissions, local-OTP restrictions, persisted OTP failures, rate limits, CSV safety, customer privacy and template rendering. It uses child PHP processes for render checks and two competing reservation attempts.
+The suite covers exact arithmetic, order/stock transactions, transfer review, accounting, partial settlements and refunds, concurrency, permissions, local-OTP restrictions, persisted OTP failures, rate limits, SpreadsheetML formula safety, customer privacy and template rendering. It uses child PHP processes for render checks and two competing reservation attempts.
 
 `test_boot.php` explicitly configures a local test environment and temporary session storage. No default production account, OTP or database credentials are created by application installation. The fixture credentials appear only inside this development suite.
 

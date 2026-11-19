@@ -78,4 +78,21 @@ function icon(string $name, string $class = ''): string {
 }
 function field(string $label, string $name, string $type = 'text', string $value = '', string $extra = ''): void { echo '<label class="field"><span>'.e($label).'</span><input type="'.e($type).'" name="'.e($name).'" value="'.e($value).'" '.$extra.'></label>'; }
 function select_field(string $label, string $name, array $options, string $selected = ''): void { echo '<label class="field"><span>'.e($label).'</span><select name="'.e($name).'" required>'; foreach ($options as $k => $v) { echo '<option value="'.e($k).'" '.((string)$k === $selected ? 'selected' : '').'>'.e($v).'</option>'; } echo '</select></label>'; }
+function demo_mode(): bool { return ready() && (bool)cfg('demo_mode',false) && setting('demo_data','0')==='1'; }
+function material_subcategories(): array { return ['baled'=>['مكبوس','Baled'],'loose'=>['سائب','Loose'],'chopped'=>['مفروم','Chopped'],'processed'=>['معالج','Processed']]; }
+function subcategory_label(string $key): string { $v=material_subcategories()[$key]??[$key,$key];return t($v[0],$v[1]); }
 function csv_cell(mixed $v): string { $s = (string)$v; return preg_match('/^[\s]*[=+@\-]/u',$s) ? "'" . $s : $s; }
+function spreadsheetml_document(array $rows,string $sheet='Hasad report'): string {
+    $xml='<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>';
+    $xml.='<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Header"><Font ss:Bold="1"/><Interior ss:Color="#E8EFDF" ss:Pattern="Solid"/></Style></Styles><Worksheet ss:Name="'.e(substr($sheet,0,31)).'"><Table>';
+    if ($rows) {
+        $xml.='<Row>';foreach(array_keys($rows[0]) as $heading){$xml.='<Cell ss:StyleID="Header"><Data ss:Type="String">'.e($heading).'</Data></Cell>';}$xml.='</Row>';
+        foreach($rows as $row){$xml.='<Row>';foreach($row as $value){$xml.='<Cell><Data ss:Type="String">'.e(csv_cell($value)).'</Data></Cell>';}$xml.='</Row>';}
+    }
+    return $xml.'</Table></Worksheet></Workbook>';
+}
+function spreadsheetml_download(array $rows,string $filename,string $sheet='Hasad report'): never {
+    header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+    header('Content-Disposition: attachment; filename="'.preg_replace('/[^a-zA-Z0-9._-]/','-',$filename).'"');
+    header('X-Content-Type-Options: nosniff');echo spreadsheetml_document($rows,$sheet);exit;
+}

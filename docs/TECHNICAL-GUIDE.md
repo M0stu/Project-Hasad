@@ -132,7 +132,9 @@ Support cannot reject/cancel supply requests, confirm money, change inventory, e
 - CSRF tokens protect POST actions; all financial transitions also validate state under locks.
 - Outputs are escaped. Internal free-text inspection reports are not rendered on customer pages.
 - Receipts use random non-executable filenames; only JPG/PNG under 1.5 MB are accepted, with MIME and image-dimension checks. Staff access and owning-order access are checked by the receipt controller.
-- Staff reports neutralize spreadsheet formulas and limit data exports to 5,000 records.
+- Staff SpreadsheetML `.xls` reports neutralize spreadsheet formulas and limit data exports to 5,000 records.
+- Listing edits use row locks and optimistic `listing_version` checks, reject active reservations, preserve quantity/reservation balances, return edited listings to inspection approval, and audit before/after values.
+- Executive Analytics is separate from operations and labels baseline, actual, variance and rule-based estimate-at-completion values; it does not claim an AI forecast.
 - Money, private-account and staff pages use no-store caching.
 - Security headers include content restrictions, frame denial, MIME protection and HTTPS-only session cookies in production.
 - Technical database errors are logged by code, without revealing credentials or SQL details in the customer response.

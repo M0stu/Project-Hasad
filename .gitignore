@@ -1,0 +1,21 @@
+# Runtime configuration and secrets
+htdocs/config/config.php
+.env
+.env.*
+!.env.example
+
+# Runtime/user data
+htdocs/storage/proofs/*
+!htdocs/storage/proofs/.gitkeep
+*.log
+*.sql.gz
+*.zip
+
+# Local tooling
+node_modules/
+vendor/
+.phpunit.cache/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

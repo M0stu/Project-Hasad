@@ -4,6 +4,9 @@ SET NAMES utf8mb4;
 CREATE TABLE IF NOT EXISTS settings (
  setting_key VARCHAR(80) PRIMARY KEY, setting_value TEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS schema_migrations (
+ version VARCHAR(80) PRIMARY KEY, applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS users (
  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
  name VARCHAR(160) NOT NULL, phone VARCHAR(20) NULL UNIQUE, email VARCHAR(190) NULL UNIQUE,
@@ -53,10 +56,10 @@ CREATE TABLE IF NOT EXISTS batches (
  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, code VARCHAR(30) NOT NULL UNIQUE,
  request_id BIGINT UNSIGNED NULL UNIQUE, supplier_id BIGINT UNSIGNED NOT NULL,
  hub_id BIGINT UNSIGNED NOT NULL, material_id BIGINT UNSIGNED NOT NULL, grade ENUM('A','B','C') NOT NULL,
- quantity_g BIGINT NOT NULL, reserved_g BIGINT NOT NULL DEFAULT 0,
+ subcategory ENUM('baled','loose','chopped','processed') NOT NULL DEFAULT 'loose', quantity_g BIGINT NOT NULL, reserved_g BIGINT NOT NULL DEFAULT 0,
  price_per_tonne BIGINT NOT NULL, moisture_bp INT NOT NULL DEFAULT 0, inspection_notes TEXT NOT NULL,
- status ENUM('inspected','published','quarantined','depleted') NOT NULL DEFAULT 'inspected',
- inspected_by BIGINT UNSIGNED NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ status ENUM('inspected','published','quarantined','depleted') NOT NULL DEFAULT 'inspected', listing_version INT UNSIGNED NOT NULL DEFAULT 1,
+ inspected_by BIGINT UNSIGNED NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  FOREIGN KEY(request_id) REFERENCES supply_requests(id), FOREIGN KEY(supplier_id) REFERENCES parties(id),
  FOREIGN KEY(hub_id) REFERENCES hubs(id), FOREIGN KEY(material_id) REFERENCES materials(id),
  FOREIGN KEY(inspected_by) REFERENCES users(id), INDEX(status,material_id,hub_id),
@@ -184,7 +187,7 @@ INSERT IGNORE INTO settings VALUES
  ('shipping_local_per_tonne','35000'),('shipping_other_per_tonne','65000'),('shipping_minimum','50000'),
  ('order_hold_hours','48'),('instapay_url',''),('instapay_account',''),('wallet_number',''),
  ('contact_phone',''),('contact_name','Hasad'),('pilot_governorate','Sharqia'),
- ('launch_open','0'),('legal_name',''),('legal_address',''),('demo_data','0');
+ ('launch_open','0'),('legal_name',''),('legal_address',''),('demo_data','0'),('demo_seed_version','0');
 INSERT IGNORE INTO hubs (id,name_ar,name_en,governorate,address) VALUES
  (1,'مركز تجميع الشرقية — موقع تجريبي','Sharkia collection hub — pilot location','Sharqia','');
 INSERT IGNORE INTO materials (id,name_ar,name_en,slug,description_ar,description_en,icon) VALUES
@@ -193,6 +196,10 @@ INSERT IGNORE INTO materials (id,name_ar,name_en,slug,description_ar,description
  (3,'حطب الذرة','Corn stalks','corn-stalks','سيقان الذرة للتدوير والتصنيع.','Corn stalk residues for recycling and manufacturing.','sprout'),
  (4,'مخلفات النخيل','Palm residues','palm-residues','جريد ومخلفات تقليم النخيل.','Palm fronds and pruning residues.','leaf'),
  (5,'مصاصة القصب','Sugarcane bagasse','sugarcane-bagasse','ألياف القصب للتصنيع والتدوير.','Sugarcane fibers for manufacturing and recycling.','layers');
+UPDATE materials SET active=0 WHERE slug='palm-residues';
+UPDATE materials SET slug='corn-residues',name_ar='مخلفات الذرة',name_en='Corn residues',description_ar='مخلفات محصول الذرة للتدوير والتصنيع.',description_en='Corn crop residues for recycling and manufacturing.' WHERE slug='corn-stalks';
+UPDATE materials SET name_ar='مصاصة قصب السكر' WHERE slug='sugarcane-bagasse';
+INSERT IGNORE INTO schema_migrations(version) VALUES('20261119_001_defense_demo');
 INSERT IGNORE INTO accounts VALUES
  (1010,'1010','البنك والتحويلات الإلكترونية','Bank and online transfers','asset'),
  (2010,'2010','مبالغ العملاء قيد التنفيذ','Buyer funds pending fulfillment','liability'),

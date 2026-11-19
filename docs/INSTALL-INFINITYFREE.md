@@ -127,7 +127,7 @@ The launch switch requires operator details, a support number, at least one paym
 - A support account must not see or access Payments, Finance, Reports, Settings, Staff access or Audit.
 - Export a complete database backup from phpMyAdmin before launch and regularly during the pilot. Keep private uploaded receipts and the private configuration in your backup plan.
 
-The customer-facing application writes no public database backup files. CSV reports are staff-only, bounded exports and not a full database backup.
+The customer-facing application writes no public database backup files. SpreadsheetML XLS reports are staff-only, bounded exports and not a full database backup.
 
 ## InfinityFree compatibility decision
 
