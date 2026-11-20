@@ -1,378 +1,391 @@
 # HASSAD (حصاد) — النص العربي للدفاع في 20 دقيقة
 
-**النسخة:** Defense-ready speaking guide  
-**المنهج:** Predictive / Traditional فقط  
-**الفترة المقفلة:** 01-Nov-2026 → 27-Jan-2027  
-**إجمالي الزمن:** **18:30 كلام فعلي + 01:30 انتقالات = 20:00 بالضبط**
+**الموضوع البصري:** Seed → Plant → Plant Waste → HASSAD Digital Bridge → Factory → Eco-Book
+**المنهج:** Predictive / Traditional فقط
+**الفترة المقفلة:** 01-Nov-2026 → 27-Jan-2027
+**الزمن النهائي:** **18:30 كلام فعلي + 01:30 انتقالات = 20:00 بالضبط**
 
-> **ملاحظة داخلية مهمة:** أرقام الإغلاق وEVM والجودة الواردة في الشرائح 9 و12–14 هي سيناريو إكمال نمذجي مُعد للدفاع، وليست بديلًا عن سجلات التنفيذ الفعلية. يجب مطابقتها مع أدلة الإغلاق قبل العرض. أما ما يظهر حيًا في الموقع فهو **دليل Prototype** على الوظائف، وليس وحده دليلًا على إغلاق المشروع أو قبول كل Work Packages.
+> **ملاحظة داخلية:** الموقع الحي يثبت سلوك الـPrototype فقط. أرقام Week 7 وEVM والإغلاق والجودة النهائية تحمل التصنيف **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]** ويجب مطابقتها مع السجلات الموقعة قبل تقديمها كحقائق نهائية.
 
-## توزيع المتحدثين المقفول
+## الفريق المقفول — خمسة أعضاء فقط وبالترتيب
 
-| الترتيب | المتحدث | الشرائح | الكلام الفعلي |
-|---:|---|---|---:|
-| 1 | **Mostafa Yakout** | 1، 2، 3 | 03:25 |
-| 2 | **Rania Abdelgliel** | 4، 5، 6 | 03:25 |
-| 3 | **Reem Ahmed** | 7، 8 | 02:25 |
-| 4 | **Omar Hassan** | 9 | 01:55 |
-| 5 | **Mohamed Ahmed (PM)** | 10، 11 | 02:55 |
-| 6 | **Mariam Ahmed** | 12 | 01:55 |
-| 7 | **Ahmed Mostafa** | 13، 14، 15 | 02:30 |
-|  | **الإجمالي** | **15 شريحة** | **18:30** |
+1. **Mostafa Yakout** — Lead Presenter / Project Management & Stakeholder Engagement Lead
+2. **Rania Abdelgliel** — Co-Lead Presenter / Requirements, Scope & UX/UI Lead
+3. **Reem Ahmed** — Schedule, Planning & Cost Baseline Lead
+4. **Ahmed Mostafa** — Quality Assurance, Documentation & Closeout Lead
+5. **Omar Hassan** — Technical Architecture, Backend & Risk/Integration Lead
 
-## خريطة التوقيت الكاملة
+**External Project Sponsor:** Saad Ibrahim, CEO, SAAD Company.
 
-- **[00:00–00:02]** هدوء وابتسامة ونظرة للجنة — انتقال افتتاحي: **2 ث**.
-- انتقال داخلي بين شرائح المتحدث نفسه: **8 انتقالات × 5 ث = 40 ث**.
-- تسليم بين المتحدثين: **6 تسليمات × 8 ث = 48 ث**.
+## توزيع الشرائح والزمن الفعلي
+
+| المتحدث | الشرائح | الكلام الفعلي |
+|---|---|---:|
+| Mostafa Yakout | 1، 2، 3 | 03:45 |
+| Rania Abdelgliel | 4، 5، 6 | 03:30 |
+| Reem Ahmed | 7، 8، 10 | 03:40 |
+| Omar Hassan | 9، 11 | 03:30 |
+| Ahmed Mostafa | 12، 13، 14، 15 | 04:05 |
+| **الإجمالي** | **15 شريحة** | **18:30** |
+
+## منطق الانتقالات — 01:30 بالضبط
+
+- افتتاح صامت: **2 ثانية**.
+- 8 انتقالات داخلية بين شرائح المتحدث نفسه × 5 ثوانٍ = **40 ثانية**.
+- 6 تسليمات بين المتحدثين × 8 ثوانٍ = **48 ثانية**.
 - **إجمالي الانتقالات = 90 ثانية.**
 
 ---
 
-## Slide 1 — HASSAD: Turning Egypt’s Agricultural Waste into Industrial Value
+## Slide 1 — The Seed: Every Harvest Begins with Potential
 
-**[00:02–01:17 | 75 sec active] — Mostafa Yakout**  
-**Delivery cue:** ابدأ من غير ما تبص للشاشة. نبرة دافئة وواثقة. اسكت ثانية بعد الجملة الأولى، ثم أشِر إلى عنوان المشروع، وبعدها إلى أسماء الفريق بالترتيب.
+**[00:02–01:22 | 80 sec active] — Mostafa Yakout**
+**Delivery cue:** ابدأ من غير ما تبص للشاشة. أمسك بذرة تخيلية بين إصبعين، واسكت ثانية بعد أول جملة. مع كل مرحلة حرّك إيدك في قوس من التربة إلى الكتاب.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"تخيّلوا إن مادة خام مطلوبة في مصنع، موجودة بالفعل على بُعد كيلومترات قليلة… لكن الطرفين مش شايفين بعض. هنا بدأت فكرة **HASSAD — From Waste to Value**. إحنا بنقدم **Agricultural Waste Digital Marketplace Website** كنموذج MVP يربط مورد المخلفات الزراعية بالمشتري الصناعي من خلال رحلة رقمية عربية واضحة ومنضبطة.
+"كل حصاد عظيم بيبدأ ببذرة صغيرة. البذرة تدخل تربة مصر، تكبر وتبقى نبات، والنبات يدي محصول. وبعد الحصاد يفضل جزء بنسميه مخلف: قش أرز، تبن قمح، مخلفات ذرة، ومصاصة قصب. هنا ناس ممكن تشوف نهاية القصة؛ إحنا شفنا بداية قيمة جديدة.
 
-المشروع اتنفّذ تحت رعاية الأستاذ **Saad Ibrahim، CEO of SAAD Company**، وبقيادة مدير المشروع **Mohamed Ahmed**. وفريقنا بالترتيب: **Mostafa Yakout، Rania Abdelgliel، Mohamed Ahmed، Reem Ahmed، Ahmed Mostafa، Omar Hassan، Mariam Ahmed**. كل عضو كان **Internal Workstream Owner** بتكلفة عمل نقدية صفر، بينما التنفيذ المتخصص في البرمجة والتصميم والاختبار مدعوم بمتخصصين خارجيين داخل خط الأساس المعتمد.
+HASSAD بيعمل الجسر الرقمي بين المخلف والمصنع: المورد يسجل، المشتري الصناعي يبحث، والنظام يساعدهم في matching وتتبع الحالة—من غير ما HASSAD ينقل أو يخزن مخلفات. داخل المصنع، المخلف يقدر يرجع للحياة في صورة ورق معاد تدويره، sustainable packaging، أو eco-friendly book.
 
-رحلتنا النهارده مش مجرد عرض موقع؛ دي قصة قرار إداري: إزاي حوّلنا فجوة في السوق إلى مشروع مضبوط بالنطاق والوقت والتكلفة والجودة."
+دي رحلتنا: **From Seed… To Waste… To Reborn Value.** وده مشروع HASSAD: Agricultural Waste Digital Marketplace Website MVP، تحت رعاية الأستاذ **Saad Ibrahim، CEO, SAAD Company**."
 
-**Bridge إلى Slide 2:**  
-"وهنحكي القصة دي في خمس محطات مترابطة، من المشكلة لحد الحصاد."
+**Bridge إلى Slide 2:**
+"خلّونا نفتح الرحلة مرحلة مرحلة، ونشوف إزاي دورة حياة النبات بقت كمان دورة حياة مشروع."
 
-**الأرقام للحفظ:** 7 أعضاء؛ Sponsor واحد؛ Website MVP؛ Group 2 labor cash cost = EGP 0.
+**الأرقام للحفظ:** 5 life-cycle stages؛ 4 residue categories؛ Website MVP؛ zero physical logistics.
 
-**[01:17–01:22 | 5 sec transition]** بدّل للشريحة 2 وخد نفسًا قصيرًا.
-
----
-
-## Slide 2 — The 5-Act Journey
-
-**[01:22–02:22 | 60 sec active] — Mostafa Yakout**  
-**Delivery cue:** حرّك إيدك من اليسار لليمين مع خط الرحلة. لا تقرأ أسماء المحطات فقط؛ اربط كل محطة بسؤال.
-
-**النص المقترح:**
-
-"الرحلة مكوّنة من **خمس Acts**. في الأولى، **The Gap**: ليه المشروع يستحق إنه يبدأ؟ في الثانية، **The Blueprint**: إيه تعريف النجاح وإيه حدود النطاق؟ في الثالثة، **The Engine**: إزاي حوّلنا الخطة إلى WBS وجدول وميزانية وضوابط مخاطر وتواصل؟
-
-بعد كده بنوصل لنقطة الضغط، **The Pressure Test**: طلبات تغيير، خطر تقني تحوّل إلى Issue، وقرارات كان لازم تحمي خط الأساس. وأخيرًا **The Harvest**: الأداء، الدروس، والخطوة التالية.
-
-الترتيب ده متعمد: كل رقم في النتائج لازم يرجع لقرار أو Artifact قبله. وعشان كده مش هنقول بس *إيه اللي اتعمل*؛ هنوضح *ليه القرار اتاخد، مين وافق عليه، وإزاي اتقاس*."
-
-**Bridge إلى Slide 3:**  
-"نبدأ من أصل الحكاية: فجوة بين مخلفات لها قيمة ومصانع محتاجة القيمة دي."
-
-**الأرقام للحفظ:** 5 Acts؛ 15 main slides؛ 20:00 total.
-
-**[02:22–02:27 | 5 sec transition]** ثبّت النظر على اللجنة قبل ظهور المشكلة.
+**[01:22–01:27 | 5 sec transition]** اكشف المسار الدائري الكامل.
 
 ---
 
-## Slide 3 — The Gap Became a Formally Authorized Project
+## Slide 2 — The Living Journey: Seed to Eco-Book
 
-**[02:27–03:37 | 70 sec active] — Mostafa Yakout**  
-**Delivery cue:** عند ذكر الأنواع الأربعة، عدّهم بأصابعك. اخفض السرعة عند صلاحيات الـPM والاحتياطي.
+**[01:27–02:42 | 75 sec active] — Mostafa Yakout**
+**Delivery cue:** أشِر لكل مرحلة مرة واحدة: Seed، Plant، Waste، Digital Bridge/Factory، Eco-Book. بعد ذلك اربطها بالـ5 Acts من غير قراءة عناوين فقط.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"المشكلة كانت واضحة: المزارع أو المورد عنده **rice straw، wheat straw، corn residues، sugarcane bagasse**، لكن الوصول لمشترٍ صناعي مناسب متفرق ويدوي. وفي المقابل، المصنع بيدور على نوع وكمية وموقع وموعد إتاحة من مصادر غير موحدة. تكلفة عدم التحرك هي وقت ضايع، بيانات أقل دقة، وفرص استخدام صناعي بتضيع.
+"المرحلة الأولى **The Seed**: فرصة لسه محتاجة قرار. الثانية **The Growing Plant**: المحاصيل الأربعة اللي بنبني عليها سيناريوهاتنا. الثالثة **Plant Waste**: قيمة موجودة، لكن الوصول ليها متفرق، وأحيانًا بتُهدر أو تُحرق، بينما مصانع بتدور على raw material.
 
-يوم **01-Nov-2026**، الـ**Project Charter** حوّل الفكرة إلى مشروع مُصرّح به رسميًا، وحدد النهاية في **27-Jan-2027**. الـSponsor هو Saad Ibrahim، والـPM هو Mohamed Ahmed. مدير المشروع يدير التشغيل اليومي ويعالج انحرافات بنود الميزانية داخل **±5%**، لكن أي تغيير في Baseline أو استخدام من **EGP 50,000 Contingency Reserve** يحتاج موافقة كتابية من الـSponsor.
+المرحلة الرابعة هي قلب HASSAD: **Digital Bridge → Factory**. منصة عربية تجمع بيانات النوع والكمية والموقع والإتاحة، وتوصل العرض بالطلب مع status tracking. المرحلة الخامسة **The Reborn Product**: المخلف يدخل عملية صناعية ويطلع قيمة جديدة—والـeco-book قدامكم هو رمز إن النهاية ممكن تبقى بداية.
 
-ومن أول يوم، حسمنا إن HASSAD منصة رقمية؛ مش شركة نقل أو تخزين أو جمع فعلي. الفصل ده هو اللي خلّى المشروع قابلًا للتنفيذ والقياس."
+وعرضنا ماشي بنفس النمو: Act I البذرة والفجوة، Act II الجذور، Act III الساق والأوراق، Act IV الصمود تحت الضغط، وAct V الحصاد والقيمة الجديدة."
 
-**Handoff إلى Rania:**  
-"وعلشان نحول التفويض ده لتعريف دقيق للنجاح وحدود ما سنسلّمه، رانيا هتوضح الـSMART objectives والـScope والـtailoring."
+**Bridge إلى Slide 3:**
+"لكن أي بذرة مشروع محتاجة تفويض واضح؛ وهنا بدأ دور الـCharter."
 
-**الأرقام للحفظ:** 01-Nov-2026؛ 27-Jan-2027؛ 4 materials؛ ±5%؛ EGP 50,000 reserve.
+**الأرقام للحفظ:** 5 stages؛ 5 Acts؛ 15 main slides؛ 20:00 total.
 
-**[03:37–03:45 | 8 sec handoff]** Mostafa يرجع خطوة؛ Rania تتقدم وتبدأ بعد تثبيت Slide 4.
+**[02:42–02:47 | 5 sec transition]** انقل التركيز من الرسم إلى الـCharter والـgovernance lock.
 
 ---
 
-## Slide 4 — Success Was Defined Before Work Began
+## Slide 3 — The Gap Became an Authorized Project
 
-**[03:45–04:50 | 65 sec active] — Rania Abdelgliel**  
+**[02:47–03:57 | 70 sec active] — Mostafa Yakout**
+**Delivery cue:** عدّ المواد الأربعة بأصابعك. اخفض السرعة عند الصلاحيات والاحتياطي.
+
+**النص المنطوق:**
+
+"الفجوة كانت في الاتصال والبيانات: المورد عنده **rice straw، wheat straw، corn residues، sugarcane bagasse**؛ والمصنع محتاج نوعًا وكمية وموقعًا وتاريخ إتاحة، لكن البحث يدوي ومجزأ. تكلفة عدم التحرك هي وقت sourcing أطول، فرص matching ضائعة، وقرارات مبنية على معلومات أقل دقة.
+
+يوم **01-Nov-2026**، الـProject Charter حوّل الفكرة إلى مشروع مُصرّح به رسميًا، بنهاية مقفولة **27-Jan-2027**. أنا **Mostafa Yakout** أتولى قيادة Project Management وStakeholder Engagement، مع توزيع الحزم على فريقنا الخماسي، والـSponsor هو Saad Ibrahim.
+
+التشغيل اليومي يسمح بمعالجة line-item variance داخل **±5%**، لكن أي Baseline change أو تحرير من **EGP 50,000 Contingency Reserve** يحتاج موافقة كتابية من الـSponsor. ومن البداية، فصلنا المنصة الرقمية عن النقل والتخزين والتشغيل المادي."
+
+**Handoff إلى Rania:**
+"بعد التفويض، لازم الجذور تبقى ثابتة: أهداف قابلة للقياس، نطاق واضح، ومنهج مناسب. رانيا هتبني الثلاثة."
+
+**الأرقام للحفظ:** 01-Nov-2026؛ 27-Jan-2027؛ ±5%؛ EGP 50,000 reserve؛ 4 categories.
+
+**[03:57–04:05 | 8 sec handoff]** Mostafa يرجع خطوة؛ Rania تبدأ بعد ثبات KPI cards.
+
+---
+
+## Slide 4 — Deep Roots: Success Was Measurable
+
+**[04:05–05:10 | 65 sec active] — Rania Abdelgliel**
 **Delivery cue:** أشِري إلى كل KPI card مرة واحدة. شددي على الفرق بين Project Success وProduct Success.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"قبل ما نبدأ التنفيذ، اتفقنا إن كلمة *نجاح* لازم تكون قابلة للقياس. عندنا أربع علامات رئيسية: التسليم خلال **12 أسبوع** في **27-Jan-2027**؛ الالتزام بسقف البداية **EGP 200,000**؛ إثبات رحلتين أساسيتين، **Supplier** و**Factory/Buyer**؛ وتحقيق على الأقل **90% Functional Pass** مع **0 open Critical defects**.
+"علشان النبات يثبت، جذوره لازم تبقى واضحة؛ وعلشان المشروع ينجح، تعريف النجاح لازم يسبق التنفيذ. حددنا أربع علامات: التسليم خلال **12 أسبوعًا** في **27-Jan-2027**؛ الالتزام بالسقف الأولي **EGP 200,000**؛ إثبات رحلتين أساسيتين **Supplier وFactory/Buyer**؛ وتحقيق **90% Functional Pass على الأقل** مع **0 open Critical defects**.
 
-لكن فرّقنا بين نوعين من النجاح. **Project Success** معناه إن النطاق المعتمد اتسلّم في الوقت والتكلفة وبحوكمة صحيحة. أما **Product Success** فمعناه إن النموذج نفسه usable: المورد يسجل عرضًا، والمشتري يبحث ويطابق ويتابع الحالة عبر الأنواع الأربعة.
+وفرّقنا بين **Project Success** و**Product Success**. الأول يقيس النطاق والوقت والتكلفة والحوكمة. الثاني يقيس هل المورد والمشتري يقدروا يكملوا الرحلة الرقمية فعليًا عبر الأنواع الأربعة.
 
-وده فرق مهم: ممكن موقع يشتغل في Demo، لكن المشروع إداريًا ما يكونش اتقفل. وممكن المشروع يلتزم بالخطة، لكن المنتج ما يحققش رحلة مستخدم مفيدة. إحنا صممنا معايير تقيس الاثنين."
+ممكن شاشة تشتغل في Demo لكن المشروع ما يكونش اتقفل؛ وممكن الخطة تلتزم لكن المنتج ما يكونش usable. لذلك معاييرنا تربط الاثنين بأدلة مستقلة."
 
-**Bridge إلى Slide 5:**  
-"ولكي تبقى المعايير دي عادلة، كان لازم نرسم خط واضح جدًا بين In Scope وOut of Scope."
+**Bridge إلى Slide 5:**
+"ولكي يبقى القياس عادلًا، لازم نحدد بالضبط إيه داخل الجذور وإيه خارجها."
 
-**الأرقام للحفظ:** 12 weeks؛ EGP 200,000 initial ceiling؛ 2 journeys؛ ≥90% functional؛ 0 Critical.
+**الأرقام للحفظ:** 12 weeks؛ EGP 200,000؛ 2 journeys؛ ≥90% functional؛ 0 Critical.
 
-**[04:50–04:55 | 5 sec transition]** وقفة قصيرة عند تغير العمودين.
-
----
-
-## Slide 5 — Clear Boundaries Protected the MVP
-
-**[04:55–06:05 | 70 sec active] — Rania Abdelgliel**  
-**Delivery cue:** أشِري أولًا لعمود In Scope ثم لعمود Out of Scope. لا تستخدمي نبرة اعتذار عند المستبعدات؛ قدّميها كقرارات حماية.
-
-**النص المقترح:**
-
-"داخل النطاق: **responsive website**، حسابات أساسية، عرض مخلفات بأربع حقول: النوع، الكمية التقديرية، الموقع، وتاريخ الإتاحة؛ طلبات مشترين؛ بحث وbasic matching؛ تواصل وتتبع حالة؛ وdashboard ببيانات تجريبية واضحة.
-
-خارج النطاق: **native mobile application**، أي collection أو transport أو warehouses، الربط المباشر بقاعدة بيانات حكومية، payment gateway أو escrow، وأي إطلاق تجاري على مستوى الجمهورية.
-
-ليه؟ لأن إدخال اللوجستيات الفعلية كان هيحوّل المشروع من منصة رقمية إلى عملية تشغيلية وتنظيمية مختلفة تمامًا. وكمان المراجعة القانونية عندنا **desk-based checklist** لشروط الاستخدام والإفصاحات المرتبطة بقانون **4/1994** وقانون **202/2020**؛ مش رأيًا قانونيًا ولا استخراج تراخيص.
-
-القيود الأساسية كانت 12 أسبوعًا وEGP 200,000 في البداية. والافتراض إن الـDemo والاختبارات ممكن تستخدم sample data، بشرط توصيفها بوضوح وعدم تقديمها كبيانات سوق حقيقية."
-
-**Bridge إلى Slide 6:**  
-"ومع ثبات الحدود والموعد والتمويل، اختيار طريقة الإدارة بقى نتيجة منطقية، مش تفضيل شخصي."
-
-**الأرقام للحفظ:** 4 listing fields؛ Laws 4/1994 & 202/2020؛ 12 weeks؛ EGP 200,000.
-
-**[06:05–06:10 | 5 sec transition]** بدّلي إلى شريحة المنهج مع وقفة ثقة.
+**[05:10–05:15 | 5 sec transition]** أشِري أولًا إلى In Scope ثم Out of Scope.
 
 ---
 
-## Slide 6 — A Pure Predictive Approach Fit the Constraint
+## Slide 5 — Scope Boundaries Protected the MVP
 
-**[06:10–07:20 | 70 sec active] — Rania Abdelgliel**  
-**Delivery cue:** قولي “Predictive” بوضوح. عند نقاط الـtailoring، استخدمي ثلاث أصابع ثم اختمي بالـphase gates.
+**[05:15–06:25 | 70 sec active] — Rania Abdelgliel**
+**Delivery cue:** لا تقدمي المستبعدات كتنازل؛ قدميها كقرارات حماية. توقفي لحظة بعد “zero physical logistics”.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"اخترنا **Predictive / Traditional life cycle** لأن عندنا نافذة ثابتة 12 أسبوع، تكلفة محددة، وMVP scope يمكن تعريفه وقبوله مقدمًا. خططنا المتطلبات، ثم التصميم، ثم التطوير، ثم الاختبار والإغلاق، وكل مرحلة مرتبطة بمخرجات وموافقة.
+"داخل النطاق: responsive website، registration وprofiles، supplier listings بأربع خانات—النوع، الكمية، الموقع، وتاريخ الإتاحة—ثم demand requests، search/basic matching، contact workflow، status tracking، وdashboard ببيانات تجريبية واضحة.
 
-عملنا **tailoring** بدل ما نحول PMBOK إلى checklist كبيرة. المتطلبات الرسمية اتوثقت في **SRS** وربطناها بـ**Requirements Traceability Matrix — RTM**. خطة التواصل ركزت على 9 قنوات تشغيلية وحوكمية. الـContingency Reserve نسبته **25% من ميزانية البداية** ومقفول بموافقة كتابية من الـSponsor. والمراجعة القانونية محدودة بالنطاق الرقمي.
+خارج النطاق: native mobile application، collection أو storage أو transport أو warehouses، الربط المباشر بقاعدة بيانات حكومية، payment gateway أو escrow، والإطلاق التجاري على مستوى الجمهورية.
 
-كمان استخدمنا scheduled milestones وWork Packages وdaily technical coordination، وكل تغيير يمر على **Integrated Change Control** قبل التنفيذ. النتيجة إن طريقة الإدارة، المصطلحات، والـArtifacts كلهم بيحكوا نفس القصة التنبؤية."
+القرار ده هو اللي خلّى الوعد قابلًا للتسليم. اختيار pickup أو hub في الـPrototype يسجل تفضيلًا فقط؛ HASSAD نفسه لا ينفذ لوجستيات مادية.
 
-**Handoff إلى Reem:**  
-"بعد ما ثبتنا طريقة الإدارة، ريم هتورّينا إزاي الخطة اتكسرت إلى 22 Work Packages وجدول وتكلفة قابلة للرقابة."
+والمراجعة القانونية **desk-based checklist** لشروط الاستخدام والإفصاحات المرتبطة بقانون **4/1994** وقانون **202/2020**؛ ليست رأيًا قانونيًا ولا استخراج تراخيص. البيانات التجريبية مسموحة بشرط وسمها وعدم تقديمها كواقع سوق."
 
-**الأرقام للحفظ:** Predictive only؛ SRS + RTM؛ 9 communication channels؛ 25% reserve.
+**Bridge إلى Slide 6:**
+"ومع نطاق وموعد وتكلفة ثابتين، اختيار طريقة الإدارة بقى قرارًا منطقيًا."
 
-**[07:20–07:28 | 8 sec handoff]** Rania تشير للخط الزمني؛ Reem تبدأ أمام Slide 7.
+**الأرقام للحفظ:** 4 listing fields؛ Laws 4/1994 & 202/2020؛ zero physical logistics.
 
----
-
-## Slide 7 — 22 Work Packages Drove Five Controlled Milestones
-
-**[07:28–08:43 | 75 sec active] — Reem Ahmed**  
-**Delivery cue:** تتبعي الـWBS من 1.1 إلى 1.6، ثم انقلي الإشارة إلى milestones. شددي على Critical Path من غير قراءة كل نشاط.
-
-**النص المقترح:**
-
-"حوّلنا النطاق إلى **6 Level-1 workstreams** وتحتهم بالضبط **22 leaf Work Packages**: الإدارة والبدء، المتطلبات والتصميم، التطوير، الجودة، التواصل والاستعداد، ثم الإغلاق.
-
-الجدول المقفول يبدأ **01-Nov-2026** وينتهي **27-Jan-2027**. وعندنا خمس بوابات: **M1000 في 14-Nov** لاعتماد المتطلبات والنطاق؛ **M2000 في 28-Nov** للتصميم والـarchitecture؛ **M3000 في 26-Dec** لتكامل Core MVP؛ **M4000 في 09-Jan-2027** لإكمال الاختبار والقبول؛ و**M5000 في 27-Jan** للإغلاق.
-
-المسار الحرج المعروض هو **A1100 → A1120 → A1130 → M3000 → M4000 → M5000**. وربطنا الـfrontend ببوابة M3000 حتى ما يبقاش عندنا dangling path. كمان نفذنا legal compliance review بالتوازي في التخطيط، وonboarding preparation بالتوازي مع الاختبار؛ ده حسّن المنطق من غير تغيير تاريخ النهاية."
-
-**Bridge إلى Slide 8:**  
-"وبعد ما عرفنا إمتى الشغل يتسلّم، السؤال التالي كان: مين ينفذه، وبأي Cost Baseline؟"
-
-**الأرقام للحفظ:** 6 workstreams؛ 22 leaf packages؛ 5 milestones؛ dates 14-Nov, 28-Nov, 26-Dec, 09-Jan, 27-Jan.
-
-**[08:43–08:48 | 5 sec transition]** بدّلي إلى مخطط التكلفة.
+**[06:25–06:30 | 5 sec transition]** انتقلي إلى phase gates.
 
 ---
 
-## Slide 8 — The Baseline Changed; the Reserve Stayed Protected
+## Slide 6 — Predictive Discipline Matched the Constraint
 
-**[08:48–09:58 | 70 sec active] — Reem Ahmed**  
-**Delivery cue:** استخدمي كفّين منفصلين بصريًا: Baseline في يد وReserve في الأخرى. توقفي لحظة بعد “لم نمس الاحتياطي”.
+**[06:30–07:45 | 75 sec active] — Rania Abdelgliel**
+**Delivery cue:** قولي Predictive / Traditional بوضوح. استخدمي أربع إشارات: SRS، RTM، phase gates، CCB.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"ميزانية البداية **EGP 200,000**: منها **EGP 150,000 Cost Baseline** و**EGP 50,000 Contingency Reserve**. توزيع الـ150 ألف كان: **90 ألف** design and development، **20 ألف** PM and documentation، **15 ألف** requirements and field research، **15 ألف** testing and QA، و**10 آلاف** hosting, domain and tools.
+"اخترنا **Predictive / Traditional life cycle** لأن عندنا نافذة ثابتة 12 أسبوعًا، تكلفة محددة، وMVP scope يمكن تعريفه وقبوله مقدمًا. خططنا المتطلبات، ثم التصميم، ثم التطوير، ثم الاختبار والإغلاق، وكل مرحلة لها مخرج وموافقة.
 
-بعد تقييم 10 Change Requests، وافق الـSponsor والـCCB على أربع إضافات نطاق بقيمة **EGP 14,000**. بالتالي الـRevised Cost Baseline أو **BAC أصبح EGP 164,000**، وإجمالي السقف المصرح به أصبح **EGP 214,000**. المهم: الـ14 ألف جت من **Sponsor-approved Cost Baseline Adjustment**؛ لم نمس الـ50 ألف المخصصة للمخاطر.
+عملنا tailoring عملي: المتطلبات الرسمية في **SRS**، والتتبع في **RTM**، وخطة التواصل في 9 قنوات، والـContingency Reserve نسبته **25% من ميزانية البداية** ومقفول بموافقة Sponsor. وكل Change يمر على Impact Analysis وCCB قبل التنفيذ.
 
-الموارد Hybrid: أعضاء Group 2 هم Internal Workstream Owners بتكلفة نقدية صفر، والتنفيذ المتخصص يتم بعقود خارجية مرتبطة بقبول مرحلي **30% / 30% / 40%** حيث ينطبق."
+الجودة تبدأ من Acceptance Criteria، مش من نهاية البرمجة. لذلك ربطنا requirement بالـWork Package ثم test evidence. النتيجة إن اللغة والـArtifacts والقرارات كلهم بيدعموا نفس النهج التنبؤي، من غير خلط في الحوكمة."
 
-**Handoff إلى Omar:**  
-"وحماية الاحتياطي ما كانتش احتياطًا نظريًا؛ عمر هيوضح إزاي أكبر Threat تحوّل إلى Issue واحتاج استجابة رسمية."
+**Handoff إلى Reem:**
+"بعد ما ثبتنا الجذور، ريم هتورينا الساق اللي شايلة المشروع: WBS، schedule، cost، والاتصال بالمعنيين."
 
-**الأرقام للحفظ:** 150K + 50K = 200K؛ +14K = BAC 164K؛ ceiling 214K؛ 90K/20K/15K/15K/10K؛ 30/30/40.
+**الأرقام للحفظ:** SRS + RTM؛ 9 channels؛ 25% reserve؛ 12 weeks.
 
-**[09:58–10:06 | 8 sec handoff]** Reem تتراجع؛ Omar يشير إلى الـRisk Matrix.
-
----
-
-## Slide 9 — A Risk Became an Issue, and Governance Responded
-
-**[10:06–12:01 | 115 sec active] — Omar Hassan**  
-**Delivery cue:** فرّق لفظيًا بين Risk وIssue. أشِر إلى أعلى خلية في المصفوفة، ثم إلى مربع corrective action. نبرة تقنية بسيطة، من غير مبالغة.
-
-**النص المقترح:**
-
-"في البداية، سجلنا التهديدات بصيغة Cause–Event–Impact وحددنا Owner وTrigger واستجابة. أعلى تعرض كان **R-07 Development Delays / Technical Complexity بدرجة 20**. بعده **R-05 Data Errors بدرجة 16**، ثم Scope Creep وBudget Overrun كتعرضات مهمة. وعندنا فرصة إيجابية **O-01**: شراكة جمعية زراعية أو جهة داعمة لتوفير بيانات موردين موثقة، واستجابتها **Exploit**.
-
-الفرق الأساسي: الـ**Risk** حدث غير مؤكد. لما يحصل فعلًا يبقى **Issue**. في سيناريو الإكمال، خلال Week 7 ظهرت استعلامات matching وقواعد validation للأنواع الأربعة بزمن يتجاوز **3 seconds**. الـtrigger اتحقق، فبطلنا نتعامل مع احتمال وفتحنا Issue فني.
-
-الإجراء الوقائي كان تعريف قواعد المطابقة، الفهارس، والاختبارات المبكرة. أما الإجراء التصحيحي فكان targeted backend optimization مع weekend fast-tracking. الـPM، Mohamed Ahmed، صعّد للـSponsor، وتمت موافقة كتابية على سحب **EGP 9,500** من الـContingency Reserve؛ وده استخدام صحيح لأنه لخطر مُسجل تحقق فعليًا، مش لميزة جديدة.
-
-النتيجة النمذجية حافظت على M3000 وM5000. لكن في الدفاع، الدليل المطلوب ليس الكلام فقط: Risk Register، Issue record، موافقة تحرير الاحتياطي، ونتائج performance retest."
-
-**Handoff إلى Mohamed:**  
-"الاستجابة التقنية نجحت لأن مسار التصعيد كان واضح. محمد هيوضح مين كان لازم نُشركه، وبعدها إزاي الـCCB فرز طلبات التغيير."
-
-**الأرقام للحفظ:** R-07 = 20؛ R-05 = 16؛ O-01؛ Week 7؛ threshold 3.0s؛ contingency draw EGP 9,500.
-
-**[12:01–12:09 | 8 sec handoff]** Omar ينهي بالنظر إلى Mohamed، لا إلى الشاشة.
+**[07:45–07:53 | 8 sec handoff]** Rania تشير للـgrowth tracker؛ Reem تبدأ عند WBS.
 
 ---
 
-## Slide 10 — Stakeholders Were Managed by Power, Interest, and Escalation Need
+## Slide 7 — The Stem: 22 Work Packages and Five Gates
 
-**[12:09–13:29 | 80 sec active] — Mohamed Ahmed (PM)**  
-**Delivery cue:** ابدأ بهدوء إداري. أشِر إلى الأرباع الصحيحة في الـPower–Interest Grid، ثم ارسم مسار التصعيد بإيدك من أسفل لأعلى.
+**[07:53–09:13 | 80 sec active] — Reem Ahmed**
+**Delivery cue:** تتبعي 1.1 إلى 1.6، ثم انتقلي إلى milestones. لا تقرئي كل نشاط.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"إدارة المعنيين عندنا ما كانتش إرسال updates للجميع بنفس الطريقة. الـSponsor **Saad Ibrahim** عنده High Power وMedium Interest، فاستراتيجية التعامل **Keep Satisfied** مع milestone summaries وقرارات مختصرة. الموردون والمشترون عندهم Medium Power وHigh Interest، فاستراتيجيتهم **Keep Informed** مع interviews وprototype reviews وUAT. أما الـPM والفريق والتنفيذ التقني، فبحكم High Power وHigh Interest يتم **Manage Closely**.
+"حوّلنا النطاق إلى **6 Level-1 workstreams** وتحتهم بالضبط **22 leaf Work Packages**: البدء والإدارة، المتطلبات والتصميم، التطوير، الجودة، التواصل والاستعداد، ثم الإغلاق.
 
-خطة التواصل فيها **9 channels**، لكن قاعدة التصعيد واحدة: المشكلة التشغيلية أو الفنية تروح أولًا للـPM. لو الحل داخل الخطة، أوجّه المسؤول وأنسّق الإجراء. لو التأثير يمس Scope أو Schedule أو Cost Baseline أو تحرير الاحتياطي، أصعّد للـSponsor والـCCB.
+الجدول يبدأ **01-Nov-2026** وينتهي **27-Jan-2027**، وعنده خمس بوابات: **M1000 في 14-Nov** لاعتماد المتطلبات والنطاق؛ **M2000 في 28-Nov** للتصميم والـarchitecture؛ **M3000 في 26-Dec** لتكامل Core MVP؛ **M4000 في 09-Jan-2027** لإكمال الاختبار والقبول؛ و**M5000 في 27-Jan** للإغلاق.
 
-ده منع تضارب الصلاحيات: الـPM يقدر يحيل الطلب للدراسة أو يعتمد توضيحًا إداريًا zero-impact؛ لكن الموافقة أو الرفض النهائي لأي Change يمس Baseline من سلطة الـSponsor/CCB."
+المسار الحرج هو **A1100 → A1120 → A1130 → M3000 → M4000 → M5000**. ربطنا الـfrontend ببوابة M3000 لمنع dangling path، ونفذنا legal review بالتوازي مع التخطيط، وonboarding preparation بالتوازي مع الاختبار. التحسين هنا في sequencing، من غير تغيير تاريخ النهاية."
 
-**Bridge إلى Slide 11:**  
-"والقاعدة دي اتختبرت بوضوح لما وصلنا عشرة Change Requests، وكل واحد كان مغريًا بطريقته."
+**Bridge إلى Slide 8:**
+"والساق القوية محتاجة موارد محسوبة؛ ننتقل من الوقت إلى المال والمسؤولية."
 
-**الأرقام للحفظ:** 9 stakeholders in register؛ 9 communication channels؛ Sponsor High/Medium؛ Farmers & Buyers Medium/High.
+**الأرقام للحفظ:** 6 workstreams؛ 22 packages؛ 5 milestones؛ 14-Nov، 28-Nov، 26-Dec، 09-Jan، 27-Jan.
 
-**[13:29–13:34 | 5 sec transition]** بدّل إلى funnel طلبات التغيير.
-
----
-
-## Slide 11 — The Best Decision Was Not to Say Yes to Everything
-
-**[13:34–15:09 | 95 sec active] — Mohamed Ahmed (PM)**  
-**Delivery cue:** ارفع نبرة الحسم عند CR-003. استخدم أربع أصابع للطلبات المقبولة، ثم افصل بوضوح تمويل النطاق عن تمويل الخطر.
-
-**النص المقترح:**
-
-"دخل الـChange Control Register **10 requests**. وافقنا على أربع تحسينات: **CR-001** multi-select filtering، **CR-004** executive dashboard، **CR-007** listing edit/update، و**CR-010** export. تكلفتهم **EGP 14,000** ومجهودهم **10 developer-days**.
-
-رفضنا **CR-003 Native Mobile App** لأنه كان يضيف **EGP 120,000** و**45 يومًا** ويكسر تعريف Website MVP. ورفضنا **CR-006 English localization** في هذه المرحلة لحماية Arabic-first release. والطلبات الأربعة الباقية اتأجلت للمرحلة التالية بدل تنفيذها من غير قرار.
-
-أهم قرار حوكمي: تمويل الأربع إضافات لم يخرج من Risk Reserve. الـSponsor وافق على **Cost Baseline Adjustment** من 150 إلى **164 ألف**، فبقي الاحتياطي كاملًا وقتها. والـ10 أيام الإضافية لم تكن Schedule Float على المسار الحرج؛ استوعبناها بتنفيذ متوازٍ، تقسيم مهام، وساعات مطور إضافية في ديسمبر، من غير ضغط زمن الاختبار.
-
-ولما تحقق R-07 لاحقًا، كان الاحتياطي متاحًا لاستخدامه الصحيح. دي خلاصة Integrated Change Control: مش كل قيمة جديدة تستحق كسر الـBaseline، ومش كل مال متاح له نفس الغرض."
-
-**Handoff إلى Mariam:**  
-"بعد القرارات دي، القياس النهائي لازم يكون صريح: وقت ممتاز، وتكلفة فيها انحراف مفهوم. مريم هتعرض الـEVM والجودة من غير تجميل."
-
-**الأرقام للحفظ:** 10 CRs؛ 4 Approved؛ 4 Deferred؛ 2 Rejected؛ +14K؛ +10 effort-days؛ CR-003 = +120K/+45 days؛ BAC 164K.  
-**ملاحظة داخلية للمصدر:** سجل 18-Nov أظهر 3 Deferred وCR-009 كـPending؛ قرار الدفاع المقفول يعرض الحالة النهائية 4 Deferred.
-
-**[15:09–15:17 | 8 sec handoff]** Mohamed يسلّم لمريم بصريًا؛ Mariam تبدأ عند ثبات لوحة EVM.
+**[09:13–09:18 | 5 sec transition]** افصلي بصريًا Cost Baseline عن Reserve.
 
 ---
 
-## Slide 12 — On Time, Cost Variance Explained, Quality Verified
+## Slide 8 — Cost Grew with Approval; the Reserve Stayed Separate
 
-**[15:17–17:12 | 115 sec active] — Mariam Ahmed**  
-**Delivery cue:** قولي المعادلات ببطء. لا تقولي إن CPI 0.95 “نجاح مالي كامل”؛ قولي الحقيقة: over baseline but under authorized ceiling. عند الجودة، فرّقي بين النسبة والعدد.
+**[09:18–10:33 | 75 sec active] — Reem Ahmed**
+**Delivery cue:** استخدمي يدًا للـBaseline ويدًا للـReserve. اسكتي لحظة بعد “لم نستخدم الاحتياطي للنطاق”.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"عند الإغلاق النمذجي في **27-Jan-2027**، الـ**PV = EGP 164,000** والـ**EV = EGP 164,000**؛ يعني الـScope المقبول اكتمل حسب الخطة. والـ**AC = EGP 173,500** بعد إضافة **EGP 9,500** approved contingency draw.
+"ميزانية البداية **EGP 200,000**: منها **EGP 150,000 Cost Baseline** و**EGP 50,000 Contingency Reserve**. توزيع الـ150 ألف: **90 ألف** design and development، **20 ألف** project management and documentation، **15 ألف** requirements and field research، **15 ألف** testing and QA، و**10 آلاف** hosting, domain and tools.
 
-بالتالي **SV = EV minus PV = zero**، و**SPI = 1.00**: التسليم في الموعد. أما **CV = EV minus AC = negative EGP 9,500**، و**CPI = EV divided by AC = 0.95** بعد التقريب. المعنى المهني: إحنا أعلى من Revised Cost Baseline بسبب استجابة خطر معتمدة، لكن ما زلنا أقل من إجمالي السقف **EGP 214,000** بمقدار **EGP 40,500**. والمتبقي من الاحتياطي **EGP 40,500**، أي **81%**.
+بعد تقييم 10 Change Requests، وافق الـSponsor والـCCB على أربع إضافات بقيمة **EGP 14,000**. بالتالي الـRevised BAC أصبح **EGP 164,000**، وإجمالي السقف المصرح به **EGP 214,000**. الـ14 ألف Cost Baseline Adjustment؛ لم نستخدم الاحتياطي لتمويل scope.
 
-الجودة النمذجية: **19 من 20 Functional tests = 95%**؛ **9 من 10 matching scenarios = 90%**؛ **9 من 10 users = 90% usability**؛ و**0 open Critical/High defects**. وفي الأداء، **96%** من core requests أقل من **3.0 seconds** والـmedian **1.8 seconds**. والمراجعة القانونية desk-based حققت checklist alignment كاملًا للنطاق المحدد.
+الفريق الخماسي Internal Workstream Owners بتكلفة عمل نقدية صفر، والتنفيذ المتخصص للبرمجة والتصميم والاختبار مدعوم بمتخصصين خارجيين داخل الميزانية، مع payments مرتبطة بالقبول حيث ينطبق."
 
-الرسالة: لم نخفِ variance؛ شرحنا سببه، سلطته، وأثره."
+**Handoff إلى Omar:**
+"الاحتياطي اتفصل علشان يوم الخطر الحقيقي يفضل موجود. عمر هيوضح إزاي التهديد التقني اتحول إلى Issue."
 
-**Handoff إلى Ahmed:**  
-"والأرقام دي لها قيمة فقط لو تحولت إلى درس قابل للنقل وقرار واضح للمرحلة التالية؛ أحمد هيقفل الرحلة بالنقطتين دول."
+**الأرقام للحفظ:** 150K + 50K = 200K؛ +14K = BAC 164K؛ ceiling 214K؛ 90/20/15/15/10K.
 
-**الأرقام للحفظ:** PV 164K؛ EV 164K؛ AC 173.5K؛ SV 0؛ SPI 1.00؛ CV −9.5K؛ CPI 0.95؛ ceiling gap 40.5K؛ reserve 81%؛ 19/20؛ 9/10؛ 9/10؛ 96% <3s؛ median 1.8s.
-
-**[17:12–17:20 | 8 sec handoff]** Mariam تتراجع؛ Ahmed يبدأ بنبرة تأملية.
+**[10:33–10:41 | 8 sec handoff]** Reem تتراجع؛ Omar يثبت الفرق بين Risk وIssue.
 
 ---
 
-## Slide 13 — Two Lessons Worth Carrying Forward
+## Slide 9 — Weathering the Storm: Risk Became Issue
 
-**[17:20–18:15 | 55 sec active] — Ahmed Mostafa**  
-**Delivery cue:** لا تسرع. ارفع إصبعين فقط. اعمل pause بعد تكلفة الدرس الأول.
+**[10:41–12:21 | 100 sec active] — Omar Hassan**
+**Delivery cue:** أشِر إلى R-07 ثم R-05. اخفض النبرة عند الاستجابة المالية، ولا تقدم الرقم كدليل فعلي قبل التحقق.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"طلعنا بدرسين، مش قائمة عامة. الأول: **freeze Matching Rule Table and NFR test environment before coding**. غموض tolerances وقواعد validation ساهم في Issue زمن الاستجابة في Week 7، وتكلفته النمذجية **EGP 9,500** من الاحتياطي. في المشروع القادم، القواعد، البيانات، والبيئة تتوقع عند M1000 وتتوقّع عليها الأطراف المعنية قبل بدء التطوير.
+"سجل المخاطر اتبنى على Cause–Event–Impact، مع Owner وTrigger واستجابة. أعلى تعرض كان **R-07 Development Delays / Technical Complexity بدرجة 20**، وبعده **R-05 Data Errors بدرجة 16**. وعندنا فرصة **O-01 Association Partnership** واستجابتها Exploit، لأنها ممكن توفر بيانات موردين موثقة.
 
-الدرس الثاني: **افصل تمويل Scope Changes عن Risk Reserve من البداية**. لما موّلنا الإضافات الأربع عبر Cost Baseline Adjustment، فضل الاحتياطي متاحًا لحظة تحقق R-07. الدرس هنا مش إننا نحتفظ بالمال وخلاص؛ إننا نحافظ على الغرض الحوكمي لكل جزء من الميزانية.
+الـRisk حدث غير مؤكد. لما الـtrigger يتحقق، يتحول إلى Issue. في سيناريو الإكمال، خلال Week 7 تجاوزت matching queries وقواعد validation للأنواع الأربعة حد **3.0 seconds**.
 
-كل درس مرتبط بسبب، تكلفة، وإجراء مختلف للمرة القادمة."
+الإجراء الوقائي كان تحديد القواعد والفهارس والاختبارات المبكرة. الإجراء التصحيحي كان targeted backend optimization وساعات إضافية في عطلة نهاية الأسبوع. تم التصعيد منّي كـTechnical Architecture and Risk Lead إلى **Mostafa Yakout** بصفته Project Management Lead، ثم إلى الـSponsor. وبموافقة كتابية، تم تحرير **EGP 9,500** من الاحتياطي لحماية M3000 وM5000.
 
-**Bridge إلى Slide 14:**  
-"وبناءً على الدروس دي، المرحلة التالية لازم تبدأ كقرار مستقل، مش امتدادًا تلقائيًا للمشروع الحالي."
+الدليل المطلوب: Risk Register، Issue record، Sponsor approval، وperformance retest."
 
-**الأرقام للحفظ:** 2 lessons؛ Week 7؛ EGP 9,500 modeled issue cost؛ M1000.
+**Handoff إلى Reem:**
+"الاستجابة نجحت لأن المعنيين ومسار التصعيد كانوا معروفين؛ ريم هتكمل الصورة من زاوية Stakeholder Management."
 
-**[18:15–18:20 | 5 sec transition]** انتقل إلى roadmap بثلاث خطوات.
+**الأرقام للحفظ:** R-07 = 20؛ R-05 = 16؛ O-01؛ Week 7؛ 3.0 sec؛ modeled EGP 9,500.
+**Internal evidence label:** **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]** على تحقق Week 7 والسحب والاستجابة النهائية.
 
----
-
-## Slide 14 — Phase 2 Needs a New Charter and Real Pilot Evidence
-
-**[18:20–19:15 | 55 sec active] — Ahmed Mostafa**  
-**Delivery cue:** استخدم ثلاث أصابع للـroadmap. وجّه الـAsk للـSponsor واللجنة مباشرة.
-
-**النص المقترح:**
-
-"اقتراحنا للمرحلة الثانية ثلاث خطوات. أولًا: **live pilot** مع أكثر من **20 verified farms and factories** وقياس نتائج الاستخدام ببيانات حقيقية. ثانيًا: إعادة تقييم mobile application مع payment/escrow كـbusiness case مستقل، مش كإضافة سريعة. ثالثًا: شراكة بيانات رسمية مع جهة زراعية بعد تحديد الصلاحيات والخصوصية.
-
-والـAsk واضح: الموافقة على بدء **Phase-2 Charter and feasibility validation**، وليس صرف تلقائي. ويمكن للـSponsor تقييم توجيه حد أقصى **EGP 40,500** من السقف غير المستخدم إلى onboarding للـpilot، بشرط قرار تمويلي جديد وخطة فوائد ومخاطر وأدلة قبول.
-
-المرحلة الأولى أثبتت إن الـprototype والحوكمة ممكن يشتغلوا معًا؛ المرحلة الثانية لازم تثبت القيمة في السوق الحقيقي."
-
-**Bridge إلى Slide 15:**  
-"وده يرجعنا للجملة اللي بدأنا بها: المخلف له قيمة، لما نخلق له طريقًا موثوقًا للسوق."
-
-**الأرقام للحفظ:** 3 roadmap steps؛ 20+ verified farms/factories؛ maximum modeled headroom EGP 40,500 subject to new authorization.
-
-**[19:15–19:20 | 5 sec transition]** اعرض شريحة الختام، ابتسم، ثم ابدأ الجملة الأخيرة.
+**[12:21–12:29 | 8 sec handoff]** Omar يسلّم بصريًا إلى Reem.
 
 ---
 
-## Slide 15 — From Waste to Value
+## Slide 10 — Stakeholders and Communications Kept the Plant Upright
 
-**[19:20–20:00 | 40 sec active] — Ahmed Mostafa**  
-**Delivery cue:** لا تقرأ أسماء الفريق بسرعة. اختم بنظرة للجنة، ثم اصمت ولا تملأ الصمت.
+**[12:29–13:34 | 65 sec active] — Reem Ahmed**
+**Delivery cue:** أشِري إلى الأرباع الصحيحة، ثم ارسمِي مسار التصعيد من التشغيل إلى Sponsor.
 
-**النص المقترح:**
+**النص المنطوق:**
 
-"HASSAD بالنسبة لنا مش مجرد Website؛ هو تطبيق عملي لفكرة إن القيمة لا تأتي من الـfeature وحدها، لكن من Scope واضح، Baseline قابل للقياس، قرار تغيير منضبط، ونتيجة نقولها بأمانة.
+"إدارة المعنيين ما كانتش إرسال نفس الرسالة للجميع. الـSponsor **Saad Ibrahim** عنده High Power وMedium Interest، فاستراتيجيته **Keep Satisfied** عبر milestone summaries وقرارات مختصرة. الموردون والمشترون Medium Power وHigh Interest، فاستراتيجيتهم **Keep Informed** عبر interviews وprototype reviews وUAT. أما قيادة المشروع والتنفيذ المتخصص، فـManage Closely.
 
-باسم الفريق، وبالترتيب: **Mostafa Yakout، Rania Abdelgliel، Mohamed Ahmed، Reem Ahmed، Ahmed Mostafa، Omar Hassan، Mariam Ahmed** — نشكر الأستاذ Saad Ibrahim واللجنة الكريمة.
+خطة التواصل فيها **9 channels**، لكن التصعيد له مسار واحد: المشكلة التشغيلية تذهب أولًا إلى **Mostafa Yakout**. إذا كانت داخل الخطة، يوجّه المسؤول. وإذا مست Scope أو Schedule أو Cost Baseline أو تحرير الاحتياطي، يصعّدها إلى Saad Ibrahim والـCCB.
 
-**HASSAD — From Waste to Value.** شكرًا لحضراتكم، وإحنا جاهزين لأسئلتكم."
+الصلاحيات واضحة: Project Management Lead ينسق الدراسة ويعتمد التوضيح zero-impact، لكن أي Approval أو Rejection يمس Baseline من سلطة Sponsor/CCB."
 
-**Handoff إلى Q&A:**  
-ابتسم، قل: **"مين يحب يبدأ؟"** ثم وجّه أول سؤال لصاحب الـworkstream، مع بقاء كل الفريق مسؤولًا عن الصورة المتكاملة.
+**Handoff إلى Omar:**
+"وضوح الصلاحيات اتختبر لما وصلتنا عشرة طلبات تغيير. عمر هياخدنا إلى لحظة القرار."
 
-**الأرقام للحفظ:** 7 team members؛ الترتيب ثابت؛ لا أرقام جديدة في الختام.
+**الأرقام للحفظ:** 9 stakeholders؛ 9 communication channels؛ Sponsor High/Medium؛ users Medium/High.
+
+**[13:34–13:42 | 8 sec handoff]** Reem تشير إلى CCB funnel؛ Omar يبدأ بحسم.
 
 ---
 
-# تعليمات أداء سريعة للفريق
+## Slide 11 — The CCB Approved Value and Blocked Expansion
 
-1. كل متحدث يبدأ عند توقيته، لا عند إحساسه أن المتحدث السابق انتهى.
-2. ممنوع قراءة النص حرفيًا؛ احفظوا **المنطق + الأرقام + جملة التسليم**.
-3. عند المقاطعة بسؤال: أجب في 30 ثانية، ثم قل: "هكمل النقطة دي في الشريحة المخصصة لها" وارجع للمسار.
-4. الـLive Demo يثبت الوظائف المرئية فقط؛ مستندات القبول وسجلات الاختبار هي دليل الإغلاق.
-5. لا تدّعوا أن forecast في الـdashboard ذكاء اصطناعي أو ضمانًا تجاريًا.
-6. لا تعرضوا أي بيانات شخصية أو credentials؛ استخدموا synthetic demo data فقط.
-7. علامة الوقت: عند **10:06** يجب أن يبدأ Slide 9؛ عند **15:17** يبدأ Slide 12؛ عند **19:20** يبدأ Slide 15.
-8. لو التأخير وصل 20 ثانية: اختصر أمثلة Slide 10 وSlide 14، ولا تحذف معادلات EVM أو الـSponsor Ask.
+**[13:42–15:32 | 110 sec active] — Omar Hassan**
+**Delivery cue:** ارفع نبرة الحسم عند CR-003. استخدم أربع أصابع للطلبات المقبولة، ثم افصل تمويل النطاق عن تمويل المخاطر.
+
+**النص المنطوق:**
+
+"دخل سجل التغيير **10 requests**. وافقنا على أربع تحسينات: **CR-001** advanced multi-select filtering، **CR-004** executive dashboard، **CR-007** listing edit/update، و**CR-010** export. تكلفتهم **EGP 14,000** ومجهودهم **10 developer-days**.
+
+رفضنا **CR-003 Native Mobile App** لأنه يضيف **EGP 120,000** و**45 يومًا** ويكسر Website MVP. ورفضنا **CR-006 English localization** لحماية Arabic-first release. والأربع الباقية اتأجلت؛ إذن الحالة النهائية المقفولة: **4 Approved، 4 Deferred، 2 Rejected**.
+
+أهم قرار: الإضافات لم تُموّل من Risk Reserve. الـSponsor اعتمد Cost Baseline Adjustment من 150 إلى **164 ألف**. والـ10 أيام ليست Float؛ تم استيعابها بتنفيذ متوازٍ، تقسيم مهام، وساعات إضافية في ديسمبر، مع حماية زمن QA.
+
+وبعدها لما تحقق R-07، كان الاحتياطي متاحًا لغرضه الصحيح. دي خلاصة Integrated Change Control: قيمة جديدة لا تُنفذ من غير قرار، وكل جزء من الميزانية له غرض حوكمي محدد."
+
+**Handoff إلى Ahmed:**
+"بعد العاصفة، نحتاج قياسًا صريحًا للحصاد: وقت، تكلفة، وجودة. أحمد هيعرض الأرقام من غير تجميل."
+
+**الأرقام للحفظ:** 10 total؛ 4 Approved؛ 4 Deferred؛ 2 Rejected؛ +14K؛ +10 days؛ CR-003 = +120K/+45 days؛ BAC 164K.
+
+**[15:32–15:40 | 8 sec handoff]** Omar يتراجع؛ Ahmed يبدأ من لوحة EVM.
+
+---
+
+## Slide 12 — The Harvest Measured Honestly
+
+**[15:40–17:10 | 90 sec active] — Ahmed Mostafa**
+**Delivery cue:** قُل المعادلات ببطء. لا تسمِّ CPI 0.95 وفرًا؛ قل over baseline but under ceiling.
+
+**النص المنطوق:**
+
+"عند الإغلاق النمذجي في **27-Jan-2027**، الـ**PV = EGP 164,000** والـ**EV = EGP 164,000**، والـ**AC = EGP 173,500** بعد approved contingency draw بقيمة **EGP 9,500**.
+
+إذن **SV = 0** و**SPI = 1.00**: التسليم في الموعد. و**CV = −EGP 9,500**، و**CPI = 0.95** بعد التقريب. الوصف الدقيق: أعلى من Revised Cost Baseline بسبب risk response، لكن أقل من ceiling **EGP 214,000** بمقدار **EGP 40,500**، والمتبقي من الاحتياطي **81%**.
+
+نتائج الجودة النمذجية: **19/20 Functional = 95%**؛ **9/10 matching = 90%**؛ **9/10 usability = 90%**؛ و**0 open Critical/High defects**. الأداء: **96%** من core requests أقل من **3.0 seconds**، والـmedian **1.8 seconds**. والمراجعة القانونية checklist فقط، وليست ترخيصًا.
+
+أنا كـQuality Assurance and Closeout Lead أراجع أن كل رقم يرجع إلى log وsign-off، لا إلى الـDemo وحده."
+
+**Bridge إلى Slide 13:**
+"الحصاد الحقيقي مش الأرقام بس؛ هو الدرس اللي يمنع تكرار التكلفة."
+
+**الأرقام للحفظ:** PV 164K؛ EV 164K؛ AC 173.5K؛ SV 0؛ SPI 1.00؛ CV −9.5K؛ CPI 0.95؛ headroom 40.5K؛ 81%؛ 19/20؛ 9/10؛ 9/10؛ 96%؛ 1.8s.
+**Internal evidence label:** كل أرقام EVM والإغلاق والجودة في هذه الشريحة **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**.
+
+**[17:10–17:15 | 5 sec transition]** اكشف بطاقتي Lessons Learned.
+
+---
+
+## Slide 13 — Two Lessons Worth Replanting
+
+**[17:15–18:10 | 55 sec active] — Ahmed Mostafa**
+**Delivery cue:** ارفع إصبعين فقط. اعمل pause بعد تكلفة الدرس الأول.
+
+**النص المنطوق:**
+
+"عندنا درسان، مش قائمة عامة. الأول: **freeze Matching Rule Table and NFR test environment before coding**. غموض tolerances وبيئة الأداء ساهم في Issue Week 7، وتكلفته النمذجية **EGP 9,500**. المرة الجاية، القواعد والبيئة تتوقّع عند M1000 قبل بدء التطوير.
+
+الدرس الثاني: **افصل Scope Funding عن Risk Reserve من البداية**. تمويل الأربع إضافات عبر Cost Baseline Adjustment خلّى الاحتياطي موجودًا عند تحقق R-07.
+
+كل درس عنده سبب، أثر، وإجراء مختلف: تعريف فني مبكر، وفصل مالي حوكمي. النبات القوي مش اللي ما يقابلش ضغط؛ هو اللي جذوره وضوابطه تخليه يتعافى."
+
+**Bridge إلى Slide 14:**
+"وعلشان نزرع المرحلة التالية صح، محتاجين Pilot وقرار جديد، مش توسع تلقائي."
+
+**الأرقام للحفظ:** 2 lessons؛ Week 7؛ modeled EGP 9,500؛ M1000.
+**Internal evidence label:** تكلفة الدرس ونتيجة Issue **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**.
+
+**[18:10–18:15 | 5 sec transition]** انتقل إلى roadmap بثلاث مراحل.
+
+---
+
+## Slide 14 — Phase 2 Must Prove the Market
+
+**[18:15–19:10 | 55 sec active] — Ahmed Mostafa**
+**Delivery cue:** استخدم ثلاث أصابع. وجّه الـAsk مباشرة إلى Sponsor واللجنة.
+
+**النص المنطوق:**
+
+"Roadmap المرحلة الثانية ثلاث خطوات. أولًا: **live pilot** مع أكثر من **20 verified farms and factories** وقياس adoption وجودة البيانات. ثانيًا: إعادة تقييم mobile application وpayment/escrow من خلال Business Case وCharter مستقلين. ثالثًا: شراكة بيانات رسمية مع جهة زراعية بعد تحديد الصلاحيات والخصوصية.
+
+والـSponsor Ask واضح: الموافقة على بدء **Phase-2 Charter and Feasibility Validation**، وليس صرفًا تلقائيًا. ويمكن تقييم توجيه حد أقصى **EGP 40,500** من الـmodeled ceiling headroom إلى onboarding، بشرط قرار تمويلي جديد وخطة فوائد ومخاطر وقبول.
+
+الـPrototype أثبت الطريق الرقمي؛ الـPilot هو اللي يثبت السوق الحقيقي."
+
+**Bridge إلى Slide 15:**
+"وده يرجعنا للبذرة الأولى: القيمة كانت موجودة، وإحنا بنينا لها طريقًا ترجع به للحياة."
+
+**الأرقام للحفظ:** 3 steps؛ 20+ verified participants؛ modeled maximum headroom 40.5K؛ new authorization required.
+**Internal evidence label:** الـheadroom المقترح **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]** وليس تمويلًا معتمدًا للمرحلة التالية.
+
+**[19:10–19:15 | 5 sec transition]** ارجع بصريًا إلى خط Seed-to-Book كاملًا.
+
+---
+
+## Slide 15 — From Seed to Reborn Value
+
+**[19:15–20:00 | 45 sec active] — Ahmed Mostafa**
+**Delivery cue:** ابدأ بهدوء، ثم ارفع الطاقة في آخر سطر. اذكر الفريق بالترتيب المقفول. بعد السؤال اصمت.
+
+**النص المنطوق:**
+
+"بدأنا ببذرة في التربة. البذرة بقت نباتًا، وبعد الحصاد بقى عندنا مخلف. HASSAD بنى Digital Bridge إلى المصنع، والمصنع أعاد تقديم القيمة في صورة ورق وpackaging وكتاب صديق للبيئة.
+
+لكن الجسر الحقيقي كان إداريًا كمان: Scope واضح، Baseline قابل للقياس، Risk Reserve محمي، Change Control منضبط، ونتيجة نقولها بأمانة.
+
+باسم الفريق، وبالترتيب: **Mostafa Yakout، Rania Abdelgliel، Reem Ahmed، Ahmed Mostafa، Omar Hassan**—نشكر Sponsor المشروع **Saad Ibrahim** واللجنة الكريمة.
+
+**HASSAD: من بذرة… لمخلف… لقيمة جديدة. From Seed → To Waste → To Reborn Value.** شكرًا لحضراتكم، وإحنا جاهزين لأسئلتكم."
+
+**Handoff إلى Q&A:**
+ابتسم وقل: **"مين يحب يبدأ؟"** ثم وجّه السؤال لصاحب الـworkstream مع بقاء الفريق مسؤولًا عن الصورة المتكاملة.
+
+**الأرقام للحفظ:** 5 members؛ exact roster order؛ no new metric in the close.
+
+---
+
+# تعليمات أداء نهائية
+
+1. احفظوا المنطق والأرقام وجملة التسليم؛ لا تقرأوا النص حرفيًا.
+2. عند **10:41** يبدأ Slide 9؛ عند **15:40** يبدأ Slide 12؛ عند **19:15** يبدأ Slide 15.
+3. الـLive Demo يثبت وظائف مرئية فقط؛ القبول وEVM والإغلاق تحتاج سجلات.
+4. لا تصفوا rule-based forecast بأنه AI أو commercial guarantee.
+5. استخدموا synthetic data فقط، ولا تعرضوا credentials أو بيانات شخصية.
+6. عند التأخير 20 ثانية: اختصروا مثال Slide 10 وشرح Phase 2، ولا تحذفوا معادلات EVM أو Sponsor Ask.
+7. كل عضو يحفظ: 150K + 50K = 200K؛ +14K → BAC 164K؛ ceiling 214K؛ modeled AC 173.5K؛ SPI 1.00؛ CPI 0.95.
+8. لو رقم الإغلاق غير متحقق، قولوا بوضوح إنه completion scenario قيد المطابقة مع السجل النهائي.

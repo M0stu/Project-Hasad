@@ -1,20 +1,31 @@
 # HASSAD (حصاد) — Arabic Defense Q&A Preparation
 
-> **Internal defense document — not a completion certificate.**  
-> Raw controlled logs available in the source package stop during Week 3 (18–19 Nov 2026). Every final EVM, closure, final-quality, final-acceptance, and realized-issue result below is therefore marked exactly as:  
+> **Internal defense document — not a completion certificate.**
+> Raw controlled logs available in the source package stop during Week 3 (18–19 Nov 2026). Every final EVM, closure, final-quality, final-acceptance, and realized-issue result below is therefore marked exactly as:
 > **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**
 
 ---
 
 # 1) English Executive Summary
 
-HASSAD is a Predictive, 12-week Agricultural Waste Digital Marketplace Website MVP intended to connect agricultural-waste suppliers with industrial buyers. The locked baseline runs from **01-Nov-2026 to 27-Jan-2027**, covers four material categories—rice straw, wheat straw, corn residues, and sugarcane bagasse—and decomposes the work into **6 Level-1 workstreams and 22 leaf Work Packages**. The Sponsor is **Saad Ibrahim, CEO of SAAD Company**, and the Project Manager is **Mohamed Ahmed**.
+HASSAD is a Predictive, 12-week Agricultural Waste Digital Marketplace Website MVP intended to connect agricultural-waste suppliers with industrial buyers. The locked baseline runs from **01-Nov-2026 to 27-Jan-2027**, covers four material categories—rice straw, wheat straw, corn residues, and sugarcane bagasse—and decomposes the work into **6 Level-1 workstreams and 22 leaf Work Packages**. The five-member team, in locked order, is **Mostafa Yakout, Rania Abdelgliel, Reem Ahmed, Ahmed Mostafa, and Omar Hassan**. The external Project Sponsor is **Saad Ibrahim, CEO, SAAD Company**.
 
 The initial authorized budget was **EGP 200,000**, composed of an **EGP 150,000 Cost Baseline** and an **EGP 50,000 Contingency Reserve**. Four approved scope enhancements—CR-001, CR-004, CR-007, and CR-010—were funded by a Sponsor-approved **EGP 14,000 Cost Baseline Adjustment**, producing a revised **BAC of EGP 164,000** and a revised total authorized ceiling of **EGP 214,000**. The reserve was not used to fund scope additions.
 
 The defense completion scenario reports: **PV EGP 164,000, EV EGP 164,000, AC EGP 173,500, SPI 1.00, CPI 0.95, and EGP 40,500 remaining under the authorized ceiling** **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. It also reports **19/20 functional tests passed, 9/10 matching scenarios passed, 9/10 pilot users completed core tasks, 0 open Critical/High defects, 96% of core requests below 3.0 seconds, and a 1.8-second median** **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. These final results must be reconciled to actual test logs, acceptance records, cost ledger, contingency approval, and closure evidence before they are stated as facts.
 
 The live website demonstrates prototype behavior for Supplier, Buyer, and Admin personas, including the four approved changes. It is valid product evidence, but it does not by itself prove final project acceptance, full quality coverage, legal compliance, financial performance, or closure.
+
+## Locked ownership map — five members only
+
+| Order | Member | Defense ownership |
+|---:|---|---|
+| 1 | **Mostafa Yakout** | Project Management, governance, Sponsor escalation, stakeholder engagement |
+| 2 | **Rania Abdelgliel** | Requirements, scope boundaries, RTM, UX/UI acceptance |
+| 3 | **Reem Ahmed** | WBS, schedule, cost baseline, resource and communication planning |
+| 4 | **Ahmed Mostafa** | Quality, EVM explanation, documentation, acceptance and closeout |
+| 5 | **Omar Hassan** | Technical architecture, backend, risk/issue response, integration and CCB technical impact |
+| External | **Saad Ibrahim** | Sponsor approval, baseline decisions, reserve authorization |
 
 ---
 
@@ -103,121 +114,121 @@ The live website demonstrates prototype behavior for Supplier, Buyer, and Admin 
 ## A. Project Logic
 
 ### Q1) لخّص المشروع في ثلاث جمل.
-**الإجابة:**  
+**الإجابة:**
 "HASSAD هو Agricultural Waste Digital Marketplace Website MVP يربط المورد بالمشتري الصناعي عبر listing، demand، search/basic matching، وتتبّع حالة. المشروع تنبؤي ومدته 12 أسبوعًا من 01-Nov-2026 إلى 27-Jan-2027، بحدود تمنع دخوله في النقل والتخزين والدفع. نجاحه يُقاس بتسليم النطاق والوقت والتكلفة، وبقدرة الرحلتين الأساسيتين على العمل على الأنواع الأربعة."
 
 ### Q2) ما المشكلة الحقيقية، وما تكلفة عدم تنفيذ المشروع؟
-**الإجابة:**  
+**الإجابة:**
 "المشكلة ليست غياب المخلفات أو الطلب، بل تشتت المعلومات والبحث اليدوي وعدم توحيد النوع والكمية والموقع والإتاحة. عدم التنفيذ يعني وقت sourcing أطول، فرص matching ضائعة، وبيانات قرار أقل جودة. لم ندّعِ Benefit نقديًا غير موثّق؛ أثبتنا أولًا قابلية الرحلة الرقمية للقياس."
 
 ### Q3) لماذا استبعدتم النقل والتخزين الفعلي؟
-**الإجابة:**  
+**الإجابة:**
 "لأنهما يغيّران طبيعة المشروع إلى تشغيل لوجستي يحتاج أصولًا وتراخيص ومسؤوليات سلامة وعقودًا مختلفة. إبقاؤهما Out of Scope حمى نافذة 12 أسبوعًا وسقف التمويل، وسمح لنا باختبار القيمة الرقمية أولًا. أي إضافة لاحقة تحتاج Charter وBusiness Case مستقلين."
 
 ### Q4) لماذا أربعة أنواع فقط؟
-**الإجابة:**  
+**الإجابة:**
 "لاختبار قواعد matching على dataset منضبط بدل التوسع غير القابل للتحقق. الأنواع هي rice straw وwheat straw وcorn residues وsugarcane bagasse، وكل Acceptance Scenario يجب أن يوضح أي نوع يغطي. إضافة أنواع جديدة تغيير في قواعد البيانات والتحقق، وليست مجرد تسمية."
 
 ### Q5) ما الفرق بين Project Success وProduct Success عندكم؟
-**الإجابة:**  
+**الإجابة:**
 "Project Success يعني تسليم النطاق المعتمد في التاريخ والتكلفة وبحوكمة صحيحة. Product Success يعني أن Supplier وBuyer ينجزان رحلتيهما وأن matching والstatus واضحان وقابلان للاستخدام. الـDemo يدعم Product Evidence؛ أما القبول والتكلفة والإغلاق فتحتاج سجلات مستقلة."
 
 ### Q6) لماذا لا تعتبرون الموقع منصة تجارية مكتملة؟
-**الإجابة:**  
+**الإجابة:**
 "لأنه MVP/Prototype ببيانات تجريبية ونطاق محدود، ولا يشمل payment، escrow، logistics، government integration، أو nationwide rollout. هدفه إثبات الرحلات وقواعد التحكم، وليس ضمان صفقات تجارية. لذلك نستخدم Working MVP وstaging/testing evidence، لا وعود تشغيل تجاري شامل."
 
 ## B. Methodology & Governance
 
 ### Q7) لماذا اخترتم Predictive بدل نهج تكراري؟
-**الإجابة:**  
+**الإجابة:**
 "لأن النافذة الأكاديمية والتمويل والـMVP scope محددة وقابلة للتفصيل مقدمًا. اعتمدنا SRS وRTM وphase approvals وbaselined schedule، ثم مررنا أي تغيير عبر CCB. هذا أعطى اللجنة traceability واضحة من المتطلب إلى Work Package ثم الاختبار والقبول."
 
 ### Q8) لماذا لم تستخدموا EGP 50,000 Reserve لتمويل CR-001/004/007/010؟
-**الإجابة:**  
+**الإجابة:**
 "لأنها Scope Enhancements وليست مخاطر تحققت. موّلها الـSponsor عبر EGP 14,000 Cost Baseline Adjustment، فصار BAC EGP 164,000 والسقف EGP 214,000. الـContingency Reserve ظل مخصصًا لاستجابات المخاطر المسجلة؛ وإلا نكون خلطنا بين تمويل النطاق وتمويل عدم اليقين."
 
 ### Q9) كيف استوعبتم +10 أيام على Critical Path بلا تأخير؟
-**الإجابة:**  
+**الإجابة:**
 "لم نزعم وجود Float غير موجود. جمعنا 2+4+2+2 developer-days، ثم نفّذنا الحزم بالتوازي مع core development، قسّمنا المهام بين التخصصات، واستخدمنا ساعات إضافية متعاقدًا عليها في ديسمبر. الشرط الحاكم كان عدم تقليص QA window، مع متابعة M3000 وM4000."
 
 ### Q10) من يملك قرار الـChange؟
-**الإجابة:**  
-"الـPM يستقبل الطلب، ينسق Impact Analysis، ويمكنه إحالته للدراسة أو اعتماد توضيح zero-impact. أي Approval أو Rejection يمس Scope/Schedule/Cost Baseline هو للـSponsor/CCB. التنفيذ لا يبدأ قبل القرار وتحديث الوثائق المتأثرة."
+**الإجابة:**
+"**Mostafa Yakout** بصفته Project Management Lead يستقبل الطلب وينسق Impact Analysis، ويمكنه إحالته للدراسة أو اعتماد توضيح zero-impact. أي Approval أو Rejection يمس Scope/Schedule/Cost Baseline هو للـSponsor/CCB بقيادة **Saad Ibrahim**. التنفيذ لا يبدأ قبل القرار وتحديث الوثائق المتأثرة."
 
 ### Q11) لماذا لم يوقّع أعضاء Group 2 على الـCharter؟
-**الإجابة:**  
-"الـSponsor يعتمد الـCharter ليمنح الـPM السلطة، والـPM يقر بالالتزام بالتنفيذ. الفريق ليس جهة اعتماد موازية. أعضاء Group 2 هم Internal Workstream Owners، ويظهر دورهم في Responsibility Matrix وسجلات التسليم، لا كتوقيع حوكمي على التفويض."
+**الإجابة:**
+"الـSponsor **Saad Ibrahim** يعتمد الـCharter ويمنح سلطة إدارة المشروع، و**Mostafa Yakout** يقر بالالتزام بقيادة التنفيذ. باقي الفريق ليس جهة اعتماد موازية؛ الأعضاء الخمسة Internal Workstream Owners، ويظهر دورهم في Responsibility Matrix وسجلات التسليم، لا كتوقيع حوكمي على التفويض."
 
 ### Q12) هل أعضاء الفريق هم من نفّذوا البرمجة؟
-**الإجابة:**  
+**الإجابة:**
 "أعضاء Group 2 يملكون المتابعة والقبول الداخلي للحزم بتكلفة نقدية صفر. التنفيذ المتخصص للبرمجة والتصميم والاختبار مدعوم بمتخصصين خارجيين داخل الميزانية والعقود المرحلية. لازم نقول Owner وExecuted by بوضوح حتى لا تتعارض الأدوار مع Resource Register."
 
 ### Q13) لماذا رفضتم CR-003 رغم أنه قد يزيد الوصول؟
-**الإجابة:**  
+**الإجابة:**
 "لأنه يضيف EGP 120,000 و45 يومًا ويكسر Website MVP و12-week baseline. الرفض لم يكن رفضًا للقيمة؛ سجّلناه كمرشح Phase 2 يحتاج Business Case منفصلًا. جودة القرار هنا في حماية الهدف الحالي وعدم تحميل المشروع منتجًا ثانيًا."
 
 ### Q14) لماذا رفضتم English localization؟
-**الإجابة:**  
+**الإجابة:**
 "لأن Arabic-first هي الأولوية للفئة المستهدفة، بينما الترجمة الكاملة تضيف تصميمًا ثنائي الاتجاه واختبارات واجهة إضافية قرب بوابة الجودة. في نافذة ثابتة، العائد الفوري أقل من أثر المخاطرة على التسليم. يمكن إعادة تقييمها بعد Pilot حقيقي."
 
 ## C. Performance, Risk, and Variance
 
 ### Q15) CPI أقل من 1؛ هل تجاوزتم الميزانية؟
-**الإجابة:**  
+**الإجابة:**
 "في سيناريو الإغلاق، CPI = 0.95 لأن EV = EGP 164,000 وAC = EGP 173,500 بعد استجابة خطر معتمدة بقيمة EGP 9,500 **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. نعم، التكلفة أعلى من Revised Cost Baseline بمقدار EGP 9,500، لكنها أقل من authorized ceiling بمقدار EGP 40,500 **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. الوصف الصحيح: over baseline بسبب risk response، وليس over total authorization."
 
 ### Q16) اشرح SPI وSV ببساطة.
-**الإجابة:**  
+**الإجابة:**
 "في سيناريو الإغلاق، EV وPV كلاهما EGP 164,000، لذلك SV = EGP 0 وSPI = 1.00 **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. هذا يعني أن القيمة المخططة أُنجزت عند تاريخ القياس، وليس أن كل نشاط لم يتأخر لحظة أثناء التنفيذ. الدليل النهائي يجب أن يطابق milestone acceptance dates."
 
 ### Q17) ما أكبر Risk؟ وهل تحقق؟
-**الإجابة:**  
+**الإجابة:**
 "R-07 كان من أعلى التهديدات بدرجة 20. في سيناريو الإكمال تحقق جزئيًا في Week 7 عندما تجاوزت استعلامات matching والـvalidation حد 3.0 ثوانٍ، وتم تحرير EGP 9,500 للاستجابة **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. قبل الدفاع نحتاج Risk trigger، Issue log، Sponsor approval، وperformance retest كأربعة أدلة مترابطة."
 
 ### Q18) ما الفرق بين Mitigation وContingency في الحالة دي؟
-**الإجابة:**  
+**الإجابة:**
 "Mitigation إجراء وقائي قبل الحدث: تعريف القواعد، index review، واختبارات مبكرة. Contingency إجراء مُفعّل بعد تحقق الـtrigger: optimization مركّز وساعات إضافية بتمويل معتمد. لا نسمي الإنفاق على ميزة جديدة Contingency."
 
 ### Q19) كيف اختبرتم Usability لو كان تجنيد المزارعين صعبًا؟
-**الإجابة:**  
+**الإجابة:**
 "الخطة الأصلية تستهدف 10 مستخدمين بنص مهام موحد، مع توثيق المساعدة وحدود العينة. إذا تعذر تمثيل كافٍ، نستخدم profiles وsample data مُعلّمة بوضوح، لكن لا ندّعي أنها Validation ميدانية كاملة. النتيجة النمذجية 9/10 مستخدمين أكملوا المهام **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**، ويجب إثباتها بـanonymized task sheets."
 
 ### Q20) لماذا نتيجة matching ليست 100%؟
-**الإجابة:**  
+**الإجابة:**
 "هدف Scope Baseline كان 8/10 على الأقل، لأن matching الأساسي يتعامل مع نوع وكمية وموقع وإتاحة ضمن قواعد MVP. النتيجة النمذجية 9/10 = 90% **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**، والفشل المتبقي يجب أن يظهر في scenario log مع السبب والتصحيح أو القبول. الشفافية أفضل من تقريب النتيجة إلى ادعاء كامل."
 
 ### Q21) ما دليل الجودة الفعلي المطلوب خلف Slide 12؟
-**الإجابة:**  
+**الإجابة:**
 "Test execution log، defect register، usability task sheets، matching scenario matrix، timestamped performance log، وacceptance sign-off. الأرقام النمذجية هي 19/20 functional، و0 open Critical/High، و96% أقل من 3.0 ثوانٍ، وmedian 1.8 ثانية **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. إذا لم تتطابق الأدلة، نغيّر الشريحة لا السجلات."
 
 ### Q22) هل 100% legal compliance ادعاء قانوني؟
-**الإجابة:**  
+**الإجابة:**
 "لا. المقصود في سيناريو الإكمال هو 100% checklist alignment ضمن desk-based review المحدد **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. لم نحصل على ترخيص، ولم نُصدر legal opinion، ولم نشغّل نقلًا أو تخزينًا؛ راجعنا Terms of Service والإفصاحات ضمن نطاق Laws 4/1994 و202/2020."
 
 ### Q23) كيف أثبتم أن CR-001 ليس تكرارًا لـREQ-003؟
-**الإجابة:**  
+**الإجابة:**
 "REQ-003 يثبت البحث والفلترة الأساسيين. CR-001 يضيف multi-select across 27 governorates وwaste sub-categories، أي سلوكًا متقدمًا قابلًا للفصل والاختبار. لذلك له Impact Analysis وتكلفة وقبول مستقل، بدل إعادة تسمية وظيفة موجودة."
 
 ### Q24) هل الـLive Demo يثبت EVM أو الإغلاق؟
-**الإجابة:**  
+**الإجابة:**
 "لا. الـLive Demo يثبت أن Persona يمكنها تنفيذ workflow محدد في prototype. EVM يحتاج ledger وprogress measurement، والإغلاق يحتاج acceptance وhandover وclosure record؛ لذلك لا نستبدل الوثائق بمشهد ناجح على الشاشة."
 
 ## D. Reflection and Next Step
 
 ### Q25) ما أغلى Lesson Learned؟
-**الإجابة:**  
+**الإجابة:**
 "تثبيت Matching Rule Table وNFR environment قبل البرمجة. في سيناريو الإكمال، غموض القواعد والأداء ارتبط باستجابة كلفت EGP 9,500 من الاحتياطي **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**. الإجراء القادم هو توقيع القواعد والبيئة عند M1000 وربطها مباشرة بسيناريوهات القبول."
 
 ### Q26) ما أكبر Limit في الـMVP؟
-**الإجابة:**  
+**الإجابة:**
 "أنه يثبت رحلة رقمية ببيانات تجريبية ومشاركة محدودة، ولا يثبت liquidity أو conversion أو economics في سوق حي. كما لا يتولى logistics أو payment أو verification حكومي. لذلك الخطوة التالية ليست توسيع features أولًا؛ بل Pilot موثّق يقيس adoption وجودة البيانات."
 
 ### Q27) ما الـPhase-2 Ask بالتحديد؟
-**الإجابة:**  
+**الإجابة:**
 "نطلب تفويضًا لبدء Phase-2 Charter وFeasibility Study، ثم Pilot مع 20+ farms/factories verified. الحد الأقصى المقترح من headroom هو EGP 40,500 **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]**، لكنه ليس تمويلًا تلقائيًا؛ يحتاج قرارًا جديدًا وخطة فوائد ومخاطر وقبول. بعد بيانات الـPilot نقيّم mobile app وpayment/data partnerships."
 
 ### Q28) ماذا ستفعلون بشكل مختلف غدًا؟
-**الإجابة:**  
+**الإجابة:**
 "أجمّد business rules والـNFR test setup مبكرًا، وأربط كل CR فورًا بالـRTM والـWBS والاختبار والتمويل. كما أراجع الاتساق بين registers في كل gate بدل انتظار نهاية المشروع. ده يقلل rework ويجعل الدفاع نتيجة طبيعية للسجلات، لا عملية إعادة بناء للقصة."
 
 ---
@@ -249,8 +260,8 @@ The live website demonstrates prototype behavior for Supplier, Buyer, and Admin 
 
 | التعارض أو الفجوة | ما ظهر في Artifacts | القرار الذي يُقال في الدفاع | سبب الترجيح |
 |---|---|---|---|
-| اسم Mostafa | بعض الملفات: Mostafa Essam | **Mostafa Yakout** | Locked roster decision |
-| ترتيب الفريق | ترتيبات مختلفة وعضوان غائبان من صفحة Charter قديمة | Mostafa, Rania, Mohamed, Reem, Ahmed, Omar, Mariam | Locked roster and credits order |
+| Team identity | Draft artifacts contain superseded roster variants | **Mostafa Yakout, Rania Abdelgliel, Reem Ahmed, Ahmed Mostafa, Omar Hassan** | Locked five-member roster and credits order |
+| Responsibility ownership | Draft artifacts distribute ownership across superseded roles | Reassign only to the five-member ownership map above | Targeted roster decision |
 | End date | نص قديم استخدم نهاية أسبق في يناير؛ الجداول اللاحقة استخدمت التاريخ المقفول | **27-Jan-2027** | Locked calendar |
 | Milestone dates | Schedule workbook draft has 15-Nov/30-Nov/28-Dec/12-Jan | **14-Nov/28-Nov/26-Dec/09-Jan/27-Jan** | Locked official milestones override draft schedule dates |
 | WBS terminology | قاموس قديم يحتوي مصطلحات لا تناسب النهج المختار | SRS, RTM, Work Packages, phases, scheduled milestones | Scope Baseline correction + locked methodology |
@@ -299,7 +310,7 @@ The live website demonstrates prototype behavior for Supplier, Buyer, and Admin 
 
 ## T−48 hours — Evidence and numbers
 
-- [ ] كل اسم يظهر بالترتيب: Mostafa Yakout، Rania Abdelgliel، Mohamed Ahmed، Reem Ahmed، Ahmed Mostafa، Omar Hassan، Mariam Ahmed.
+- [ ] كل اسم يظهر بالترتيب المقفول: Mostafa Yakout، Rania Abdelgliel، Reem Ahmed، Ahmed Mostafa، Omar Hassan.
 - [ ] كل تاريخ نهاية هو 27-Jan-2027.
 - [ ] المعادلات: 150K + 50K = 200K؛ 150K + 14K = 164K؛ 164K + 50K = 214K.
 - [ ] أي رقم EVM/closure/final quality في مادة التدريب يحمل علامة **[SIMULATED COMPLETION DATA — VERIFY BEFORE DEFENSE]** حتى يتم استبداله بدليل فعلي.
@@ -332,7 +343,7 @@ The live website demonstrates prototype behavior for Supplier, Buyer, and Admin 
 - [ ] افتح العرض محليًا، والنسخة الاحتياطية PDF، والـDemo، والـfallback.
 - [ ] افصل الإشعارات وأخفِ bookmarks وpassword managers.
 - [ ] كبّر العرض إلى 100% وتأكد أن العربية واضحة.
-- [ ] اتفقوا أن Mohamed يجيب Governance، Mariam الجودة، Omar التقنية، والباقي يدعم دون مقاطعة.
+- [ ] اتفقوا أن Mostafa Yakout يجيب Governance، Rania Abdelgliel المتطلبات والنطاق، Reem Ahmed الجدول والتكلفة، Ahmed Mostafa الجودة والإغلاق، وOmar Hassan التقنية والمخاطر؛ والباقي يدعم دون مقاطعة.
 - [ ] إذا لم يُتحقق رقم نهائي: قولوا "ده completion scenario للنقاش، والرقم المعتمد هو الموجود في السجل النهائي" بدل الادعاء.
 
 ---

@@ -1,14 +1,10 @@
 {
   "slide_count": 20,
-  "width_inches": 13.333332239720034,
+  "width_inches": 13.333333333333334,
   "height_inches": 7.5,
   "files": {
-    "HASSAD_Graduation_Presentation.pptx": 678595,
-    "HASSAD_Graduation_Presentation.pdf": 777335,
-    "HASSAD_Defense_20min_Music.mp4": 42043792,
-    "HASSAD_Defense_20min_NoMusic.mp4": 23024725,
-    "HASSAD_Trailer_2min_Music.mp4": 4538819,
-    "HASSAD_Trailer_2min_NoMusic.mp4": 2637487
+    "HASSAD_Graduation_Presentation.pptx": 721948,
+    "HASSAD_Graduation_Presentation.pdf": 889886
   },
   "checks": {
     "exactly_20_slides": true,
@@ -20,42 +16,205 @@
     "required_live_sources_present": true,
     "live_crops_no_detected_credentials_or_account_tokens": true,
     "prohibited_terms_absent_from_slide_xml": true,
-    "media_duration_resolution_codecs_audio": true,
+    "excluded_student_names_absent_from_pptx": true,
+    "transitions_on_20_of_20_slides": true,
+    "timing_trees_on_intended_slides": true,
+    "mp4_wav_bytes_and_mtimes_unchanged": true,
     "powerpoint_text_overflow_zero": true,
+    "powerpoint_com_open_export_clean": true,
     "preview_png_count_20": true,
     "contact_sheet_present": true
   },
   "live_prototype_evidence_labels": 4,
   "privacy_token_hits": [],
   "prohibited_hits": [],
-  "media": {
+  "excluded_name_hits": [],
+  "transition_details": {
+    "1": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "2": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "3": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "4": {
+      "present": true,
+      "type": "push",
+      "duration_ms": 800
+    },
+    "5": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "6": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "7": {
+      "present": true,
+      "type": "push",
+      "duration_ms": 800
+    },
+    "8": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "9": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "10": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "11": {
+      "present": true,
+      "type": "push",
+      "duration_ms": 800
+    },
+    "12": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "13": {
+      "present": true,
+      "type": "push",
+      "duration_ms": 800
+    },
+    "14": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "15": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "16": {
+      "present": true,
+      "type": "push",
+      "duration_ms": 800
+    },
+    "17": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "18": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "19": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    },
+    "20": {
+      "present": true,
+      "type": "fade",
+      "duration_ms": 700
+    }
+  },
+  "transition_count": 20,
+  "timing_tree_slides": [
+    2,
+    7,
+    8,
+    11,
+    12
+  ],
+  "transition_strategy": {
+    "opening_and_within_acts": "Fade Smoothly, PowerPoint-compatible fallback where Morph is not exposed by the installed COM object model",
+    "act_boundaries": {
+      "slides": [
+        4,
+        7,
+        11,
+        13,
+        16
+      ],
+      "effect": "Push Left"
+    },
+    "morph_claimed": false
+  },
+  "media_preservation_before": {
+    "HASSAD_Ambient_20min.wav": {
+      "sha256": "f6afd0094b1e3631c2a4d46c4c6ec6f2231509ddf1a84a6a905b081904d15950",
+      "size": 115200044,
+      "mtime_ns": 1795117754580895700
+    },
+    "HASSAD_Ambient_2min.wav": {
+      "sha256": "a1e4e623124f924995782f86ae0ad5f0ff92846d95305156f1df479371b72aab",
+      "size": 11520044,
+      "mtime_ns": 1795117756087817700
+    },
     "HASSAD_Defense_20min_Music.mp4": {
-      "duration_seconds": 1200.0,
-      "resolution": "1920x1080",
-      "video_codec": "h264",
-      "audio_codec": "aac",
-      "audio_rate_hz": 48000
+      "sha256": "1dc56b14056b47d781d4d4fbb0abe08c56e177427dce64e6e28aa4cb15efd29a",
+      "size": 42043792,
+      "mtime_ns": 1795117771662537400
     },
     "HASSAD_Defense_20min_NoMusic.mp4": {
-      "duration_seconds": 1200.0,
-      "resolution": "1920x1080",
-      "video_codec": "h264",
-      "audio_codec": "aac",
-      "audio_rate_hz": 48000
+      "sha256": "cf7e84cdb08ffd46e21031211ad7336e267a5e8486a46f532f042a76f7a183dd",
+      "size": 23024725,
+      "mtime_ns": 1795117774290091200
     },
     "HASSAD_Trailer_2min_Music.mp4": {
-      "duration_seconds": 120.0,
-      "resolution": "1920x1080",
-      "video_codec": "h264",
-      "audio_codec": "aac",
-      "audio_rate_hz": 48000
+      "sha256": "b2c8eefd232cc1fbc1b00af530aebc7490009bb65edda9db2f690c9f0742b0c8",
+      "size": 4538819,
+      "mtime_ns": 1795117775971016600
     },
     "HASSAD_Trailer_2min_NoMusic.mp4": {
-      "duration_seconds": 120.0,
-      "resolution": "1920x1080",
-      "video_codec": "h264",
-      "audio_codec": "aac",
-      "audio_rate_hz": 48000
+      "sha256": "80f83d6e4db196b53fb7a44e3de2c4b325e676fbe186673ee04104eb70036c1e",
+      "size": 2637487,
+      "mtime_ns": 1795117776336088200
+    }
+  },
+  "media_preservation_after": {
+    "HASSAD_Ambient_20min.wav": {
+      "sha256": "f6afd0094b1e3631c2a4d46c4c6ec6f2231509ddf1a84a6a905b081904d15950",
+      "size": 115200044,
+      "mtime_ns": 1795117754580895700
+    },
+    "HASSAD_Ambient_2min.wav": {
+      "sha256": "a1e4e623124f924995782f86ae0ad5f0ff92846d95305156f1df479371b72aab",
+      "size": 11520044,
+      "mtime_ns": 1795117756087817700
+    },
+    "HASSAD_Defense_20min_Music.mp4": {
+      "sha256": "1dc56b14056b47d781d4d4fbb0abe08c56e177427dce64e6e28aa4cb15efd29a",
+      "size": 42043792,
+      "mtime_ns": 1795117771662537400
+    },
+    "HASSAD_Defense_20min_NoMusic.mp4": {
+      "sha256": "cf7e84cdb08ffd46e21031211ad7336e267a5e8486a46f532f042a76f7a183dd",
+      "size": 23024725,
+      "mtime_ns": 1795117774290091200
+    },
+    "HASSAD_Trailer_2min_Music.mp4": {
+      "sha256": "b2c8eefd232cc1fbc1b00af530aebc7490009bb65edda9db2f690c9f0742b0c8",
+      "size": 4538819,
+      "mtime_ns": 1795117775971016600
+    },
+    "HASSAD_Trailer_2min_NoMusic.mp4": {
+      "sha256": "80f83d6e4db196b53fb7a44e3de2c4b325e676fbe186673ee04104eb70036c1e",
+      "size": 2637487,
+      "mtime_ns": 1795117776336088200
     }
   },
   "visual_overflow_hits": []
