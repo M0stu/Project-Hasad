@@ -1,7 +1,7 @@
 # HASSAD Website Demo Runbook
 
-**Purpose:** controlled Arabic-first live demo supporting the 15-slide defense  
-**Evidence boundary:** the website proves **prototype behavior**; it does not, by itself, prove EVM, final quality rates, full acceptance, legal certification, or closure.  
+**Purpose:** controlled Arabic-first live demo supporting the 15-slide defense
+**Evidence boundary:** the website proves **prototype behavior**; it does not, by itself, prove EVM, final quality rates, full acceptance, legal certification, or closure.
 **Data rule:** synthetic data only. Never expose real identities, phone numbers, passwords, pricing, or contact details.
 
 ---
@@ -90,7 +90,7 @@ The defense deck has 15 story slides. The table distinguishes:
 | 14 | Admin | Open **Reports**; export stock workbook | SpreadsheetML `.xls`; formula-leading text neutralized | **CR-010**; Phase-2 decision evidence | 30 sec |
 | 15 | None | Close/hide browser and return to Q&A slide | Clean finish | Keep site ready for panel deep dives | 0 sec |
 
-**Maximum planned live-screen time:** approximately **4 minutes 15 seconds** if every cue is shown.  
+**Maximum planned live-screen time:** approximately **4 minutes 15 seconds** if every cue is shown.
 **Recommended defense use:** show only the four CR proof points in the main 20-minute talk, or move the full workflow to Q&A. The speaking script already fills 20:00; any live action inserted into that timing must replace an equal amount of spoken explanation.
 
 ---

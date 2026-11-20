@@ -1,5 +1,5 @@
 from __future__ import annotations
-import math, os, json, shutil, subprocess, sys, time, zipfile
+import math, os, json, shutil, subprocess, sys, time, zipfile, hashlib
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageOps
@@ -18,17 +18,25 @@ PPTX = ROOT / "HASSAD_Graduation_Presentation.pptx"
 PDF = ROOT / "HASSAD_Graduation_Presentation.pdf"
 FFMPEG = Path.home()/"AppData/Roaming/Python/Python314/site-packages/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v9.0.2.exe"
 W, H = 13.333333, 7.5
+MEDIA_FILES = sorted(list(ROOT.glob("*.mp4"))+list(ROOT.glob("*.wav")))
+def media_fingerprint(path):
+    h=hashlib.sha256()
+    with open(path,"rb") as f:
+        for chunk in iter(lambda:f.read(1024*1024),b""): h.update(chunk)
+    st=path.stat(); return {"sha256":h.hexdigest(),"size":st.st_size,"mtime_ns":st.st_mtime_ns}
+MEDIA_GUARD = {p.name:media_fingerprint(p) for p in MEDIA_FILES}
+
 C = {
     "ivory":"FAF8F5", "green":"1B5E20", "leaf":"388E3C", "terra":"8D5524",
     "gold":"D4A017", "char":"1F2933", "slate":"4A5568", "red":"C62828",
     "pale":"E8EFE6", "sand":"F1E8DA", "white":"FFFFFF", "amber":"E6A23C",
     "blue":"3D6F82", "line":"D8D3CB", "soft":"F4F0E9"
 }
-ACTS = ["ACT I · THE GAP","ACT II · THE BLUEPRINT","ACT III · THE ENGINE","ACT IV · THE PRESSURE TEST","ACT V · THE HARVEST"]
+ACTS = ["ACT I · SEED & GAP","ACT II · DEEP ROOTS","ACT III · STEM & LEAVES","ACT IV · WEATHERING THE STORM","ACT V · HARVEST & ECO-BOOK"]
 ACT_BY_SLIDE = [0,0,0,1,1,1,2,2,2,2,3,3,4,4,4]
 TITLES = [
-"What Egypt calls waste, HASSAD turns into industrial value.",
-"Five acts take us from a broken market to a governed result.",
+"From seed to waste to reborn value.",
+"One living cycle turns a hidden gap into industrial value.",
 "One marketplace closes two disconnected searches.",
 "Success was measurable before work began.",
 "The MVP was protected as much by exclusions as by features.",
@@ -59,21 +67,21 @@ TAGS = [
 "APPENDIX · INTEGRATED CHANGE CONTROL / FINANCIAL RECONCILIATION","APPENDIX · EVM / CONTROL QUALITY / ACCEPTANCE"
 ]
 LINES = [
-["HASSAD: Turning Egypt’s Agricultural Waste into Industrial Value","Agricultural Waste Digital Marketplace Website · MVP / Prototype","From Waste to Value · PMP Graduation Defense · 27-Jan-2027","Mostafa Yakout · Rania Abdelgliel · Mohamed Ahmed (PM) · Reem Ahmed","Ahmed Mostafa · Omar Hassan · Mariam Ahmed","Sponsor: Saad Ibrahim, CEO, SAAD Company"],
-["ACT I — THE GAP · Why HASSAD had to exist","ACT II — THE BLUEPRINT · Scope, success, and Predictive control","ACT III — THE ENGINE · Work, cost, risk, and stakeholders","ACT IV — THE PRESSURE TEST · Issues, changes, and performance","ACT V — THE HARVEST · Lessons, next phase, and the ask"],
-["Farmers hold rice straw, wheat straw, corn residues, and sugarcane bagasse.","Factories seek usable residues through fragmented, manual channels.","HASSAD connects supply listings to industrial demand—digitally.","Charter authorized 01-Nov-2026 by Sponsor Saad Ibrahim.","PM Mohamed Ahmed controls day-to-day delivery and ±5% line-item variance.","Reserve use or baseline change requires prior written Sponsor approval."],
+["HASSAD: From Seed to Waste to Reborn Value.","Every harvest begins with a seed.","Agricultural Waste Digital Marketplace Website · MVP / Prototype","PMP Graduation Defense · 27-Jan-2027","Mostafa Yakout · Rania Abdelgliel · Reem Ahmed","Ahmed Mostafa · Omar Hassan"],
+["THE SEED · Every harvest begins with potential.","THE GROWING PLANT · Rice, wheat, corn, and sugarcane rise.","PLANT WASTE · Residues remain fragmented and underutilized.","HASSAD → FACTORY · Digital matching and tracking; zero physical logistics.","REBORN VALUE · Eco-books, recycled paper, and sustainable packaging."],
+["Farmers hold rice straw, wheat straw, corn residues, and sugarcane bagasse.","Factories seek usable residues through fragmented, manual channels.","HASSAD connects supply listings to industrial demand—digitally.","Charter authorized 01-Nov-2026 by Sponsor Saad Ibrahim.","PM Mostafa Yakout controls day-to-day delivery and ±5% line-item variance.","Reserve use or baseline change requires prior written Sponsor approval."],
 ["TIME · 12 weeks · finish 27-Jan-2027","COST · EGP 200,000 initial authorized ceiling","SCOPE · 2 complete journeys: Supplier and Factory","PRODUCT · listings and matching across 4 waste categories","QUALITY · ≥18/20 functional tests · 0 open Critical defects","Project success and product success were measured separately."],
 ["IN · responsive website, registration, profiles, 4-field listings","IN · demand requests, search/basic matching, status tracking","IN · sample-data dashboard, testing, and documented handover","OUT · native app, physical collection, storage, transport, warehouses","OUT · Ministry database integration, payments, escrow, national launch","CONSTRAINT · 12 weeks; desk-based Laws 4/1994 and 202/2020 review only"],
 ["Fixed scope, fixed 12-week calendar, and controlled cost baseline","Phase gates: Requirements → Design → Build → Test → Close","Formal SRS + RTM replaced ambiguous requirement narratives","Nine-channel Communications Plan kept governance lean and traceable","CCB approval controlled every scope, schedule, or cost baseline change","EGP 50,000 reserve remained Sponsor-gated for identified risks only"],
 ["6 Level-1 workstreams · exactly 22 leaf Work Packages","M1000 · 14-Nov-2026 · Requirements & Scope Baseline approved","M2000 · 28-Nov-2026 · UX/UI & Architecture approved","M3000 · 26-Dec-2026 · Core MVP developed and integrated","M4000 · 09-Jan-2027 · Testing and acceptance completed","M5000 · 27-Jan-2027 · Prototype deployment and closure"],
 ["Initial Cost Baseline EGP 150,000 + reserve EGP 50,000 = EGP 200,000","Approved scope adjustment +EGP 14,000 → revised BAC EGP 164,000","Revised BAC 164,000 + reserve 50,000 = ceiling EGP 214,000","Initial mix: Dev 90K · PM/Docs 20K · Research 15K · QA 15K · Tools 10K","Group 2 = internal Workstream Owners at EGP 0 labor cost","External Dev/UI/QA specialists = milestone payments 30% / 30% / 40%"],
-["Top threats: R-07 Development Delay 20 · R-05 Data Errors 16","R-01 Scope Creep 12 · R-13 Budget Overrun 12","Opportunity O-01 Association Partnership · Exploit","Week 7: matching queries and validation exceeded the 3-second threshold","PM escalated; Sponsor released EGP 9,500 from contingency in writing","Backend optimization + weekend fast-tracking protected M3000 and M5000"],
-["Manage Closely · PM, Group 2, Development/QA, Academic Evaluator","Keep Satisfied · Sponsor Saad Ibrahim; relevant authorities as needed","Keep Informed · Farmers/Suppliers; Factories/Buyers; UX/UI support","Monitor · Marketing and communications support","Operational issue → PM Mohamed Ahmed → technical Workstream Owner","Baseline or reserve impact → Sponsor Saad Ibrahim / CCB"],
+["Top threats: R-07 Development Delay 20 · R-05 Data Errors 16","R-01 Scope Creep 12 · R-13 Budget Overrun 12","Opportunity O-01 Association Partnership · Exploit","Week 7: matching queries and validation exceeded the 3-second threshold","PM Mostafa Yakout escalated; Sponsor released EGP 9,500 from contingency in writing","Backend optimization + weekend fast-tracking protected M3000 and M5000"],
+["Manage Closely · PM Mostafa Yakout, Group 2, Development/QA, Academic Evaluator","Keep Satisfied · Sponsor Saad Ibrahim; relevant authorities as needed","Keep Informed · Farmers/Suppliers; Factories/Buyers; UX/UI support","Monitor · Marketing and communications support","Operational issue → PM Mostafa Yakout → technical Workstream Owner","Baseline or reserve impact → Sponsor Saad Ibrahim / CCB"],
 ["10 requests evaluated through formal impact analysis","4 Approved · CR-001 / 004 / 007 / 010 · +EGP 14,000 / +10 effort days","4 Deferred · CR-002 / 005 / 008 / 009 · no baseline addition","2 Rejected · CR-003 native app + CR-006 English localization","Rejecting CR-003 avoided EGP 120,000 and 45 days","Scope additions changed BAC; the risk reserve stayed protected for risks"],
 ["PV 164,000 · EV 164,000 · AC 173,500 EGP","SV = 0 · SPI = 1.00 · delivered 27-Jan-2027","CV = -9,500 · CPI = 0.95 · EGP 40,500 below total ceiling","19/20 functional = 95% · 0 open Critical/High defects","9/10 matching = 90% · 9/10 usability = 90%","96% <3.0 sec · median 1.8 sec · legal checklist 100%"],
 ["LESSON 1 · Freeze matching logic and NFRs before coding.","Ambiguous tolerances and test conditions drove the Week-7 issue.","Next time: sign the Matching Rule Table and performance environment at M1000.","LESSON 2 · Separate scope funding from risk reserves.","The +EGP 14,000 scope adjustment preserved contingency for R-07.","The consequence was contained at EGP 9,500 without moving the deadline."],
 ["1 · LIVE PILOT with 20+ verified farms and factories","2 · SCALE FEATURES: native app, payment/escrow, stronger verification","3 · PARTNER with the Ministry / agricultural associations for trusted data","Reassess CR-003 only through a new business case and charter","SPONSOR ASK · authorize Phase-2 Charter initiation","Evaluate the remaining EGP 40,500 ceiling headroom for pilot onboarding"],
-["HASSAD — FROM WASTE TO VALUE","A focused website MVP for suppliers and industrial buyers","Governed through scope, schedule, cost, risk, quality, and change control","Thank you · Questions?","Mostafa Yakout · Rania Abdelgliel · Mohamed Ahmed · Reem Ahmed","Ahmed Mostafa · Omar Hassan · Mariam Ahmed"],
+["HASSAD — FROM SEED TO REBORN VALUE","A focused website MVP for suppliers and industrial buyers","Governed through scope, schedule, cost, risk, quality, and change control","Thank you · Questions?","Mostafa Yakout · Rania Abdelgliel · Reem Ahmed","Ahmed Mostafa · Omar Hassan"],
 ["Charter · Stakeholder Register · Requirements Register","Scope Baseline · Schedule Baseline · Resource/Cost Register","Risk Register · Quality Plan · Communications Plan","Change Request Register · WBS Dictionary · WBS Presentation","Instructor Feedback · 13 artifacts total","Modeled closure data requires signed replacement evidence before defense."],
 ["1.1 Initiation (4) · Charter · Stakeholders · Schedule · Budget","1.2 Requirements & UX/UI (4) · Documentation · Journeys · Design · Approval","1.3 Core Development (4) · Frontend · Backend/DB · User Modules · Matching/Status","1.4 Testing (3) · Functional/Usability · Validation/Fixes · Test Summary","1.5 Launch Preparation (3) · Comms · Onboarding · Legal/Environmental Review","1.6 Closeout (4) · Handover · Final Report · Defense Assets · Closure/Lessons"],
 ["R-07 Delay 20 · Mitigate · extra hours only after authorization","R-05 Data Errors 16 · Mitigate · required fields, validation, listing edits","R-01 Scope Creep 12 · Mitigate · signed baseline and CCB screening","R-13 Budget Overrun 12 · Active Accept · reserve and fixed payment gates","R-08 Hosting Failure · Transfer · managed host / backup restore","O-01 Association Partnership · Exploit · prepare verified bulk-data intake"],
@@ -101,6 +109,10 @@ def prepare_live_assets():
         src=LIVE/filename
         if not src.exists():
             raise FileNotFoundError(f"Required live prototype capture missing: {src}")
+        out=ASSETS/f"{key}-proof-crop.png"
+        if out.exists() and out.stat().st_mtime_ns >= src.stat().st_mtime_ns:
+            made[key]=out
+            continue
         im=Image.open(src).convert("RGB"); w,h=im.size
         box=(int(w*boxf[0]),int(h*boxf[1]),int(w*boxf[2]),int(h*boxf[3]))
         crop=im.crop(box)
@@ -121,7 +133,7 @@ def prepare_live_assets():
                         draw.rounded_rectangle((min(xs)-5,min(ys)-4,max(xs)+5,max(ys)+4),radius=4,fill=(250,248,245),outline=(27,94,32),width=2)
             except Exception:
                 pass
-        out=ASSETS/f"{key}-proof-crop.png"; crop.save(out,optimize=True)
+        crop.save(out,optimize=True)
         made[key]=out
     return made
 
@@ -201,15 +213,79 @@ def base_slide(i):
     line(sl,.42,1.18,12.90,1.18,"line",1)
     return sl
 
+
+def mark(shape,name):
+    shape.name=name
+    return shape
+
+
+def stage_visual(sl,stage,x,y,w,h,prefix=None):
+    """Native vector life-cycle vignette: seed, plant, residue, bridge/factory, eco-book."""
+    made=[]
+    def keep(sh,label):
+        if prefix: mark(sh,f"{prefix}_{label}")
+        made.append(sh); return sh
+    # shared ground glow
+    keep(rect(sl,x,y,w,h,"white","line"),"FRAME")
+    if stage==0:
+        keep(line(sl,x+.18,y+h*.69,x+w-.18,y+h*.69,"terra",2.5),"SOIL")
+        seed=keep(rect(sl,x+w*.42,y+h*.53,w*.18,h*.13,"gold","terra",MSO_SHAPE.OVAL),"SEED")
+        seed.rotation=-18
+        keep(line(sl,x+w*.50,y+h*.53,x+w*.50,y+h*.27,"green",2.2),"STEM")
+        leaf=keep(rect(sl,x+w*.50,y+h*.28,w*.20,h*.12,"leaf","green",MSO_SHAPE.OVAL),"LEAF")
+        leaf.rotation=-28
+    elif stage==1:
+        keep(line(sl,x+w*.50,y+h*.76,x+w*.50,y+h*.18,"green",3),"STEM")
+        for q in range(3):
+            yy=y+h*(.30+q*.15); side=-1 if q%2==0 else 1
+            keep(line(sl,x+w*.50,yy,x+w*(.50+side*.20),yy-h*.09,"leaf",2),f"BRANCH{q}")
+            gr=keep(rect(sl,x+w*(.50+side*.23-(.07 if side<0 else 0)),yy-h*.16,w*.13,h*.15,"gold","gold",MSO_SHAPE.OVAL),f"GRAIN{q}")
+            gr.rotation=28 if side>0 else -28
+        keep(line(sl,x+.18,y+h*.78,x+w-.18,y+h*.78,"terra",2),"SOIL")
+    elif stage==2:
+        keep(line(sl,x+.16,y+h*.78,x+w-.16,y+h*.78,"terra",2.4),"SOIL")
+        keep(rect(sl,x+w*.25,y+h*.48,w*.50,h*.24,"sand","terra",MSO_SHAPE.ROUNDED_RECTANGLE),"BALE")
+        for q in range(5):
+            keep(line(sl,x+w*(.24+q*.12),y+h*.49,x+w*(.34+q*.10),y+h*.28,"gold",2),f"STRAW{q}")
+    elif stage==3:
+        hub=keep(circle(sl,x+w*.08,y+h*.33,min(w,h)*.34,"green"),"HUB")
+        keep(text(sl,"H",x+w*.08,y+h*.33,min(w,h)*.34,min(w,h)*.34,16,"white",True,PP_ALIGN.CENTER),"HUBTXT")
+        keep(line(sl,x+w*.34,y+h*.52,x+w*.55,y+h*.52,"gold",3),"BRIDGE")
+        keep(rect(sl,x+w*.55,y+h*.40,w*.34,h*.30,"slate","slate",MSO_SHAPE.RECTANGLE),"FACTORY")
+        keep(rect(sl,x+w*.61,y+h*.24,w*.08,h*.20,"terra","terra",MSO_SHAPE.RECTANGLE),"STACK1")
+        keep(rect(sl,x+w*.75,y+h*.18,w*.08,h*.26,"terra","terra",MSO_SHAPE.RECTANGLE),"STACK2")
+        keep(line(sl,x+w*.53,y+h*.72,x+w*.92,y+h*.72,"terra",2),"GROUND")
+    else:
+        left=keep(rect(sl,x+w*.16,y+h*.33,w*.34,h*.38,"ivory","green",MSO_SHAPE.PARALLELOGRAM),"BOOKL")
+        right=keep(rect(sl,x+w*.50,y+h*.33,w*.34,h*.38,"ivory","green",MSO_SHAPE.PARALLELOGRAM),"BOOKR")
+        left.rotation=-4; right.rotation=4
+        keep(line(sl,x+w*.50,y+h*.34,x+w*.50,y+h*.72,"gold",2),"SPINE")
+        keep(line(sl,x+w*.60,y+h*.53,x+w*.70,y+h*.43,"leaf",2),"LEAFSTEM")
+        lf=keep(rect(sl,x+w*.67,y+h*.38,w*.13,h*.10,"leaf","leaf",MSO_SHAPE.OVAL),"BOOKLEAF"); lf.rotation=-30
+    return made
+
+
 def footer(sl,i):
     if i<15:
         current=ACT_BY_SLIDE[i]
-        x=.42; total=11.5; gap=.08; sw=(total-gap*4)/5
+        x0=.58; y0=7.08; step=2.27
+        line(sl,x0,y0,x0+step*4,y0,"terra",1.4)
+        labels=["SEED & GAP","DEEP ROOTS","STEM & LEAVES","WEATHER STORM","HARVEST & BOOK"]
         for a in range(5):
-            fc="gold" if a==current else ("green" if a<current else "pale")
-            tc="white" if a<=current else "green"
-            rect(sl,x+a*(sw+gap),7.08,sw,.20,fc,fc,MSO_SHAPE.RECTANGLE)
-            text(sl,ACTS[a].replace("ACT ",""),x+a*(sw+gap),7.08,sw,.20,6.5,tc,True,PP_ALIGN.CENTER)
+            xx=x0+a*step; done=a<current; active=a==current
+            node=circle(sl,xx-.10,y0-.10,.20,"gold" if active else ("green" if done else "pale"),"green")
+            if a==0:
+                sd=rect(sl,xx-.035,y0-.045,.07,.055,"terra","terra",MSO_SHAPE.OVAL); sd.rotation=-20
+                line(sl,xx,y0-.04,xx,y0-.16,"green",1.2)
+            elif a==1:
+                line(sl,xx,y0+.02,xx,y0-.18,"green",1.5); line(sl,xx,y0-.10,xx+.10,y0-.16,"leaf",1.2); line(sl,xx,y0+.01,xx-.09,y0+.09,"terra",1)
+            elif a==2:
+                line(sl,xx,y0+.02,xx,y0-.20,"green",1.8); line(sl,xx,y0-.08,xx+.11,y0-.14,"leaf",1.2); line(sl,xx,y0-.02,xx-.10,y0-.09,"leaf",1.2)
+            elif a==3:
+                line(sl,xx,y0+.02,xx,y0-.18,"green",1.7); line(sl,xx,y0-.08,xx+.10,y0-.13,"leaf",1.2); line(sl,xx-.14,y0-.21,xx+.14,y0-.21,"blue",1)
+            else:
+                rect(sl,xx-.13,y0-.14,.12,.12,"ivory","green",MSO_SHAPE.PARALLELOGRAM); rect(sl,xx+.01,y0-.14,.12,.12,"ivory","green",MSO_SHAPE.PARALLELOGRAM)
+            text(sl,labels[a],xx-.72,7.20,1.44,.13,5.7,"green" if a<=current else "slate",True,PP_ALIGN.CENTER,margin=0.0)
         num=f"{i+1:02d} / 15"
     else:
         rect(sl,.42,7.08,11.5,.20,"green","green",MSO_SHAPE.RECTANGLE); text(sl,"APPENDIX · CONTROLLED DETAIL",.55,7.08,4.0,.20,7,"white",True)
@@ -246,25 +322,31 @@ def roman(n):
 for i in range(20):
     sl=base_slide(i)
     if i==0:
-        wheat(sl,10.45,1.45,.92)
-        browser(sl,8.0,3.05,3.1,2.85,"SUPPLIER","List agricultural residue","green")
-        # Five seed motif
-        for k in range(5): circle(sl,8.15+k*.34,6.08,.16,"gold" if k==0 else "pale","green")
-        add_body_rows(sl,i,.55,1.40,7.1,4.95)
+        # Cinematic title hero: the entire seed-to-value arc in one native-vector sweep.
+        stages=[("THE SEED","Potential"),("GROWING PLANT","4 residues"),("PLANT WASTE","Hidden gap"),("HASSAD → FACTORY","Digital bridge"),("ECO-BOOK","Reborn value")]
+        for k,(head,sub) in enumerate(stages):
+            xx=.42+k*2.53
+            stage_visual(sl,k,xx,1.40,2.15,1.72,f"S1_STAGE_{k+1}")
+            text(sl,head,xx,3.18,2.15,.26,11,"green" if k!=2 else "terra",True,PP_ALIGN.CENTER,font="Arial Narrow")
+            text(sl,sub,xx,3.44,2.15,.20,9,"slate",False,PP_ALIGN.CENTER)
+            if k<4:
+                line(sl,xx+2.15,2.23,xx+2.48,2.23,"gold",2.6)
+        text(sl,"HASSAD: FROM SEED → TO WASTE → TO REBORN VALUE",1.20,3.70,10.85,.36,22,"green",True,PP_ALIGN.CENTER,font="Arial Narrow",margin=0.0)
+        add_body_rows(sl,i,.70,4.48,11.78,2.04,True)
+        pill(sl,"SPONSOR · Saad Ibrahim, CEO, SAAD Company",9.00,.18,3.36,"sand","terra",8)
     elif i==1:
-        # act agenda film strip
-        x=.52
-        thumbs=["The gap","The blueprint","The engine","Pressure test","The harvest"]
-        ranges=["1–3","4–6","7–10","11–12","13–15"]
+        # Five-stage life cycle plus the mapped five-Act defense roadmap.
+        stage_heads=["1 · THE SEED","2 · GROWING PLANT","3 · PLANT WASTE","4 · DIGITAL BRIDGE","5 · ECO-BOOK"]
+        ranges=["ACT I · 1–3","ACT II · 4–6","ACT III · 7–10","ACT IV · 11–12","ACT V · 13–15"]
         for k in range(5):
-            xx=x+k*2.49
-            rect(sl,xx,1.45,2.22,2.0,"white","line")
-            circle(sl,xx+.76,1.68,.70,"gold" if k==0 else "green")
-            text(sl,roman(k+1),xx+.76,1.68,.70,.70,18,"white",True,PP_ALIGN.CENTER)
-            text(sl,thumbs[k].upper(),xx+.15,2.50,1.92,.28,11,"char",True,PP_ALIGN.CENTER)
-            pill(sl,ranges[k],xx+.70,2.94,.82,"soft","green",10)
-            if k<4: line(sl,xx+2.22,2.02,xx+2.49,2.02,"gold",3)
-        add_body_rows(sl,i,.52,3.82,12.1,2.45)
+            xx=.43+k*2.53
+            stage_visual(sl,k,xx,1.38,2.16,1.70,f"S2_STAGE_{k+1}")
+            text(sl,stage_heads[k],xx,3.15,2.16,.28,11,"green" if k!=2 else "terra",True,PP_ALIGN.CENTER,font="Arial Narrow")
+            pill(sl,ranges[k],xx+.27,3.48,1.62,"gold" if k==0 else "pale","char" if k==0 else "green",8)
+            if k<4:
+                ar=line(sl,xx+2.16,2.22,xx+2.49,2.22,"gold",2.8); mark(ar,f"S2_FLOW_{k+1}")
+        text(sl,"Every harvest begins with a seed. Every controlled decision moves it toward value.",.70,3.92,11.92,.42,19,"char",True,PP_ALIGN.CENTER,font="Arial Narrow")
+        add_body_rows(sl,i,.52,4.47,12.1,2.10,True)
     elif i==2:
         # hub + materials
         for k,(name,col) in enumerate([("RICE STRAW","gold"),("WHEAT STRAW","terra"),("CORN RESIDUES","leaf"),("SUGARCANE BAGASSE","green")]):
@@ -462,6 +544,69 @@ def save_deck():
     prs.save(PPTX)
 
 
+
+def apply_native_motion():
+    """Use PowerPoint's object model so it writes schema-valid transition and timing trees."""
+    import win32com.client
+    app=win32com.client.gencache.EnsureDispatch("PowerPoint.Application")
+    app.Visible=1
+    deck=app.Presentations.Open(str(PPTX),WithWindow=False)
+    c=win32com.client.constants
+    act_boundaries={4,7,11,13,16}  # destination slide numbers
+    for si in range(1,deck.Slides.Count+1):
+        sl=deck.Slides(si)
+        tr=sl.SlideShowTransition
+        # PowerPoint's installed object model exposes no stable Morph constant here;
+        # Slides 1-2 therefore use the validated Fade Smoothly fallback.
+        tr.EntryEffect=c.ppEffectPushLeft if si in act_boundaries else c.ppEffectFadeSmoothly
+        tr.Speed=c.ppTransitionSpeedSlow if si in act_boundaries else c.ppTransitionSpeedMedium
+        tr.AdvanceOnClick=True
+        try: tr.Duration=.8 if si in act_boundaries else .7
+        except Exception: pass
+    # Slide 2: five-step seed-to-book reveal. Two signature shapes per stage.
+    sl=deck.Slides(2); seq=sl.TimeLine.MainSequence
+    signature={1:("SEED","STEM"),2:("STEM","GRAIN0"),3:("BALE","STRAW0"),4:("HUB","FACTORY"),5:("BOOKL","BOOKR")}
+    for stage in range(1,6):
+        picked=[]
+        for sh in sl.Shapes:
+            nm=sh.Name
+            if any(nm==f"S2_STAGE_{stage}_{suffix}" for suffix in signature[stage]): picked.append(sh)
+        for j,sh in enumerate(picked):
+            trig=c.msoAnimTriggerOnPageClick if j==0 else c.msoAnimTriggerWithPrevious
+            eff=seq.AddEffect(sh,c.msoAnimEffectFade,0,trig)
+            eff.Timing.Duration=.4
+        if stage<5:
+            for sh in sl.Shapes:
+                if sh.Name==f"S2_FLOW_{stage}":
+                    eff=seq.AddEffect(sh,c.msoAnimEffectWipe,0,c.msoAnimTriggerAfterPrevious)
+                    eff.Timing.Duration=.25
+    # Key data/governance slides: a small number of narrative-led entrance cues.
+    cue_map={
+        7:["4 + 4 + 4","M1000","M3000","M5000"],
+        8:["INITIAL COST BASELINE","REVISED BAC","RESERVE"],
+        11:["10 SUBMITTED","4 APPROVED","LIVE PROTOTYPE EVIDENCE"],
+        12:["PV 164K","SPI","CPI","LIVE PROTOTYPE EVIDENCE"],
+    }
+    for si,cues in cue_map.items():
+        sl=deck.Slides(si); seq=sl.TimeLine.MainSequence; used=set()
+        for cue in cues:
+            target=None
+            for sh in sl.Shapes:
+                try:
+                    tx=sh.TextFrame.TextRange.Text
+                    if cue in tx and sh.Id not in used:
+                        target=sh; break
+                except Exception:
+                    pass
+            if target is not None:
+                used.add(target.Id)
+                trigger=c.msoAnimTriggerOnPageClick if len(used)==1 else c.msoAnimTriggerAfterPrevious
+                eff=seq.AddEffect(target,c.msoAnimEffectFade,0,trigger)
+                eff.Timing.Duration=.4
+                if trigger==c.msoAnimTriggerAfterPrevious: eff.Timing.TriggerDelayTime=.10
+    deck.Save()
+    deck.Close(); app.Quit()
+
 def export_with_powerpoint():
     import win32com.client
     PREV.mkdir(exist_ok=True)
@@ -549,21 +694,68 @@ def build_media():
 def write_readme():
     readme = """# HASSAD Graduation Defense Deliverables
 
-## Primary files
+## Current presentation package
 
-- `HASSAD_Graduation_Presentation.pptx` — 20-slide, 16:9 English defense deck (15 timed main slides + 5 appendix slides).
-- `HASSAD_Graduation_Presentation.pdf` — PowerPoint-rendered PDF for reliable sharing and printing.
+- `HASSAD_Graduation_Presentation.pptx` — 20-slide, 16:9 English defense deck: 15 timed main slides plus 5 appendix slides.
+- `HASSAD_Graduation_Presentation.pdf` — Microsoft PowerPoint COM export for reliable sharing and printing.
 - `previews/slide-01.png` through `slide-20.png` — 1920×1080 PowerPoint renders.
 - `previews/HASSAD_Contact_Sheet.png` — visual review sheet for all 20 slides.
-- `HASSAD_Defense_20min_Music.mp4` — exact 20:00 timed defense cut with low original ambient music and clean narration space.
-- `HASSAD_Defense_20min_NoMusic.mp4` — exact 20:00 timed defense cut with a silent AAC track.
-- `HASSAD_Trailer_2min_Music.mp4` — exact 02:00 trailer cut with original ambient music.
-- `HASSAD_Trailer_2min_NoMusic.mp4` — exact 02:00 trailer cut with a silent AAC track.
-- `HASSAD_Ambient_20min.wav` and `HASSAD_Ambient_2min.wav` — original, code-synthesized instrumental beds; no external copyrighted source.
-- `build_hassad_presentation.py` — reusable source generator for the deck, PowerPoint exports, previews, audio, videos, and validation.
-- `validation_report.json` — automated structural, content, visual-overflow, and media checks.
+- `build_hassad_presentation.py` — reusable presentation generator for the PPTX, native PowerPoint motion, PDF, previews, contact sheet, and validation.
+- `validation_report.json` — structural, content, transition, animation, overflow, evidence, privacy, and media-preservation checks.
 
-Existing Arabic speaking script, Q&A preparation, storyboard, and website demo runbook remain unchanged.
+## Seed-to-Value story and five-member team
+
+Slides 1–2 introduce the project through a native-vector circular story:
+
+**Seed → Growing Plant → Plant Waste → HASSAD Digital Bridge / Factory → Reborn Eco-Book and sustainable products**
+
+A botanical growth tracker continues across all 15 main slides:
+
+1. **Act I — Seed & Gap**
+2. **Act II — Deep Roots**
+3. **Act III — Stem & Leaves**
+4. **Act IV — Weathering the Storm**
+5. **Act V — Harvest & Eco-Book**
+
+The student roster is limited to these five members, in this order:
+
+1. **Mostafa Yakout** — Lead Presenter; Project Management and Stakeholder Engagement
+2. **Rania Abdelgliel** — Co-Lead Presenter; Requirements, Scope, and UX/UI
+3. **Reem Ahmed** — Schedule, Planning, and Cost Baseline
+4. **Ahmed Mostafa** — Quality Assurance, Documentation, and Closeout
+5. **Omar Hassan** — Technical Architecture, Backend, Risk, and Integration
+
+**Saad Ibrahim, CEO, SAAD Company** remains the external Project Sponsor and is not part of the student roster.
+
+The Arabic speaking script (`.md` and `.docx`) and defense Q&A preparation have been updated for the five-member roster and the Seed-to-Value opening. The storyboard and website demo runbook remain reference documents.
+
+## Native PowerPoint motion
+
+Motion is written by installed Microsoft PowerPoint through its COM object model, which produces schema-valid OOXML timing and transition structures.
+
+- **Transitions: 20/20 slides.**
+- **Fade Smoothly, 700 ms:** opening slides and movement within an Act.
+- **Push Left, 800 ms:** Act or section boundaries on Slides 4, 7, 11, 13, and 16.
+- **Native entrance timing trees:** Slides 2, 7, 8, 11, and 12.
+- **Slide 2:** progressive Seed-to-Book reveal with restrained Fade/Wipe entrances.
+- **Slides 7, 8, 11, and 12:** narrative-led entrances for WBS, cost, change control, and EVM elements.
+
+The installed PowerPoint COM interface does not expose a stable Morph constant. The opening therefore uses a validated **Fade Smoothly** fallback rather than claiming Morph. `validation_report.json` records the allocation, durations, transition count, intended timing-tree slides, clean PowerPoint opening/export, and zero text overflow.
+
+## Existing media files — preserved, not rebuilt
+
+The following existing media files are preserved artifacts:
+
+- `HASSAD_Defense_20min_Music.mp4`
+- `HASSAD_Defense_20min_NoMusic.mp4`
+- `HASSAD_Trailer_2min_Music.mp4`
+- `HASSAD_Trailer_2min_NoMusic.mp4`
+- `HASSAD_Ambient_20min.wav`
+- `HASSAD_Ambient_2min.wav`
+
+The current `main()` workflow in `build_hassad_presentation.py` **does not call the video/audio rendering functions**. It regenerates only the presentation, PowerPoint exports, previews, contact sheet, and validation report. Media SHA-256 hashes, byte sizes, and modification timestamps are checked before and after the run to prove preservation.
+
+Because the videos were intentionally not re-rendered during the Seed-to-Value presentation edit, treat them as previously produced rehearsal/media assets; the PPTX is the authoritative current visual deck.
 
 ## Exact 20-minute presentation clock
 
@@ -585,27 +777,28 @@ Existing Arabic speaking script, Q&A preparation, storyboard, and website demo r
 | 14 | 60 sec | 18:20–19:20 |
 | 15 | 40 sec | 19:20–20:00 |
 
-These screen holds include the opening breath, visual holds, speaker handoffs, and Act transitions from the authoritative storyboard. Slides 16–20 are appendix material and are not included in the timed run.
+The screen holds include the opening breath, visual holds, speaker handoffs, and Act transitions. Slides 16–20 are appendix material and are not included in the timed run.
 
 ## How to present
 
-1. Open the PowerPoint file in Microsoft PowerPoint and use Presenter View with the existing Arabic speaking script.
-2. Start on Slide 1 and keep the first frame silent for two seconds.
-3. Follow the five-Act progress bar and the exact handoff clock above. The deck intentionally uses stable native shapes rather than fragile embedded motion.
-4. Use the music video only as a rehearsal or pre-recorded visual bed. It contains no narration. Record live narration separately or present live.
-5. For a quiet room or later voice-over, use the no-music version; it includes a silent AAC stream for editor compatibility.
-6. During Q&A, move to Slides 16–20 only when the panel asks for traceability, WBS, risk, change, or EVM detail.
-7. For the website demonstration, follow `HASSAD_Website_Demo_Runbook.md`; the deck’s UI frames are presentation mockups, not execution proof.
+1. Open `HASSAD_Graduation_Presentation.pptx` in Microsoft PowerPoint and use Presenter View with the updated Arabic speaking script.
+2. Start on Slide 1 and keep the opening frame silent for two seconds.
+3. On Slide 2, advance through the five Seed-to-Book entrance groups in story order.
+4. Follow the botanical tracker and exact clock above. Allow the Push transitions to signal new Acts.
+5. Use Slides 16–20 only when the panel asks for traceability, WBS, risk, change, or EVM detail.
+6. Follow `HASSAD_Website_Demo_Runbook.md` for the website demonstration.
+7. If an existing MP4 is used for rehearsal, remember that it was preserved rather than rebuilt for the latest deck.
 
 ## Data and evidence transparency
 
-- Controlled charter, registers, plans, WBS, dates, scope, and approved decisions are shown as **[VERIFIED BASELINE]**.
-- Artifact logs end in Week 3. The Week-7 issue, EGP 9,500 contingency draw, closure EVM, final quality results, completion status, and related lessons are labeled **[MODELED COMPLETION]** or mixed evidence.
+- Controlled charter, registers, plans, WBS, dates, scope, and approved decisions are marked **[VERIFIED BASELINE]**.
+- Artifact logs end in Week 3. The Week-7 issue, EGP 9,500 contingency draw, closure EVM, final quality results, completion status, and related lessons remain labeled **[MODELED COMPLETION]** or mixed evidence.
 - Replace modeled figures only with dated, owner-signed closure records, cost ledgers, test logs, acceptance evidence, and authorization records.
-- UI panels use a restrained mix: illustrative frames remain clearly labeled, while privacy-conscious live crops are labeled **LIVE PROTOTYPE EVIDENCE**. Live feature proof does not convert modeled closure figures into verified actuals.
-- The approved change arithmetic is separated from risk reserve arithmetic: revised BAC EGP 164,000; total ceiling EGP 214,000; modeled AC EGP 173,500; modeled headroom EGP 40,500.
+- UI panels use a restrained mix: illustrative frames remain labeled as mockups, while privacy-conscious live crops are labeled **LIVE PROTOTYPE EVIDENCE**.
+- Live feature evidence does not convert modeled closure figures into verified actuals.
+- Approved change arithmetic remains separate from risk-reserve arithmetic: revised BAC EGP 164,000; total ceiling EGP 214,000; modeled AC EGP 173,500; modeled headroom EGP 40,500.
 
-## Rebuild
+## Presentation-only rebuild
 
 Run from this folder:
 
@@ -613,10 +806,15 @@ Run from this folder:
 python build_hassad_presentation.py
 ```
 
-Requirements: Python with `python-pptx`, Pillow, NumPy, pywin32, installed Microsoft PowerPoint, and the bundled `imageio-ffmpeg` binary. If available, `rapidocr-onnxruntime` is used to redact detected sample/account-like tokens from live crops before embedding. The generator overwrites generated deliverables but does not edit the website repository or existing source-content files. PowerPoint exports the PDF and PNGs. No slide-transition XML is injected because file integrity takes priority; continuity is carried by the five-Act bar, recurring geometry, and exact video timing.
+Requirements: Python with `python-pptx`, Pillow, NumPy, pywin32, installed Microsoft PowerPoint, and optional `rapidocr-onnxruntime` for privacy redaction checks. The current `main()` sequence is:
+
+```text
+save_deck → apply_native_motion → export_with_powerpoint → make_contact_sheet → validate
+```
+
+It overwrites the PPTX, PDF, preview PNGs, contact sheet, and validation report. It does **not** regenerate MP4 or WAV files, does not update this README automatically, and does not edit the website repository or source-content documents.
 """
     (ROOT/"README_DELIVERABLES.md").write_text(readme,encoding="utf-8")
-
 
 def validate():
     import re
@@ -625,7 +823,7 @@ def validate():
     report={"slide_count":len(q.slides),"width_inches":q.slide_width/914400,"height_inches":q.slide_height/914400,"files":{},"checks":{}}
     report["checks"]["exactly_20_slides"]=(len(q.slides)==20)
     report["checks"]["dimensions_16_9"]=(abs(q.slide_width/914400-W)<.001 and abs(q.slide_height/914400-H)<.001)
-    report["checks"]["team_order_locked"]=(LINES[0][3].startswith("Mostafa Yakout · Rania Abdelgliel"))
+    report["checks"]["team_order_locked"]=(LINES[0][4]=="Mostafa Yakout · Rania Abdelgliel · Reem Ahmed" and LINES[0][5]=="Ahmed Mostafa · Omar Hassan")
     report["checks"]["dates_locked"]=("01-Nov-2026" in " ".join(sum(LINES,[])) and "27-Jan-2027" in " ".join(sum(LINES,[])))
     report["checks"]["math_locked"]=(150+50==200 and 150+14==164 and 164+50==214 and 164+9.5==173.5 and 214-173.5==40.5)
     live_labels=0
@@ -650,29 +848,41 @@ def validate():
         pass
     report["privacy_token_hits"]=privacy_hits
     report["checks"]["live_crops_no_detected_credentials_or_account_tokens"]=(len(privacy_hits)==0)
-    # XML search using hex-decoded terms keeps the generator source clean.
+    # Package-level text, transition, and native timing-tree audit.
     terms=[bytes.fromhex(h).decode() for h in ["737072696e74","6261636b6c6f67","757365722073746f7279","7374616e647570","736372756d"]]
-    bad=[]
+    excluded=[bytes.fromhex(h).decode() for h in ["4d617269616d2041686d6564","4d6f68616d65642041686d6564"]]
+    bad=[]; excluded_hits=[]; transition_details={}; timing_slides=[]
     with zipfile.ZipFile(PPTX) as z:
         for n in z.namelist():
             if n.endswith(".xml"):
-                low=z.read(n).decode("utf-8","ignore").lower()
+                raw=z.read(n).decode("utf-8","ignore"); low=raw.lower()
                 for term in terms:
                     if term in low: bad.append([n,term])
+                for name in excluded:
+                    if name.lower() in low: excluded_hits.append([n,name])
+            if n.startswith("ppt/slides/slide") and n.endswith(".xml"):
+                num=int(n.split("slide")[2].split(".xml")[0]); raw=z.read(n).decode("utf-8","ignore")
+                has_transition="<p:transition" in raw
+                kind="push" if "<p:push" in raw else ("fade" if "<p:fade" in raw else "other")
+                dm=re.search(r'p14:dur="(\d+)"',raw)
+                transition_details[str(num)]={"present":has_transition,"type":kind,"duration_ms":int(dm.group(1)) if dm else None}
+                if "<p:timing" in raw: timing_slides.append(num)
     report["checks"]["prohibited_terms_absent_from_slide_xml"]=(not bad); report["prohibited_hits"]=bad
-    for p in [PPTX,PDF,ROOT/"HASSAD_Defense_20min_Music.mp4",ROOT/"HASSAD_Defense_20min_NoMusic.mp4",ROOT/"HASSAD_Trailer_2min_Music.mp4",ROOT/"HASSAD_Trailer_2min_NoMusic.mp4"]:
+    report["excluded_name_hits"]=excluded_hits
+    report["checks"]["excluded_student_names_absent_from_pptx"]=(not excluded_hits)
+    report["transition_details"]=dict(sorted(transition_details.items(),key=lambda kv:int(kv[0])))
+    report["transition_count"]=sum(1 for v in transition_details.values() if v["present"])
+    report["checks"]["transitions_on_20_of_20_slides"]=(report["transition_count"]==20)
+    intended=[2,7,8,11,12]
+    report["timing_tree_slides"]=sorted(timing_slides)
+    report["checks"]["timing_trees_on_intended_slides"]=(all(x in timing_slides for x in intended))
+    report["transition_strategy"]={"opening_and_within_acts":"Fade Smoothly, PowerPoint-compatible fallback where Morph is not exposed by the installed COM object model","act_boundaries":{"slides":[4,7,11,13,16],"effect":"Push Left"},"morph_claimed":False}
+    for p in [PPTX,PDF]:
         report["files"][p.name]=p.stat().st_size if p.exists() else 0
-    expected={"HASSAD_Defense_20min_Music.mp4":1200,"HASSAD_Defense_20min_NoMusic.mp4":1200,"HASSAD_Trailer_2min_Music.mp4":120,"HASSAD_Trailer_2min_NoMusic.mp4":120}
-    media_ok=True
-    for name,seconds in expected.items():
-        cp=subprocess.run([str(FFMPEG),"-hide_banner","-i",str(ROOT/name)],capture_output=True,text=True)
-        meta=cp.stderr
-        m=re.search(r"Duration: (\d+):(\d+):(\d+\.\d+)",meta)
-        duration=(int(m.group(1))*3600+int(m.group(2))*60+float(m.group(3))) if m else -1
-        item={"duration_seconds":duration,"resolution":"1920x1080" if "1920x1080" in meta else "unknown","video_codec":"h264" if "Video: h264" in meta else "unknown","audio_codec":"aac" if "Audio: aac" in meta else "unknown","audio_rate_hz":48000 if "48000 Hz" in meta else 0}
-        report.setdefault("media",{})[name]=item
-        media_ok &= abs(duration-seconds)<.05 and item["resolution"]=="1920x1080" and item["video_codec"]=="h264" and item["audio_codec"]=="aac"
-    report["checks"]["media_duration_resolution_codecs_audio"] = bool(media_ok)
+    media_after={p.name:media_fingerprint(p) for p in MEDIA_FILES}
+    report["media_preservation_before"]=MEDIA_GUARD
+    report["media_preservation_after"]=media_after
+    report["checks"]["mp4_wav_bytes_and_mtimes_unchanged"]=(media_after==MEDIA_GUARD)
     # PowerPoint-renderer geometry check: text bounds must remain within text shapes.
     import win32com.client
     app=win32com.client.DispatchEx("PowerPoint.Application"); app.Visible=1
@@ -689,6 +899,7 @@ def validate():
     deck.Close(); app.Quit()
     report["visual_overflow_hits"]=over
     report["checks"]["powerpoint_text_overflow_zero"]=(len(over)==0)
+    report["checks"]["powerpoint_com_open_export_clean"]=(PDF.exists() and PDF.stat().st_size>0)
     report["checks"]["preview_png_count_20"]=(len(list(PREV.glob("slide-*.png")))==20)
     report["checks"]["contact_sheet_present"]=(PREV/"HASSAD_Contact_Sheet.png").stat().st_size>0
     (ROOT/"validation_report.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
@@ -697,7 +908,7 @@ def validate():
 
 
 def main():
-    save_deck(); export_with_powerpoint(); make_contact_sheet(); build_media(); write_readme(); validate()
+    save_deck(); apply_native_motion(); export_with_powerpoint(); make_contact_sheet(); validate()
     print("HASSAD defense package generated and validated.")
 
 if __name__=="__main__":
