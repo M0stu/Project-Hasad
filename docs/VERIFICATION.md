@@ -1,6 +1,6 @@
 # Development verification
 
-Date: 12 October 2026.
+Date: 23 November 2026.
 
 ## Passed
 
@@ -14,6 +14,8 @@ Date: 12 October 2026.
 The workflow suite includes exact quotations, oversized arithmetic, stock reservations, immutable fee snapshots, insufficient-stock rejection, client-total tampering, transfer amount mismatch, payment-review permissions, duplicate receipt approval, delivery sequencing, seller/carrier accounting, partial payouts, overpayment rejection, global transfer-reference uniqueness, paid cancellations, partial/full refunds, unpaid cancellations, self-purchase prevention, order ownership, partner-processing loss/ownership, balanced/unbalanced journals, role permissions, CSRF, local-OTP restrictions, wrong/used OTP behavior, staff credential checks, persisted rate limits and SpreadsheetML/CSV-cell formula safety.
 
 The confidentiality checks assert that buyer pages contain no seller name, phone, farm address or internal inspection report; supplier accounts contain no factory name, phone, destination or organization; and marketplace listings omit supplier identity. Concurrent tests launch two independent buyers requesting 6 tonnes from 9.5 available tonnes and verify that exactly one succeeds.
+
+The 2026-11-23 reliability suite additionally covers zero/one payment destination readiness, readiness before order rate-limit persistence, transactional order payment snapshots, refusal of methods absent from a snapshot, safe legacy fallback, demo-environment gating, opposite-principal session clearing, verified supplier-party binding and ownership conflicts, approved-catalogue publication, depleted/recovered stock transitions, disabled marketplace/checkout reservation states, the Settings invariant warning, and required repository protection files.
 
 ## Verification boundaries
 

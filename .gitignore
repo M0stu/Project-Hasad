@@ -6,6 +6,7 @@ htdocs/config/config.php
 
 # Runtime/user data
 htdocs/storage/proofs/*
+!htdocs/storage/proofs/.htaccess
 !htdocs/storage/proofs/.gitkeep
 *.log
 *.sql.gz
