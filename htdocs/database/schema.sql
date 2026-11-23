@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS orders (
  quantity_g BIGINT NOT NULL, price_per_tonne BIGINT NOT NULL, subtotal BIGINT NOT NULL,
  shipping BIGINT NOT NULL, fee_bp INT NOT NULL, fee_flat BIGINT NOT NULL, service_fee BIGINT NOT NULL, total BIGINT NOT NULL,
  shipping_mode ENUM('hasad','buyer') NOT NULL, destination VARCHAR(500) NOT NULL, governorate VARCHAR(80) NOT NULL,
+ instapay_account_snapshot VARCHAR(190) NULL, wallet_number_snapshot VARCHAR(30) NULL,
  status ENUM('quoted','payment_review','paid','dispatching','delivered','cancelled','refund_pending','refunded') NOT NULL DEFAULT 'quoted',
  expires_at DATETIME NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  FOREIGN KEY(user_id) REFERENCES users(id), FOREIGN KEY(buyer_id) REFERENCES parties(id),
@@ -199,7 +200,7 @@ INSERT IGNORE INTO materials (id,name_ar,name_en,slug,description_ar,description
 UPDATE materials SET active=0 WHERE slug='palm-residues';
 UPDATE materials SET slug='corn-residues',name_ar='مخلفات الذرة',name_en='Corn residues',description_ar='مخلفات محصول الذرة للتدوير والتصنيع.',description_en='Corn crop residues for recycling and manufacturing.' WHERE slug='corn-stalks';
 UPDATE materials SET name_ar='مصاصة قصب السكر' WHERE slug='sugarcane-bagasse';
-INSERT IGNORE INTO schema_migrations(version) VALUES('20261119_001_defense_demo');
+INSERT IGNORE INTO schema_migrations(version) VALUES('20261119_001_defense_demo'),('20261123_002_order_payment_snapshot');
 INSERT IGNORE INTO accounts VALUES
  (1010,'1010','البنك والتحويلات الإلكترونية','Bank and online transfers','asset'),
  (2010,'2010','مبالغ العملاء قيد التنفيذ','Buyer funds pending fulfillment','liability'),

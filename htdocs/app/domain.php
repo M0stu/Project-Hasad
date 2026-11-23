@@ -5,6 +5,24 @@ function catalogue_materials(): array {
     if (ready()) { return Db::all("SELECT * FROM materials WHERE active=1 AND slug IN ('rice-straw','wheat-straw','corn-residues','sugarcane-bagasse') ORDER BY FIELD(slug,'rice-straw','wheat-straw','corn-residues','sugarcane-bagasse')"); }
     return [['id'=>1,'name_ar'=>'قش الأرز','name_en'=>'Rice straw','icon'=>'wheat','slug'=>'rice-straw'],['id'=>2,'name_ar'=>'تبن القمح','name_en'=>'Wheat straw','icon'=>'wheat','slug'=>'wheat-straw'],['id'=>3,'name_ar'=>'مخلفات الذرة','name_en'=>'Corn residues','icon'=>'sprout','slug'=>'corn-residues'],['id'=>5,'name_ar'=>'مصاصة قصب السكر','name_en'=>'Sugarcane bagasse','icon'=>'layers','slug'=>'sugarcane-bagasse']];
 }
+function approved_catalogue_material(int $id): bool {
+    return (bool)Db::one("SELECT id FROM materials WHERE id=? AND active=1 AND slug IN ('rice-straw','wheat-straw','corn-residues','sugarcane-bagasse')",[$id]);
+}
+function supplier_party_for_request(array $request): int {
+    if (!Db::inTransaction()) { throw new LogicException('Supplier party resolution must be transactional'); }
+    $userId=(int)($request['user_id']??0);
+    $parties=Db::all("SELECT * FROM parties WHERE kind='seller' AND phone=? ORDER BY id FOR UPDATE",[$request['contact_phone']]);
+    if ($userId>0) {
+        foreach($parties as $party){if($party['user_id']!==null && (int)$party['user_id']!==$userId){throw new DomainException(t('ملكية ملف المورد تتعارض مع صاحب الطلب الموثق.','The supplier record belongs to a different verified user.'));}}
+        foreach($parties as $party){if((int)($party['user_id']??0)===$userId){Db::run('UPDATE parties SET verified=1 WHERE id=?',[$party['id']]);return (int)$party['id'];}}
+        foreach($parties as $party){if($party['user_id']===null && (int)$party['verified']===1){$bound=Db::run('UPDATE parties SET user_id=? WHERE id=? AND user_id IS NULL',[$userId,$party['id']]);if($bound->rowCount()===1){return (int)$party['id'];}}}
+        return Db::insert("INSERT INTO parties(kind,name,phone,governorate,address,verified,user_id) VALUES('seller',?,?,?,?,1,?)",[$request['contact_name'],$request['contact_phone'],$request['governorate'],$request['location'],$userId]);
+    }
+    foreach($parties as $party){if($party['user_id']!==null){throw new DomainException(t('يجب أن يؤكد صاحب رقم المورد هذا الطلب من حسابه.','The owner of this supplier phone must verify the request from their account.'));}}
+    if($parties){$id=(int)$parties[0]['id'];Db::run('UPDATE parties SET verified=1 WHERE id=?',[$id]);return $id;}
+    return Db::insert("INSERT INTO parties(kind,name,phone,governorate,address,verified) VALUES('seller',?,?,?,?,1)",[$request['contact_name'],$request['contact_phone'],$request['governorate'],$request['location']]);
+}
+function adjusted_stock_status(int $quantity): string { return $quantity===0?'depleted':'inspected'; }
 function batch_detail(int $id, bool $lock=false): array {
     $r=Db::one('SELECT b.*,m.name_ar,m.name_en,m.icon,h.name_ar AS hub_ar,h.name_en AS hub_en,h.governorate FROM batches b JOIN materials m ON m.id=b.material_id JOIN hubs h ON h.id=b.hub_id WHERE b.id=?'.($lock?' FOR UPDATE':''),[$id]);
     if (!$r) { throw new DomainException(t('الدفعة غير موجودة.','Batch not found.')); } return $r;
@@ -58,9 +76,9 @@ function inspect_supply(): void {
         $r=Db::one('SELECT * FROM supply_requests WHERE id=? FOR UPDATE',[$id]);
         if (!$r || !in_array($r['status'],['new','scheduled'],true)) { throw new DomainException(t('تمت معالجة هذا الطلب بالفعل.','This request has already been processed.')); }
         if (!Db::one('SELECT id FROM hubs WHERE id=? AND active=1',[$hub])) { throw new DomainException(t('اختر مركزاً نشطاً.','Select an active hub.')); }
-        $party=Db::one("SELECT id FROM parties WHERE kind='seller' AND phone=? ORDER BY id LIMIT 1",[$r['contact_phone']]);
-        $supplier=$party?(int)$party['id']:Db::insert("INSERT INTO parties(kind,name,phone,governorate,address,verified,user_id) VALUES('seller',?,?,?,?,1,?)",[$r['contact_name'],$r['contact_phone'],$r['governorate'],$r['location'],$r['user_id']]);
-        Db::run('UPDATE parties SET verified=1 WHERE id=?',[$supplier]);
+        $supplier=supplier_party_for_request($r);
+
+
         $batch=Db::insert("INSERT INTO batches(code,request_id,supplier_id,hub_id,material_id,grade,subcategory,quantity_g,price_per_tonne,moisture_bp,inspection_notes,inspected_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",[code('B'),$id,$supplier,$hub,$r['material_id'],$grade,$subcategory,$q,$price,$moisture,$notes,$u['id']]);
         Db::run("UPDATE supply_requests SET status='inspected',contact_verified=1 WHERE id=?",[$id]);
         stock_move($batch,'inspection_received',$q,0,$r['public_code']); audit('inspection_accepted','batches',$batch,['seller_authorization'=>true]);
@@ -76,11 +94,12 @@ function quote_totals(int $quantity, int $price, string $mode, string $origin, s
     return ['subtotal'=>$subtotal,'shipping'=>$shipping,'fee_bp'=>$bp,'fee_flat'=>$flat,'service_fee'=>$fee,'total'=>$subtotal+$shipping+$fee];
 }
 function create_order(): int {
-    live_required(); $u=member_required(); rate_limit('order-user:'.$u['id'],10,3600);
+    live_required(); $u=member_required(); commerce_required(); rate_limit('order-user:'.$u['id'],10,3600);
     $batch=id_input('batch_id'); $q=quantity_input(); $shipping=choice('shipping_mode',['hasad','buyer']); $destination=required('destination',500); $gov=choice('governorate',array_keys(governorates())); $org=required('organization',190);
     if (post('accept',4)!=='yes') { throw new DomainException(t('وافق على إجمالي العرض والشروط قبل تأكيد الطلب.','Accept the quote total and terms before confirming.')); }
-    if (setting('instapay_account')==='' && setting('wallet_number')==='') { throw new DomainException(t('طرق الدفع لم تفعّل بعد. تواصل مع الدعم.','Payment destinations are not configured yet. Please contact support.')); }
+
     return Db::tx(function () use ($u,$batch,$q,$shipping,$destination,$gov,$org): int {
+        $commerce=commerce_required(true);
         $b=batch_detail($batch,true);
         if ($b['status']!=='published' || $q>((int)$b['quantity_g']-(int)$b['reserved_g'])) { throw new DomainException(t('الكمية المطلوبة غير متاحة الآن.','The requested quantity is no longer available.')); }
         $supplier=Db::one('SELECT user_id FROM parties WHERE id=?',[$b['supplier_id']]);
@@ -90,7 +109,8 @@ function create_order(): int {
         $t=quote_totals($q,(int)$b['price_per_tonne'],$shipping,$b['governorate'],$gov);
         // The submitted snapshot is checked against a fresh server-side quote to prevent surprise price changes.
         if (money_input('expected_total',true)!==$t['total']) { throw new DomainException(t('تغير العرض. أعد فتح صفحة الشراء لمراجعة الإجمالي الجديد.','The quote changed. Reopen checkout to review the updated total.')); }
-        $id=Db::insert('INSERT INTO orders(code,user_id,buyer_id,batch_id,quantity_g,price_per_tonne,subtotal,shipping,fee_bp,fee_flat,service_fee,total,shipping_mode,destination,governorate,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[code('O'),$u['id'],$buyer,$batch,$q,$b['price_per_tonne'],$t['subtotal'],$t['shipping'],$t['fee_bp'],$t['fee_flat'],$t['service_fee'],$t['total'],$shipping,$destination,$gov,gmdate('Y-m-d H:i:s',time()+(int)setting('order_hold_hours','48')*3600)]);
+        $destinations=$commerce['destinations'];
+        $id=Db::insert('INSERT INTO orders(code,user_id,buyer_id,batch_id,quantity_g,price_per_tonne,subtotal,shipping,fee_bp,fee_flat,service_fee,total,shipping_mode,destination,governorate,instapay_account_snapshot,wallet_number_snapshot,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[code('O'),$u['id'],$buyer,$batch,$q,$b['price_per_tonne'],$t['subtotal'],$t['shipping'],$t['fee_bp'],$t['fee_flat'],$t['service_fee'],$t['total'],$shipping,$destination,$gov,$destinations['instapay'],$destinations['wallet'],gmdate('Y-m-d H:i:s',time()+(int)setting('order_hold_hours','48')*3600)]);
         Db::run('UPDATE batches SET reserved_g=reserved_g+? WHERE id=?',[$q,$batch]); stock_move($batch,'reserved',0,$q,'Order #'.$id); audit('order_created','orders',$id);
         return $id;
     });
@@ -129,11 +149,13 @@ function save_proof(): array {
 }
 function submit_payment(): void {
     $u=member_required(); $id=id_input('order_id'); $method=choice('method',['instapay','wallet']); $reference=required('reference',100); $amount=money_input('amount');
-    if ($method==='instapay' && setting('instapay_account')==='' || $method==='wallet' && setting('wallet_number')==='') { throw new DomainException(t('طريقة الدفع المختارة غير مفعلة.','The selected payment method is not configured.')); }
+
     rate_limit('payment-user:'.$u['id'],15,3600);
     [$path,$mime]=save_proof();
     try { Db::tx(function () use ($u,$id,$method,$reference,$amount,$path,$mime): void {
         $o=order_detail($id,true);
+        $destinations=order_payment_destinations($o,true);
+        if (($method==='instapay' && $destinations['instapay']==='') || ($method==='wallet' && $destinations['wallet']==='')) { throw new DomainException(t('طريقة الدفع المختارة غير مفعلة لهذا الطلب.','The selected payment method is not configured for this order.')); }
         if ((int)$o['user_id']!==(int)$u['id'] || !in_array($o['status'],['quoted','payment_review'],true)) { throw new DomainException(t('لا يمكن تقديم تحويل لهذا الطلب.','A transfer cannot be submitted for this order.')); }
         if ($amount!==(int)$o['total']) { throw new DomainException(t('المبلغ يجب أن يساوي إجمالي الطلب. تواصل مع الدعم عند اختلافه.','The amount must match the order total. Contact support if it differs.')); }
         if (Db::one("SELECT id FROM payments WHERE order_id=? AND status='pending'",[$id])) { throw new DomainException(t('يوجد تحويل قيد المراجعة لهذا الطلب.','This order already has a transfer under review.')); }
@@ -249,7 +271,7 @@ function save_settings(): void {
     $updates['instapay_url']=$v; $updates['pilot_governorate']=choice('pilot_governorate',array_keys(governorates()));$updates['launch_open']=post('launch_open',4)==='yes'?'1':'0';
     if ($updates['launch_open']==='1') {
         if ($updates['contact_phone']==='' || $updates['legal_name']==='' || $updates['legal_address']==='' || ($updates['wallet_number']==='' && $updates['instapay_account']==='')) { throw new DomainException(t('قبل الإطلاق أضف بيانات النشاط والدعم ووجهة دفع واحدة على الأقل.','Before launch, add business details, a support number, and at least one payment destination.')); }
-        $otp=cfg('otp',[]); if (!local_otp_allowed() && (empty($otp['account_sid']) || empty($otp['auth_token']) || empty($otp['verify_service_sid']) || ($otp['driver']??'')!=='twilio')) { throw new DomainException(t('فعّل مزود رموز الدخول قبل فتح المنصة للجمهور.','Configure the login-code provider before opening the platform.')); }
+        $otp=cfg('otp',[]); if (!demo_environment() && !local_otp_allowed() && (empty($otp['account_sid']) || empty($otp['auth_token']) || empty($otp['verify_service_sid']) || ($otp['driver']??'')!=='twilio')) { throw new DomainException(t('فعّل مزود رموز الدخول قبل فتح المنصة للجمهور.','Configure the login-code provider before opening the platform.')); }
         if (setting('demo_data','0')==='1' && cfg('app_env')==='production') { throw new DomainException(t('قاعدة البيانات تحتوي بيانات تدريبية. أنشئ قاعدة نظيفة قبل الإطلاق.','The database contains training records. Use a clean database before launch.')); }
     }
     Db::tx(function () use ($updates): void { foreach ($updates as $key=>$v) { Db::run('INSERT INTO settings(setting_key,setting_value) VALUES(?,?) ON DUPLICATE KEY UPDATE setting_value=VALUES(setting_value)',[$key,$v]); } audit('settings_updated','settings',0,['keys'=>array_keys($updates)]); });
@@ -258,6 +280,14 @@ function create_staff(): void {
     permit('staff');$name=required('name',160);$email=strtolower(required('email',190));$password=required('password',512);$role=choice('role',['support','admin','super_admin']);
     if (!filter_var($email,FILTER_VALIDATE_EMAIL) || strlen($password)<12) { throw new DomainException(t('بريد صحيح وكلمة مرور من ١٢ حرفاً على الأقل مطلوبان.','A valid email and a password of at least 12 characters are required.')); }
     Db::tx(function () use ($name,$email,$password,$role): void {$id=Db::insert('INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,?)',[$name,$email,password_hash($password,PASSWORD_DEFAULT),$role]);audit('staff_created','users',$id,['role'=>$role]);});
+}
+function change_batch_status(): void {
+    permit('inventory');$id=id_input('batch_id');$state=choice('status',['published','quarantined','inspected']);$note=required('note',500);
+    Db::tx(function () use ($id,$state,$note): void { $b=batch_detail($id,true); if ((int)$b['reserved_g']>0 || (int)$b['quantity_g']===0) { throw new DomainException(t('لا يمكن تغيير دفعة محجوزة أو فارغة.','Reserved or empty batches cannot be changed.')); } if ($state==='published' && (!approved_catalogue_material((int)$b['material_id']) || !Db::one("SELECT id FROM hubs WHERE id=? AND active=1 AND address<>''",[$b['hub_id']]) || $b['status']!=='inspected')) { throw new DomainException(t('لا يمكن نشر إلا مادة عامة معتمدة بعد اعتماد الفحص.','Only an approved public catalogue material may be published after inspection approval.')); } Db::run('UPDATE batches SET status=? WHERE id=?',[$state,$id]);audit('batch_'.$state,'batches',$id,['note'=>$note]); });
+}
+function adjust_stock(): void {
+    permit('inventory');$id=id_input('batch_id');$q=quantity_input();$direction=choice('direction',['add','remove']);$note=required('note',500);
+    Db::tx(function () use ($id,$q,$direction,$note): void { $b=batch_detail($id,true); if ($direction==='remove' && $q>(int)$b['quantity_g']-(int)$b['reserved_g']) { throw new DomainException(t('التعديل يتجاوز الكمية غير المحجوزة.','Adjustment exceeds unreserved stock.')); } $delta=$direction==='add'?$q:-$q; if ((int)$b['quantity_g']+$delta>1000000000) { throw new DomainException(t('الكمية تتجاوز حد الدفعة.','Quantity exceeds the batch limit.')); } $resulting=(int)$b['quantity_g']+$delta;$status=adjusted_stock_status($resulting);Db::run("UPDATE batches SET quantity_g=quantity_g+?,status=? WHERE id=?",[$delta,$status,$id]);stock_move($id,'adjustment',$delta,0,$note);audit('stock_adjusted','batches',$id,['delta_g'=>$delta,'note'=>$note]); });
 }
 function handle_admin_action(string $action): void {
     $return=$_POST['return_section']??'dashboard';
@@ -273,13 +303,9 @@ function handle_admin_action(string $action): void {
             $u=permit('supply');$id=id_input('request_id');$state=choice('status',['scheduled','rejected','cancelled']);
             if ($state!=='scheduled' && $u['role']==='support') { throw new DomainException(t('الإلغاء والرفض يحتاجان إلى مدير.','Cancellation and rejection require an administrator.')); }
             Db::tx(function () use ($id,$state): void { $r=Db::one('SELECT * FROM supply_requests WHERE id=? FOR UPDATE',[$id]); if (!$r || !in_array($r['status'],['new','scheduled'],true)) { throw new DomainException(t('لا يمكن تغيير هذه الحالة.','This status cannot be changed.')); } Db::run('UPDATE supply_requests SET status=? WHERE id=?',[$state,$id]);audit('supply_'.$state,'supply_requests',$id); });break;
-        case 'batch-status':
-            permit('inventory');$id=id_input('batch_id');$state=choice('status',['published','quarantined','inspected']);$note=required('note',500);
-            Db::tx(function () use ($id,$state,$note): void { $b=batch_detail($id,true); if ((int)$b['reserved_g']>0 || (int)$b['quantity_g']===0) { throw new DomainException(t('لا يمكن تغيير دفعة محجوزة أو فارغة.','Reserved or empty batches cannot be changed.')); } if ($state==='published' && (!Db::one("SELECT id FROM hubs WHERE id=? AND active=1 AND address<>''",[$b['hub_id']]) || $b['status']!=='inspected')) { throw new DomainException(t('أعد اعتماد الفحص قبل نشر الدفعة.','Reapprove inspection before publishing the batch.')); } Db::run('UPDATE batches SET status=? WHERE id=?',[$state,$id]);audit('batch_'.$state,'batches',$id,['note'=>$note]); });break;
+        case 'batch-status': change_batch_status();break;
         case 'listing-update': update_listing(); break;
-        case 'stock-adjust':
-            permit('inventory');$id=id_input('batch_id');$q=quantity_input();$direction=choice('direction',['add','remove']);$note=required('note',500);
-            Db::tx(function () use ($id,$q,$direction,$note): void { $b=batch_detail($id,true); if ($direction==='remove' && $q>(int)$b['quantity_g']-(int)$b['reserved_g']) { throw new DomainException(t('التعديل يتجاوز الكمية غير المحجوزة.','Adjustment exceeds unreserved stock.')); } $delta=$direction==='add'?$q:-$q; if ((int)$b['quantity_g']+$delta>1000000000) { throw new DomainException(t('الكمية تتجاوز حد الدفعة.','Quantity exceeds the batch limit.')); } Db::run("UPDATE batches SET quantity_g=quantity_g+?,status='inspected' WHERE id=?",[$delta,$id]);stock_move($id,'adjustment',$delta,0,$note);audit('stock_adjusted','batches',$id,['delta_g'=>$delta,'note'=>$note]); });break;
+        case 'stock-adjust': adjust_stock();break;
         case 'extend-order':
             permit('orders');$id=id_input('order_id');$note=required('note',500);
             Db::tx(function () use ($id,$note): void {$o=order_detail($id,true);if (!in_array($o['status'],['quoted','payment_review'],true)) {throw new DomainException(t('الحجز لا يحتاج تمديداً في هذه الحالة.','The reservation cannot be extended in this state.'));}Db::run('UPDATE orders SET expires_at=? WHERE id=?',[gmdate('Y-m-d H:i:s',time()+(int)setting('order_hold_hours','48')*3600),$id]);audit('reservation_extended','orders',$id,['note'=>$note]);});break;

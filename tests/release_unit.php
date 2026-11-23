@@ -6,4 +6,5 @@ check(count(material_subcategories())===4,'four preparation subcategories');
 $xml=spreadsheetml_document([['code'=>'=HYPERLINK("x")','name'=>'Rice straw']],'Stock');
 check(str_contains($xml,'Workbook')&&str_contains($xml,'&#039;=HYPERLINK'),'SpreadsheetML workbook and formula neutralization');
 check(subcategory_label('baled')==='Baled','localized subcategory');
+$root=dirname(__DIR__);$protection=['htdocs/.htaccess','htdocs/app/.htaccess','htdocs/config/.htaccess','htdocs/database/.htaccess','htdocs/views/.htaccess','htdocs/storage/.htaccess','htdocs/storage/proofs/.htaccess','htdocs/storage/proofs/.gitkeep'];foreach($protection as $file){check(is_file($root.'/'.$file),'required repository protection file: '.$file);}check(str_contains((string)file_get_contents($root.'/.gitignore'),'!htdocs/storage/proofs/.htaccess'),'proof protection file is explicitly retained by gitignore');
 echo "ALL RELEASE UNIT CHECKS PASSED.\n";

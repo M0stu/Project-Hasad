@@ -6,8 +6,13 @@
   },
   {
     "path": ".gitignore",
-    "bytes": 297,
-    "sha256": "8667880d986b37a45274c1291495faa6dcc01ff6d489b1f2852a0f747a832813"
+    "bytes": 330,
+    "sha256": "98183fbe7e0320dfb5aaa344a74b03c4826b6904c66e9b473fac6448d9732c81"
+  },
+  {
+    "path": "README.md",
+    "bytes": 6522,
+    "sha256": "b0ecb4c765b3b1dcab984b72ed2ae515f3518abd0494d2d3b742d9f1ac147b98"
   },
   {
     "path": "docs/BRAND.md",
@@ -16,8 +21,8 @@
   },
   {
     "path": "docs/DATABASE.md",
-    "bytes": 4231,
-    "sha256": "49846a23bba1428f759154c2a9d7fa6fbc3935bf2165ea49d5af1a359784df9c"
+    "bytes": 4665,
+    "sha256": "7de899c0ac24a3f1db5be88fc69037b81bf16c0802bd64771e60b0d00641e42c"
   },
   {
     "path": "docs/DEMO-GUIDE-EN.md",
@@ -26,8 +31,8 @@
   },
   {
     "path": "docs/INSTALL-INFINITYFREE.md",
-    "bytes": 9197,
-    "sha256": "4ce132035877c52b2b597123a9951edbad75a39a475d77be246bbd60458b1cdc"
+    "bytes": 10068,
+    "sha256": "2c6d780e41abb969dfb2cbf4d58c60c7fca1cfb8f8121ff7691e148161b8919c"
   },
   {
     "path": "docs/LAUNCH.md",
@@ -40,19 +45,34 @@
     "sha256": "c2dd6755fa913bf0eece1c8ca527727623c090ec5c4c020f9fe3caa8df975b06"
   },
   {
+    "path": "docs/RELEASE-20261123.md",
+    "bytes": 2025,
+    "sha256": "0d382a4bf8c992aa62a65835466fd24ebfeb567fb2118328ab662715c00ab3a9"
+  },
+  {
     "path": "docs/TECHNICAL-GUIDE.md",
     "bytes": 12308,
     "sha256": "42ff6519f12ede4a7da528526326c26304252266f79d628b172413b9522b13fd"
   },
   {
     "path": "docs/VERIFICATION.md",
-    "bytes": 3181,
-    "sha256": "7f5dd60cdf5891d2c17746f6c193b89c5b48d8c705e84b35f7c87cb5f176ef71"
+    "bytes": 3740,
+    "sha256": "db3ecb470d3e55fc4d0f79658a8a10a4f5d7f2761f42a155559fe4228719118e"
+  },
+  {
+    "path": "htdocs/.htaccess",
+    "bytes": 155,
+    "sha256": "f6caf9e67dffe909d9e109fd6d02b03d3536fae30d31b19a5cebe64b8bb9d65c"
+  },
+  {
+    "path": "htdocs/app/.htaccess",
+    "bytes": 36,
+    "sha256": "dbdf47f62a27badc00789cd9369768de4d210117e6b04d534677154701c19435"
   },
   {
     "path": "htdocs/app/auth.php",
-    "bytes": 11405,
-    "sha256": "23514cf8dbb9c6c7ddb303391e8230ddbb0d905b067006d5c8cc348a71cabcee"
+    "bytes": 11578,
+    "sha256": "fa7f002942d0bf8a2c0a0200a55acdb2354014adfdb4341767f735dcc935f05a"
   },
   {
     "path": "htdocs/app/bootstrap.php",
@@ -66,13 +86,13 @@
   },
   {
     "path": "htdocs/app/domain.php",
-    "bytes": 53078,
-    "sha256": "8960d831426eefb771dafddb11bfe75c52aabed9c0ad32e98dee7bd5bd60d44a"
+    "bytes": 54925,
+    "sha256": "0df53024ed5d88322e53771ca7c7dda7bc8634809c4323090f3973fcf0e18abb"
   },
   {
     "path": "htdocs/app/helpers.php",
-    "bytes": 15577,
-    "sha256": "34f6fb5bf987bfd78b8bbf5b8e82bb11e6400af495edf00ff1ac8aabb7a2cf7f"
+    "bytes": 18124,
+    "sha256": "9ed2e7d599108d027524fd7091ffb96dcf7041addf90cbdb66f6973b0136addb"
   },
   {
     "path": "htdocs/assets/app.css",
@@ -100,9 +120,19 @@
     "sha256": "407ee8aaa876d1e8d9f357cd5e78e3a90c558d768dfec3f774ae3a3cd05a8c7b"
   },
   {
+    "path": "htdocs/config/.htaccess",
+    "bytes": 36,
+    "sha256": "dbdf47f62a27badc00789cd9369768de4d210117e6b04d534677154701c19435"
+  },
+  {
     "path": "htdocs/config/config.example.php",
     "bytes": 1401,
     "sha256": "7b6eaefa428b789830d1087c58065e04acec2ebfda86f42ad540274cfb62122f"
+  },
+  {
+    "path": "htdocs/database/.htaccess",
+    "bytes": 36,
+    "sha256": "dbdf47f62a27badc00789cd9369768de4d210117e6b04d534677154701c19435"
   },
   {
     "path": "htdocs/database/migrations/20261119_001_defense_demo.sql",
@@ -110,14 +140,39 @@
     "sha256": "b256ed4a9e2aa5bdefc4cd12e89f7123da1c95e7cfe53ed5171873cce6afac70"
   },
   {
+    "path": "htdocs/database/migrations/20261123_002_order_payment_snapshot.sql",
+    "bytes": 571,
+    "sha256": "41d21198377daf6ff710fb9d3bb11c56017740c9acde46d363414c4087ab445b"
+  },
+  {
     "path": "htdocs/database/schema.sql",
-    "bytes": 17801,
-    "sha256": "ecbd1c3c4d5ead3c572e53095987e25f8e4a306edc274bfa715a51be9af35ea6"
+    "bytes": 17928,
+    "sha256": "c79c02942ad87e7c8edb606dc4ab256d51230f1c9ea1f8b0ffdaeac8dd213c85"
   },
   {
     "path": "htdocs/index.php",
     "bytes": 6910,
     "sha256": "fe78c17759d58386cdd21fc4183ffac5be8eb2a93c46607a533d18441bdd8948"
+  },
+  {
+    "path": "htdocs/storage/.htaccess",
+    "bytes": 36,
+    "sha256": "dbdf47f62a27badc00789cd9369768de4d210117e6b04d534677154701c19435"
+  },
+  {
+    "path": "htdocs/storage/proofs/.gitkeep",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "htdocs/storage/proofs/.htaccess",
+    "bytes": 36,
+    "sha256": "dbdf47f62a27badc00789cd9369768de4d210117e6b04d534677154701c19435"
+  },
+  {
+    "path": "htdocs/views/.htaccess",
+    "bytes": 36,
+    "sha256": "dbdf47f62a27badc00789cd9369768de4d210117e6b04d534677154701c19435"
   },
   {
     "path": "htdocs/views/account.php",
@@ -136,8 +191,8 @@
   },
   {
     "path": "htdocs/views/admin-settings-reports.php",
-    "bytes": 14518,
-    "sha256": "2b881bb7ff048e78774b52eba0720de6fce7b8313d126aa3af1037e9c673488a"
+    "bytes": 15023,
+    "sha256": "5ba39df4bbb6ca72c57188811b7705efbd496bad8d7a990e671112e47e5ec1ef"
   },
   {
     "path": "htdocs/views/admin.php",
@@ -151,8 +206,8 @@
   },
   {
     "path": "htdocs/views/checkout.php",
-    "bytes": 7080,
-    "sha256": "b604515193ef15ee1df242829e813157f5f31904a54d2dafc86f108af1477165"
+    "bytes": 7669,
+    "sha256": "583466a0a7a40ec9c812b96d47f6be844d2b78fd5a66e7bd67c67ce13af8c72b"
   },
   {
     "path": "htdocs/views/contact.php",
@@ -196,13 +251,13 @@
   },
   {
     "path": "htdocs/views/market.php",
-    "bytes": 6841,
-    "sha256": "9bf04ecc1ec2419269146d0ace6f83ab86fce48ae583449ba7c4367b61d5e28e"
+    "bytes": 7587,
+    "sha256": "3e3ab3cd76284c2ecd43fbaca32b2a44c3b9818311a0915a648f9f4e509e69c8"
   },
   {
     "path": "htdocs/views/order.php",
-    "bytes": 7389,
-    "sha256": "344d3f1c9210b67dbcb1c7e5533cdd108c48bdc67355db6721107bebd56b0b60"
+    "bytes": 7437,
+    "sha256": "9be5a947a01fc8f2bc2eb6008c98fa7d9f6ffb85166ef0e19d28d39446894228"
   },
   {
     "path": "htdocs/views/sell.php",
@@ -228,11 +283,6 @@
     "path": "htdocs/views/verify.php",
     "bytes": 1555,
     "sha256": "f0c0478b7881fbcf67a336c1f2efede7cef1de54b5ca72c38e3abcc530c6e316"
-  },
-  {
-    "path": "presentation/build_hassad_presentation.py",
-    "bytes": 66303,
-    "sha256": "1b95c68a31d4d02299303dcf64a759b93a94e0dbd10f227f2392a52ebc62fe5a"
   },
   {
     "path": "presentation/HASSAD_Arabic_Defense_QA_Prep.md",
@@ -288,6 +338,16 @@
     "path": "presentation/HASSAD_Website_Demo_Runbook.md",
     "bytes": 18602,
     "sha256": "4d9a9717c1d893bdf01720cac15b420ca57781ca49f84b7f3fad3b0d26466f08"
+  },
+  {
+    "path": "presentation/README_DELIVERABLES.md",
+    "bytes": 7005,
+    "sha256": "04d06ec95d3cc95aff70368457c7a61efc69fbf6db167265c1d94d0dc67d07ab"
+  },
+  {
+    "path": "presentation/build_hassad_presentation.py",
+    "bytes": 66303,
+    "sha256": "1b95c68a31d4d02299303dcf64a759b93a94e0dbd10f227f2392a52ebc62fe5a"
   },
   {
     "path": "presentation/previews/HASSAD_Contact_Sheet.png",
@@ -395,11 +455,6 @@
     "sha256": "cd659c0b0d47b9fea75396748047e570e68f68e91012a2c892042b30c722c040"
   },
   {
-    "path": "presentation/README_DELIVERABLES.md",
-    "bytes": 6884,
-    "sha256": "1747ca79d4d8014830f2152d83dcc966b5566f4aaf0a4390936b9784ab62a559"
-  },
-  {
     "path": "presentation/validation_report.json",
     "bytes": 5888,
     "sha256": "016d3b6e51da8815b9341498a86042565837bc8bad2ec6e650bfd048e493cff7"
@@ -410,9 +465,9 @@
     "sha256": "abc02ed5630e4a32a472f1e4bf597f6bb1b3a7e78590e12e8911a0e3a34086f4"
   },
   {
-    "path": "README.md",
-    "bytes": 6522,
-    "sha256": "b0ecb4c765b3b1dcab984b72ed2ae515f3518abd0494d2d3b742d9f1ac147b98"
+    "path": "tests/README.md",
+    "bytes": 1803,
+    "sha256": "dac369fed46a26fdccf28374b89d6f2b8e34701eed47c1d615a57040f4f887ea"
   },
   {
     "path": "tests/auth_driver.php",
@@ -425,14 +480,9 @@
     "sha256": "5eedca27f0bb2a6567185fc38b006229ad53891654d3f0ce52cdd1ca000f1cee"
   },
   {
-    "path": "tests/README.md",
-    "bytes": 1514,
-    "sha256": "fb34161922350b77eeee1e888b63533bb135c10044db0cba2046ba391e9d3c25"
-  },
-  {
     "path": "tests/release_unit.php",
-    "bytes": 663,
-    "sha256": "32ae65e243cac9d84ebd2d35e4736258012d13fae3c8534474338589c0c9d889"
+    "bytes": 1188,
+    "sha256": "da4ef0ad154e75d547868e1ea81ae71e1c5e8040ddf4f959ae52023c450ce1fd"
   },
   {
     "path": "tests/render_page.php",
@@ -451,8 +501,8 @@
   },
   {
     "path": "tests/workflows.php",
-    "bytes": 19666,
-    "sha256": "8c7777a696be7275f6d9dc3208911cc151f0cb658f685fbed4df27755b1806b5"
+    "bytes": 26116,
+    "sha256": "5bfa3afb40fcd1d50c5bbedb979c760e9e8cd77a3f5573cd65e1fdf7c81eb311"
   },
   {
     "path": "tools/demo_data.php",

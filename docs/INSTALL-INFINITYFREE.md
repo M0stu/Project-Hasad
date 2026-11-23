@@ -17,6 +17,8 @@ In the hosting control panel, open **MySQL Databases** and create a database, fo
 
 Open phpMyAdmin for this database. Select **Import** and import `htdocs/database/schema.sql`. The schema does not try to create a database or change server-wide settings. All tables use InnoDB and utf8mb4.
 
+For an existing installation, do not re-import the fresh schema. Back up the database and receipt storage, then apply unapplied versioned migrations in order. For this release, import `htdocs/database/migrations/20261123_002_order_payment_snapshot.sql` once and confirm `20261123_002_order_payment_snapshot` appears in `schema_migrations` before uploading the new PHP source.
+
 The schema creates reference materials, accounts and starting settings. It contains no real customers, stock, transactions or login passwords.
 
 ## 3. Upload the application
@@ -117,7 +119,9 @@ Customers pay Hasad, staff confirm receipt, and staff record verified seller/car
 
 Review the customer terms and privacy text against the actual business arrangements. Complete the live steps in `docs/LAUNCH.md`. Enable **Open requests and phone sign-in** in Settings when you are ready for a limited pilot.
 
-The launch switch requires operator details, a support number, at least one payment destination and SMS configuration. A database marked as training data cannot be opened in production.
+The launch switch requires operator details, a support number, at least one payment destination and SMS configuration. A database marked as training data cannot be opened in production. If a legacy/manual database edit leaves launch open without a payment destination, Settings displays a prominent invariant warning and buyer reservation remains disabled while marketplace browsing stays available.
+
+`app_env=demo` plus explicit `demo_mode` is the only configuration that enables demo personas and permits a demo launch without Twilio. Never use that exception in production: `app_env=production` requires valid Twilio configuration and rejects a database marked with demo data.
 
 ## 9. Check protection and backups
 

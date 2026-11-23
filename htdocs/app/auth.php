@@ -4,6 +4,8 @@ function member(): ?array { $id=(int)($_SESSION['member_id'] ?? 0); return $id &
 function staff(): ?array { $id=(int)($_SESSION['staff_id'] ?? 0); return $id && ready() ? Db::one("SELECT * FROM users WHERE id=? AND active=1 AND role IN ('support','admin','super_admin')",[$id]) : null; }
 function member_required(): array { $u=member(); if (!$u) { redirect('login'); } return $u; }
 function staff_required(): array { $u=staff(); if (!$u) { redirect('admin-login'); } return $u; }
+function activate_member_session(int $id): void { session_regenerate_id(true);unset($_SESSION['staff_id'],$_SESSION['otp'],$_SESSION['local_code']);$_SESSION['member_id']=$id;$_SESSION['csrf']=bin2hex(random_bytes(32)); }
+function activate_staff_session(int $id): void { session_regenerate_id(true);unset($_SESSION['member_id'],$_SESSION['otp'],$_SESSION['local_code']);$_SESSION['staff_id']=$id;$_SESSION['csrf']=bin2hex(random_bytes(32)); }
 function can(string $permission): bool {
     $u=staff(); if (!$u) { return false; }
     if ($u['role']==='super_admin') { return true; }
@@ -63,7 +65,7 @@ function finish_phone_login(): void {
     });
     if (!empty($u['failed'])) { throw new DomainException(t('الرمز غير صحيح.','The code is incorrect.')); }
     if (!empty($u['blocked'])) { throw new DomainException(t('هذا الحساب غير متاح. تواصل مع الإدارة.','This account is unavailable. Please contact an administrator.')); }
-    session_regenerate_id(true); $_SESSION['member_id']=$u['id']; $_SESSION['csrf']=bin2hex(random_bytes(32)); unset($_SESSION['otp'],$_SESSION['local_code']);
+    activate_member_session((int)$u['id']);
     redirect('account');
 }
 function login_staff(): void {
@@ -75,7 +77,7 @@ function login_staff(): void {
     $ok=password_verify($password,$u['password_hash'] ?? $dummy);
     if (!$u || !$ok || !$u['active']) { throw new DomainException(t('بيانات الدخول غير صحيحة.','Login details are incorrect.')); }
     if (password_needs_rehash($u['password_hash'],PASSWORD_DEFAULT)) { Db::run('UPDATE users SET password_hash=? WHERE id=?',[password_hash($password,PASSWORD_DEFAULT),$u['id']]); }
-    session_regenerate_id(true); $_SESSION['staff_id']=$u['id']; $_SESSION['csrf']=bin2hex(random_bytes(32)); audit('login','users',(int)$u['id']); redirect('admin');
+    activate_staff_session((int)$u['id']); audit('login','users',(int)$u['id']); redirect('admin');
 }
 function login_demo_persona(): void {
     if (!demo_mode()) { throw new DomainException(t('الدخول التدريبي غير متاح.','Training sign-in is unavailable.')); }
@@ -86,7 +88,7 @@ function login_demo_persona(): void {
     $u=Db::one("SELECT * FROM users WHERE phone=? AND role='member' AND active=1",[$phone]);
     $dummy='$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi';
     if (!$u || !password_verify($password,$u['password_hash']??$dummy) || $u['account_type']!==($persona==='supplier'?'seller':'buyer')) { throw new DomainException(t('بيانات الشخصية التدريبية غير صحيحة.','Training persona credentials are incorrect.')); }
-    session_regenerate_id(true);$_SESSION['member_id']=$u['id'];$_SESSION['csrf']=bin2hex(random_bytes(32));audit('demo_persona_login','users',(int)$u['id'],['persona'=>$persona]);redirect('account');
+    activate_member_session((int)$u['id']);audit('demo_persona_login','users',(int)$u['id'],['persona'=>$persona]);redirect('account');
 }
 function setup_admin(): void {
     if (!ready()) { throw new DomainException(t('استورد ملف schema.sql واضبط config.php أولاً.','Import schema.sql and configure config.php first.')); }
@@ -101,5 +103,5 @@ function setup_admin(): void {
         $_SESSION['staff_id']=$id;
         audit('initial_setup','users',$id);
     });
-    session_regenerate_id(true); $_SESSION['csrf']=bin2hex(random_bytes(32)); redirect('admin',['section'=>'settings']);
+    activate_staff_session((int)$_SESSION['staff_id']); redirect('admin',['section'=>'settings']);
 }
