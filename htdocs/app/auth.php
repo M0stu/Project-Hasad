@@ -4,8 +4,9 @@ function member(): ?array { $id=(int)($_SESSION['member_id'] ?? 0); return $id &
 function staff(): ?array { $id=(int)($_SESSION['staff_id'] ?? 0); return $id && ready() ? Db::one("SELECT * FROM users WHERE id=? AND active=1 AND role IN ('support','admin','super_admin')",[$id]) : null; }
 function member_required(): array { $u=member(); if (!$u) { redirect('login'); } return $u; }
 function staff_required(): array { $u=staff(); if (!$u) { redirect('admin-login'); } return $u; }
-function activate_member_session(int $id): void { session_regenerate_id(true);unset($_SESSION['staff_id'],$_SESSION['otp'],$_SESSION['local_code']);$_SESSION['member_id']=$id;$_SESSION['csrf']=bin2hex(random_bytes(32)); }
-function activate_staff_session(int $id): void { session_regenerate_id(true);unset($_SESSION['member_id'],$_SESSION['otp'],$_SESSION['local_code']);$_SESSION['staff_id']=$id;$_SESSION['csrf']=bin2hex(random_bytes(32)); }
+function activate_member_session(int $id): void { session_regenerate_id(true);unset($_SESSION['staff_id'],$_SESSION['otp'],$_SESSION['local_code'],$_SESSION['demo_persona']);$_SESSION['member_id']=$id;$_SESSION['csrf']=bin2hex(random_bytes(32)); }
+function activate_demo_member_session(int $id,string $persona): void { activate_member_session($id);$_SESSION['demo_persona']=['type'=>$persona,'member_id'=>$id]; }
+function activate_staff_session(int $id): void { session_regenerate_id(true);unset($_SESSION['member_id'],$_SESSION['otp'],$_SESSION['local_code'],$_SESSION['demo_persona']);$_SESSION['staff_id']=$id;$_SESSION['csrf']=bin2hex(random_bytes(32)); }
 function can(string $permission): bool {
     $u=staff(); if (!$u) { return false; }
     if ($u['role']==='super_admin') { return true; }
@@ -88,7 +89,7 @@ function login_demo_persona(): void {
     $u=Db::one("SELECT * FROM users WHERE phone=? AND role='member' AND active=1",[$phone]);
     $dummy='$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi';
     if (!$u || !password_verify($password,$u['password_hash']??$dummy) || $u['account_type']!==($persona==='supplier'?'seller':'buyer')) { throw new DomainException(t('بيانات الشخصية التدريبية غير صحيحة.','Training persona credentials are incorrect.')); }
-    activate_member_session((int)$u['id']);audit('demo_persona_login','users',(int)$u['id'],['persona'=>$persona]);redirect('account');
+    activate_demo_member_session((int)$u['id'],$persona);audit('demo_persona_login','users',(int)$u['id'],['persona'=>$persona]);redirect('account');
 }
 function setup_admin(): void {
     if (!ready()) { throw new DomainException(t('استورد ملف schema.sql واضبط config.php أولاً.','Import schema.sql and configure config.php first.')); }

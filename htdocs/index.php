@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         case 'demo-login': login_demo_persona();
         case 'admin-login': login_staff();
         case 'setup-admin': setup_admin();
-        case 'logout': if (post('area',20)==='staff') {unset($_SESSION['staff_id']);} else {unset($_SESSION['member_id'],$_SESSION['otp'],$_SESSION['local_code']);} session_regenerate_id(true);$_SESSION['csrf']=bin2hex(random_bytes(32));redirect('home');
+        case 'logout': if (post('area',20)==='staff') {unset($_SESSION['staff_id']);} else {unset($_SESSION['member_id'],$_SESSION['otp'],$_SESSION['local_code'],$_SESSION['demo_persona']);} session_regenerate_id(true);$_SESSION['csrf']=bin2hex(random_bytes(32));redirect('home');
         case 'supply': create_supply();flash(t('استلمنا طلبك. فريق حصاد سيراجع التفاصيل ويتواصل معك.','Your request is received. Hasad will review the details and contact you.'));redirect('thanks');
         case 'order': $id=create_order();redirect('order',['id'=>$id]);
         case 'payment': submit_payment();flash(t('تم إرسال بيانات التحويل للمراجعة. لم يتم تأكيد الدفع بعد.','Transfer details were submitted for review. Payment is not confirmed yet.'));redirect('order',['id'=>(int)$_POST['order_id']]);

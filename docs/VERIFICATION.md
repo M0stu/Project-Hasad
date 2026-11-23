@@ -15,7 +15,7 @@ The workflow suite includes exact quotations, oversized arithmetic, stock reserv
 
 The confidentiality checks assert that buyer pages contain no seller name, phone, farm address or internal inspection report; supplier accounts contain no factory name, phone, destination or organization; and marketplace listings omit supplier identity. Concurrent tests launch two independent buyers requesting 6 tonnes from 9.5 available tonnes and verify that exactly one succeeds.
 
-The 2026-11-23 reliability suite additionally covers zero/one payment destination readiness, readiness before order rate-limit persistence, transactional order payment snapshots, refusal of methods absent from a snapshot, safe legacy fallback, demo-environment gating, opposite-principal session clearing, verified supplier-party binding and ownership conflicts, approved-catalogue publication, depleted/recovered stock transitions, disabled marketplace/checkout reservation states, the Settings invariant warning, and required repository protection files.
+The 2026-11-23 reliability suite additionally covers zero/one payment destination readiness, readiness before order rate-limit persistence, transactional order payment snapshots, refusal of methods absent from a snapshot, safe legacy fallback, isolated demo-buyer synthetic instructions, production rejection of forged demo markers, opposite-principal session clearing, verified supplier-party binding and ownership conflicts, approved-catalogue publication, depleted/recovered stock transitions, disabled marketplace/checkout reservation states, the Settings invariant warning, and required repository protection files.
 
 ## Verification boundaries
 
