@@ -63,17 +63,25 @@ function positive(int $v): int { if ($v < 1) { throw new DomainException(t('ال
 function setting(string $key, string $default = ''): string { if (!ready()) { return $default; } $r = Db::one('SELECT setting_value FROM settings WHERE setting_key=?', [$key]); return $r ? $r['setting_value'] : $default; }
 function ready(): bool { if(!empty($GLOBALS['error_rendering'])){return false;}static $known=null;if($known!==null){return $known;}try { return $known= !empty(cfg('db')) && Db::one('SELECT setting_key FROM settings LIMIT 1') !== null; } catch (Throwable) { return $known=false; } }
 function live_required(): void { if (!ready() || setting('launch_open','0') !== '1') { throw new DomainException(t('المنصة قيد تجهيز الإطلاق. استقبال الطلبات سيفتح بعد تفعيل الإدارة.','The platform is preparing to launch. Requests open after administrator activation.')); } }
+/** A trial marker is valid only for the matching member in an explicitly isolated demo environment. */
+function demo_trial_session(string $persona='buyer'): bool {
+    $marker=$_SESSION['demo_persona']??null;
+    return demo_mode() && is_array($marker) && ($marker['type']??'')===$persona && (int)($marker['member_id']??0)>0 && (int)($marker['member_id']??0)===(int)($_SESSION['member_id']??0);
+}
+function demo_payment_destination(): string { $v=trim((string)cfg('demo_payment_destination','DEMO-ONLY-NO-TRANSFER'));return $v!==''?$v:'DEMO-ONLY-NO-TRANSFER'; }
 /** Read the launch switch and receiving destinations as one readiness snapshot. */
 function commerce_readiness(bool $lock=false): array {
     $values=['launch_open'=>'0','instapay_account'=>'','instapay_url'=>'','wallet_number'=>''];
-    if (!ready()) { return ['available'=>false,'launch_open'=>false,'destinations'=>['instapay'=>'','wallet'=>'','instapay_url'=>''],'methods'=>[]]; }
+    if (!ready()) { return ['available'=>false,'launch_open'=>false,'destinations'=>['instapay'=>'','wallet'=>'','instapay_url'=>''],'methods'=>[],'demo_trial'=>false]; }
     if ($lock && !Db::inTransaction()) { throw new LogicException('Commerce settings may only be locked in a transaction'); }
     $sql="SELECT setting_key,setting_value FROM settings WHERE setting_key IN ('launch_open','instapay_account','instapay_url','wallet_number') ORDER BY setting_key".($lock?' FOR UPDATE':'');
     foreach (Db::all($sql) as $row) { $values[$row['setting_key']]=(string)$row['setting_value']; }
     $destinations=['instapay'=>trim($values['instapay_account']),'wallet'=>trim($values['wallet_number']),'instapay_url'=>trim($values['instapay_url'])];
+    $trial=demo_trial_session('buyer');
+    if ($trial) { $destinations=['instapay'=>demo_payment_destination(),'wallet'=>'','instapay_url'=>'']; }
     $methods=[];if($destinations['instapay']!==''){$methods[]='instapay';}if($destinations['wallet']!==''){$methods[]='wallet';}
     $open=$values['launch_open']==='1';
-    return ['available'=>$open && $methods!==[],'launch_open'=>$open,'destinations'=>$destinations,'methods'=>$methods];
+    return ['available'=>$open && $methods!==[],'launch_open'=>$open,'destinations'=>$destinations,'methods'=>$methods,'demo_trial'=>$trial];
 }
 function commerce_required(bool $lock=false): array {
     $readiness=commerce_readiness($lock);
@@ -85,10 +93,11 @@ function order_payment_destinations(array $order, bool $lockCurrent=false): arra
     $hasColumns=array_key_exists('instapay_account_snapshot',$order) && array_key_exists('wallet_number_snapshot',$order);
     $legacy=!$hasColumns || ($order['instapay_account_snapshot']===null && $order['wallet_number_snapshot']===null);
     if ($legacy) {
-        $current=commerce_readiness($lockCurrent)['destinations'];
-        return ['instapay'=>$current['instapay'],'wallet'=>$current['wallet'],'instapay_url'=>$current['instapay_url'],'legacy'=>true];
+        $readiness=commerce_readiness($lockCurrent);$current=$readiness['destinations'];
+        return ['instapay'=>$current['instapay'],'wallet'=>$current['wallet'],'instapay_url'=>$current['instapay_url'],'legacy'=>true,'demo_trial'=>$readiness['demo_trial']];
     }
-    return ['instapay'=>(string)$order['instapay_account_snapshot'],'wallet'=>(string)$order['wallet_number_snapshot'],'instapay_url'=>'','legacy'=>false];
+    $ip=(string)$order['instapay_account_snapshot'];$wallet=(string)$order['wallet_number_snapshot'];$trial=demo_environment() && $wallet==='' && hash_equals(demo_payment_destination(),$ip);
+    return ['instapay'=>$ip,'wallet'=>$wallet,'instapay_url'=>'','legacy'=>false,'demo_trial'=>$trial];
 }
 function demo_environment(): bool { return cfg('app_env')==='demo' && (bool)cfg('demo_mode',false); }
 function code(string $kind): string { return 'HS-' . $kind . '-' . date('ymd') . '-' . strtoupper(bin2hex(random_bytes(4))); }

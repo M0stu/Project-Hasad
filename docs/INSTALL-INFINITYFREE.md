@@ -121,7 +121,7 @@ Review the customer terms and privacy text against the actual business arrangeme
 
 The launch switch requires operator details, a support number, at least one payment destination and SMS configuration. A database marked as training data cannot be opened in production. If a legacy/manual database edit leaves launch open without a payment destination, Settings displays a prominent invariant warning and buyer reservation remains disabled while marketplace browsing stays available.
 
-`app_env=demo` plus explicit `demo_mode` is the only configuration that enables demo personas and permits a demo launch without Twilio. Never use that exception in production: `app_env=production` requires valid Twilio configuration and rejects a database marked with demo data.
+`app_env=demo` plus explicit `demo_mode` is the only configuration that enables demo personas and permits a demo launch without Twilio. An authenticated buyer demo persona receives the synthetic `DEMO-ONLY-NO-TRANSFER` payment instruction so a classroom reservation can proceed without publishing or using a real financial account. The UI repeatedly says not to transfer money. Normal member sessions do not receive this bypass. Never use that exception in production: `app_env=production` requires valid Twilio configuration, rejects a database marked with demo data, and ignores forged demo-session markers.
 
 ## 9. Check protection and backups
 
