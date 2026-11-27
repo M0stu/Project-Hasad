@@ -148,19 +148,23 @@ function save_proof(): array {
     return [$filename,$mime];
 }
 function submit_payment(): void {
-    $u=member_required(); $id=id_input('order_id'); $method=choice('method',['instapay','wallet']); $reference=required('reference',100); $amount=money_input('amount');
-
+    $u=member_required(); $id=id_input('order_id'); $method=choice('method',['instapay','wallet']); $submittedReference=post('reference',100); $amount=money_input('amount');
+    $preview=order_detail($id);$previewDestinations=order_payment_destinations($preview);$previewDemo=(bool)$previewDestinations['demo_trial'];
+    if ((int)$preview['user_id']!==(int)$u['id']) { throw new DomainException(t('لا يمكن تقديم تحويل لهذا الطلب.','A transfer cannot be submitted for this order.')); }
+    if (!$previewDemo) { $submittedReference=transfer_reference_value($submittedReference); }
     rate_limit('payment-user:'.$u['id'],15,3600);
     [$path,$mime]=save_proof();
-    try { Db::tx(function () use ($u,$id,$method,$reference,$amount,$path,$mime): void {
+    try { Db::tx(function () use ($u,$id,$method,$submittedReference,$amount,$path,$mime): void {
         $o=order_detail($id,true);
-        $destinations=order_payment_destinations($o,true);
+        $destinations=order_payment_destinations($o,true);$demo=(bool)$destinations['demo_trial'];
         if (($method==='instapay' && $destinations['instapay']==='') || ($method==='wallet' && $destinations['wallet']==='')) { throw new DomainException(t('طريقة الدفع المختارة غير مفعلة لهذا الطلب.','The selected payment method is not configured for this order.')); }
         if ((int)$o['user_id']!==(int)$u['id'] || !in_array($o['status'],['quoted','payment_review'],true)) { throw new DomainException(t('لا يمكن تقديم تحويل لهذا الطلب.','A transfer cannot be submitted for this order.')); }
         if ($amount!==(int)$o['total']) { throw new DomainException(t('المبلغ يجب أن يساوي إجمالي الطلب. تواصل مع الدعم عند اختلافه.','The amount must match the order total. Contact support if it differs.')); }
         if (Db::one("SELECT id FROM payments WHERE order_id=? AND status='pending'",[$id])) { throw new DomainException(t('يوجد تحويل قيد المراجعة لهذا الطلب.','This order already has a transfer under review.')); }
+        $reference=$demo?'DEMO-'.$o['code'].'-'.str_pad((string)((int)Db::scalar('SELECT COUNT(*) FROM payments WHERE order_id=?',[$id])+1),2,'0',STR_PAD_LEFT):$submittedReference;
+        if (Db::one('SELECT id FROM payments WHERE method=? AND reference=?',[$method,$reference])) { throw new DomainException(t('تم استخدام مرجع التحويل من قبل. راجع الرقم أو استخدم المرجع الصحيح.','This transfer reference has already been used. Check it or enter the correct reference.')); }
         Db::run('INSERT INTO payments(order_id,method,reference,amount,proof_path,proof_mime) VALUES(?,?,?,?,?,?)',[$id,$method,$reference,$amount,$path,$mime]);
-        Db::run("UPDATE orders SET status='payment_review' WHERE id=?",[$id]); audit('transfer_submitted','orders',$id);
+        Db::run("UPDATE orders SET status='payment_review' WHERE id=?",[$id]); audit('transfer_submitted','orders',$id,['demo'=>$demo]);
     }); } catch (Throwable $e) { if ($path) { @unlink(HASAD_ROOT.'/storage/proofs/'.$path); } throw $e; }
 }
 function post_journal(string $source,int $id,string $event,string $description,array $lines,int $actor): int {
@@ -177,30 +181,38 @@ function register_transfer(string $method,string $reference,string $direction,in
     Db::run('INSERT INTO transfer_register(reference,method,direction,amount,source,source_id,created_by) VALUES(?,?,?,?,?,?,?)',[$reference,$method,$direction,$amount,$source,$sourceId,$actor]);
 }
 function confirm_payment(): void {
-    $u=permit('payments');$id=id_input('payment_id');$decision=choice('decision',['confirmed','rejected']); $note=required('review_note',500); $bankRef=post('bank_reference',100);
-    if ($decision==='confirmed' && (post('bank_checked',4)!=='yes' || $bankRef==='')) { throw new DomainException(t('تحقق من وصول التحويل في الحساب الفعلي وسجل مرجع كشف الحساب.','Check the actual receiving account and record the statement reference.')); }
-    Db::tx(function () use ($u,$id,$decision,$note,$bankRef): void {
+    $u=permit('payments');$id=id_input('payment_id');$decision=choice('decision',['confirmed','rejected']);$note=required('review_note',500);$submittedBankRef=post('bank_reference',100);$bankChecked=post('bank_checked',4)==='yes';$demoApproved=post('demo_approval',4)==='yes';
+    Db::tx(function () use ($u,$id,$decision,$note,$submittedBankRef,$bankChecked,$demoApproved): void {
         // All payment/order paths lock order before payment to avoid lock-order deadlocks.
         $preview=Db::one('SELECT order_id FROM payments WHERE id=?',[$id]); if (!$preview) { throw new DomainException(t('التحويل غير موجود.','Transfer not found.')); }
         $o=order_detail((int)$preview['order_id'],true);$p=Db::one('SELECT * FROM payments WHERE id=? FOR UPDATE',[$id]);
         if ($p['status']!=='pending' || $o['status']!=='payment_review') { throw new DomainException(t('تمت مراجعة هذا التحويل بالفعل.','This transfer has already been reviewed.')); }
+        $demo=(bool)order_payment_destinations($o)['demo_trial'];$bankRef='';
         if ($decision==='confirmed') {
             if ((int)$p['amount']!==(int)$o['total']) { throw new LogicException('Payment total invariant broken'); }
-            post_journal('order',(int)$o['id'],'collection','Online transfer received '.$o['code'],[['account'=>1010,'debit'=>(int)$o['total']],['account'=>2010,'credit'=>(int)$o['total'],'party'=>$o['buyer_id']]],(int)$u['id']);
+            if ($demo) {
+                if (!$demoApproved) { throw new DomainException(t('أكد أن هذه موافقة تدريبية بلا تحويل أموال.','Confirm that this is a synthetic demo approval with no money transferred.')); }
+                $bankRef='DEMO-PAYMENT-'.$id;
+            } else {
+                if (!$bankChecked || $submittedBankRef==='') { throw new DomainException(t('تحقق من وصول التحويل في الحساب الفعلي وسجل مرجع كشف الحساب.','Check the actual receiving account and record the statement reference.')); }
+                $bankRef=transfer_reference_value($submittedBankRef);
+            }
+            post_journal('order',(int)$o['id'],'collection',($demo?'DEMO ONLY - synthetic collection ':'Online transfer received ').$o['code'],[['account'=>1010,'debit'=>(int)$o['total']],['account'=>2010,'credit'=>(int)$o['total'],'party'=>$o['buyer_id']]],(int)$u['id']);
             register_transfer($p['method'],$bankRef,'incoming',(int)$o['total'],'payment',$id,(int)$u['id']);
             Db::run("UPDATE orders SET status='paid' WHERE id=?",[$o['id']]);
         } else { Db::run("UPDATE orders SET status='quoted' WHERE id=?",[$o['id']]); }
-        Db::run('UPDATE payments SET status=?,bank_reference=?,reviewed_by=?,review_note=? WHERE id=?',[$decision,$decision==='confirmed'?$bankRef:null,$u['id'],$note,$id]); audit('payment_'.$decision,'payments',$id);
+        Db::run('UPDATE payments SET status=?,bank_reference=?,reviewed_by=?,review_note=? WHERE id=?',[$decision,$decision==='confirmed'?$bankRef:null,$u['id'],$note,$id]);audit('payment_'.$decision,'payments',$id,['demo'=>$demo]);
     });
 }
 function fulfill_order(): void {
     $u=permit('orders');$id=id_input('order_id');$next=choice('status',['dispatching','delivered','cancelled']);
-    $note=required('note',500);
-    Db::tx(function () use ($u,$id,$next,$note): void {
+    $note=required('note',500);$demoApproved=post('demo_approval',4)==='yes';
+    Db::tx(function () use ($u,$id,$next,$note,$demoApproved): void {
         $o=order_detail($id,true);
         if ($next==='cancelled') {
             if (!in_array($o['status'],['quoted','payment_review','paid'],true)) { throw new DomainException(t('الإلغاء غير متاح في هذه المرحلة.','Cancellation is unavailable at this stage.')); }
-            if (post('bank_checked',4)!=='yes') { throw new DomainException(t('راجع الحساب الفعلي قبل إلغاء أي طلب للتأكد من التحويلات المتأخرة.','Check the actual receiving account before cancellation for any delayed transfer.')); }
+            $demo=(bool)order_payment_destinations($o)['demo_trial'];
+            if ($demo ? !$demoApproved : post('bank_checked',4)!=='yes') { throw new DomainException($demo?t('أكد إغلاق الطلب التدريبي بلا أموال.','Confirm closure of the synthetic demo order with no money involved.'):t('راجع الحساب الفعلي قبل إلغاء أي طلب للتأكد من التحويلات المتأخرة.','Check the actual receiving account before cancellation for any delayed transfer.')); }
             if ($o['status']==='payment_review' || Db::one("SELECT id FROM payments WHERE order_id=? AND status='pending'",[$id])) { throw new DomainException(t('راجع التحويل المقدم قبل الإلغاء.','Review the submitted transfer before cancellation.')); }
             release_reservation($o,'cancelled');
             Db::run('UPDATE orders SET status=? WHERE id=?',[$o['status']==='paid'?'refund_pending':'cancelled',$id]);
@@ -222,20 +234,23 @@ function fulfill_order(): void {
     });
 }
 function settle_order(): void {
-    $u=permit('finance');$id=id_input('order_id');$type=choice('type',['seller','shipping','refund']);$amount=money_input('amount');$method=choice('method',['instapay','wallet']);$ref=required('reference',100);
-    if (post('transfer_checked',4)!=='yes') { throw new DomainException(t('نفذ التحويل خارج المنصة وتحقق منه أولاً.','Complete and verify the outgoing transfer outside the platform first.')); }
-    Db::tx(function () use ($u,$id,$type,$amount,$method,$ref): void {
-        $o=order_detail($id,true);
+    $u=permit('finance');$id=id_input('order_id');$type=choice('type',['seller','shipping','refund']);$amount=money_input('amount');$method=choice('method',['instapay','wallet']);$submittedRef=post('reference',100);$transferChecked=post('transfer_checked',4)==='yes';$demoApproved=post('demo_approval',4)==='yes';
+    $preview=order_detail($id);$previewDemo=(bool)order_payment_destinations($preview)['demo_trial'];
+    if ($previewDemo ? !$demoApproved : !$transferChecked) { throw new DomainException($previewDemo?t('أكد أن التسوية تدريبية بلا تحويل أموال.','Confirm that this is a synthetic demo settlement with no money transferred.'):t('نفذ التحويل خارج المنصة وتحقق منه أولاً.','Complete and verify the outgoing transfer outside the platform first.')); }
+    if (!$previewDemo) { $submittedRef=transfer_reference_value($submittedRef); }
+    Db::tx(function () use ($u,$id,$type,$amount,$method,$submittedRef): void {
+        $o=order_detail($id,true);$demo=(bool)order_payment_destinations($o)['demo_trial'];
         if (($type==='refund' && $o['status']!=='refund_pending') || ($type!=='refund' && $o['status']!=='delivered')) { throw new DomainException(t('حالة الطلب لا تسمح بالتسوية.','Order status does not allow this settlement.')); }
         $cap=(int)$o[$type==='seller'?'subtotal':($type==='shipping'?'shipping':'total')];
         $paid=(int)Db::scalar('SELECT COALESCE(SUM(amount),0) FROM settlements WHERE order_id=? AND type=?',[$id,$type]);
         if ($amount>$cap-$paid) { throw new DomainException(t('المبلغ يتجاوز المستحق المتبقي.','Amount exceeds the outstanding balance.')); }
+        $ref=$demo?'DEMO-SETTLEMENT-'.$id.'-'.strtoupper($type).'-'.str_pad((string)((int)Db::scalar('SELECT COUNT(*) FROM settlements WHERE order_id=? AND type=?',[$id,$type])+1),2,'0',STR_PAD_LEFT):$submittedRef;
         $sid=Db::insert('INSERT INTO settlements(order_id,type,amount,method,reference,created_by) VALUES(?,?,?,?,?,?)',[$id,$type,$amount,$method,$ref,$u['id']]);
         register_transfer($method,$ref,'outgoing',$amount,'settlement',$sid,(int)$u['id']);
         $account=['seller'=>2020,'shipping'=>2030,'refund'=>2010][$type];
-        post_journal('settlement',$sid,'payout','Verified online '.$type.' transfer '.$o['code'],[['account'=>$account,'debit'=>$amount,'party'=>$type==='seller'?$o['supplier_id']:($type==='refund'?$o['buyer_id']:null)],['account'=>1010,'credit'=>$amount]],(int)$u['id']);
+        post_journal('settlement',$sid,'payout',($demo?'DEMO ONLY - synthetic ':'Verified online ').$type.' transfer '.$o['code'],[['account'=>$account,'debit'=>$amount,'party'=>$type==='seller'?$o['supplier_id']:($type==='refund'?$o['buyer_id']:null)],['account'=>1010,'credit'=>$amount]],(int)$u['id']);
         if ($type==='refund' && $amount+$paid===$cap) { Db::run("UPDATE orders SET status='refunded' WHERE id=?",[$id]); }
-        audit('settlement_recorded','settlements',$sid,['type'=>$type]);
+        audit('settlement_recorded','settlements',$sid,['type'=>$type,'demo'=>$demo]);
     });
 }
 function create_production(): void {
@@ -336,7 +351,7 @@ function handle_admin_action(string $action): void {
                 $r=Db::one('SELECT * FROM procurement WHERE id=? FOR UPDATE',[$id]);
                 if (!$r || !(($r['status']==='draft' && in_array($state,['approved','cancelled'],true)) || ($r['status']==='approved' && $state==='paid'))) {throw new DomainException(t('انتقال حالة غير صالح.','Invalid status transition.'));}
                 if ($state==='approved') {post_journal('procurement',$id,'approved',$r['description'],[['account'=>5010,'debit'=>(int)$r['amount']],['account'=>2040,'credit'=>(int)$r['amount'],'party'=>$r['supplier_id']]],(int)$u['id']);}
-                if ($state==='paid') { $method=choice('method',['instapay','wallet']);$ref=required('reference',100);if (post('transfer_checked',4)!=='yes') {throw new DomainException(t('تحقق من التحويل أولاً.','Verify the outgoing transfer first.'));}Db::run('UPDATE procurement SET payment_method=?,payment_reference=? WHERE id=?',[$method,$ref,$id]);register_transfer($method,$ref,'outgoing',(int)$r['amount'],'procurement',$id,(int)$u['id']);post_journal('procurement',$id,'paid',$r['description'],[['account'=>2040,'debit'=>(int)$r['amount'],'party'=>$r['supplier_id']],['account'=>1010,'credit'=>(int)$r['amount']]],(int)$u['id']);}
+                if ($state==='paid') { $method=choice('method',['instapay','wallet']);$ref=transfer_reference_value(required('reference',100));if (post('transfer_checked',4)!=='yes') {throw new DomainException(t('تحقق من التحويل أولاً.','Verify the outgoing transfer first.'));}Db::run('UPDATE procurement SET payment_method=?,payment_reference=? WHERE id=?',[$method,$ref,$id]);register_transfer($method,$ref,'outgoing',(int)$r['amount'],'procurement',$id,(int)$u['id']);post_journal('procurement',$id,'paid',$r['description'],[['account'=>2040,'debit'=>(int)$r['amount'],'party'=>$r['supplier_id']],['account'=>1010,'credit'=>(int)$r['amount']]],(int)$u['id']);}
                 Db::run('UPDATE procurement SET status=? WHERE id=?',[$state,$id]);audit('procurement_'.$state,'procurement',$id);
             });break;
         case 'project':
@@ -345,7 +360,7 @@ function handle_admin_action(string $action): void {
         case 'project-status':
             permit('projects');$id=id_input('project_id');$state=choice('status',['planned','active','completed','on_hold']);Db::tx(function () use ($id,$state): void {Db::run('UPDATE projects SET status=? WHERE id=?',[$state,$id]);audit('project_status','projects',$id,['status'=>$state]);});break;
         case 'expense':
-            $u=permit('finance');$description=required('description',500);$amount=money_input('amount');$method=choice('method',['instapay','wallet']);$ref=required('reference',100);$project=post('project_id',20);
+            $u=permit('finance');$description=required('description',500);$amount=money_input('amount');$method=choice('method',['instapay','wallet']);$ref=transfer_reference_value(required('reference',100));$project=post('project_id',20);
             if (post('transfer_checked',4)!=='yes') {throw new DomainException(t('تحقق من التحويل أولاً.','Verify the outgoing transfer first.'));}
             Db::tx(function () use ($u,$description,$amount,$method,$ref,$project): void {$id=Db::insert('INSERT INTO expenses(project_id,description,amount,method,reference,created_by) VALUES(?,?,?,?,?,?)',[$project!==''?(int)$project:null,$description,$amount,$method,$ref,$u['id']]);register_transfer($method,$ref,'outgoing',$amount,'expense',$id,(int)$u['id']);post_journal('expense',$id,'paid',$description,[['account'=>5010,'debit'=>$amount],['account'=>1010,'credit'=>$amount]],(int)$u['id']);audit('expense_recorded','expenses',$id);});break;
         case 'journal':

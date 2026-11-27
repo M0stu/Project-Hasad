@@ -46,8 +46,8 @@
   },
   {
     "path": "docs/RELEASE-20261123.md",
-    "bytes": 2382,
-    "sha256": "d158aa5d52ec03fb3251ebf2dda83b38686f2b42bb266b06d86ef2df546002b6"
+    "bytes": 2787,
+    "sha256": "75b68cf88a73902fccc146989c26273bf88d44db6ac84fcaafc05557a7e25050"
   },
   {
     "path": "docs/TECHNICAL-GUIDE.md",
@@ -56,8 +56,8 @@
   },
   {
     "path": "docs/VERIFICATION.md",
-    "bytes": 3806,
-    "sha256": "4f3fef3966a40ae2535f6bcc06e84af1b9c0d92b58154bb67dcad0d6959c7745"
+    "bytes": 3903,
+    "sha256": "bfc35b84485955c618a40c282220990bae37c02452f1300482164ac5509ded4d"
   },
   {
     "path": "htdocs/.htaccess",
@@ -86,13 +86,13 @@
   },
   {
     "path": "htdocs/app/domain.php",
-    "bytes": 55312,
-    "sha256": "0e9b9d4a54a8803d8cadf7762062d5986e290c5b8a459d707245e7e0289e2c26"
+    "bytes": 58155,
+    "sha256": "786bc7f9a247eda8def5ee022cff69a9cdfa7596ec17676497e2c7be92bd3e23"
   },
   {
     "path": "htdocs/app/helpers.php",
-    "bytes": 19112,
-    "sha256": "4118db2a1e339cbd6e82910b2652be498234ef4c8586eccd50b523a4cc517ab8"
+    "bytes": 19604,
+    "sha256": "477c6e590a1265eb0eb9d62a0d138861a95ec8dc33e4deee6d2d10a1e7661c40"
   },
   {
     "path": "htdocs/assets/app.css",
@@ -186,8 +186,8 @@
   },
   {
     "path": "htdocs/views/admin-modules.php",
-    "bytes": 27705,
-    "sha256": "afdf67805b334369d15748002f8656cb23520e10e46d6d9d8a854bb2103182d7"
+    "bytes": 28281,
+    "sha256": "8577b5d82bf5cd0fe03500e59c6340441d0d9c090dcdc08db642862b4b8a5855"
   },
   {
     "path": "htdocs/views/admin-settings-reports.php",
@@ -196,8 +196,8 @@
   },
   {
     "path": "htdocs/views/admin.php",
-    "bytes": 24342,
-    "sha256": "10d67dc2c84362dc0298b69e13235cfd902d53fdc48e6e00fef486daf1a26c18"
+    "bytes": 25995,
+    "sha256": "04d4f3ef78f8ada2f8d718a1b1e98b57be2ad08a406f5e245e22f5a3d4dd964f"
   },
   {
     "path": "htdocs/views/buyers.php",
@@ -256,8 +256,8 @@
   },
   {
     "path": "htdocs/views/order.php",
-    "bytes": 8349,
-    "sha256": "725afc22b5982e9af6000a5df2f1c1e4a4386420573245b04314678aae1dbc88"
+    "bytes": 8781,
+    "sha256": "7b8f721d50f2fb7b3aa0df726d55116a7ae52ed258f468f855e1566f0606f048"
   },
   {
     "path": "htdocs/views/sell.php",
@@ -466,8 +466,8 @@
   },
   {
     "path": "tests/README.md",
-    "bytes": 1867,
-    "sha256": "a75ede60e77d274816d5e105c28ac4e327d53dd67b06c5756e26d195da442bfb"
+    "bytes": 1962,
+    "sha256": "073504766da88609186d805e6abc8828ca1e098a004d0954b3ea6f2e4becc709"
   },
   {
     "path": "tests/auth_driver.php",
@@ -501,8 +501,8 @@
   },
   {
     "path": "tests/workflows.php",
-    "bytes": 28036,
-    "sha256": "7ac4fdb03dff2b6b2e1f12fe829df908ffb73476f6ac5be75ad6408f0498112d"
+    "bytes": 30634,
+    "sha256": "447beea25c2a15927c217dc98c7adaf410520b8f00ff3f41b5172f8ca770e365"
   },
   {
     "path": "tools/demo_data.php",
