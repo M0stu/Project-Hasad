@@ -11,6 +11,16 @@ function customer(int $id): void {unset($_SESSION['staff_id'],$_SESSION['demo_pe
 function payment_for(int $id,string $reference): void {$o=order_detail($id);input(['order_id'=>(string)$id,'method'=>'instapay','reference'=>$reference,'amount'=>number_format((int)$o['total']/100,2,'.','')]);submit_payment();}
 function approve_for(int $id,string $reference): void {$p=Db::one('SELECT id FROM payments WHERE order_id=? ORDER BY id DESC LIMIT 1',[$id]);input(['payment_id'=>(string)$p['id'],'decision'=>'confirmed','review_note'=>'Receiving statement checked','bank_reference'=>$reference,'bank_checked'=>'yes']);confirm_payment();}
 function reserve(int $batch,string $qty='2',string $shipping='hasad'): int {$b=batch_detail($batch);$g=decimal_scaled($qty,3,1000000)*1000;$q=quote_totals($g,(int)$b['price_per_tonne'],$shipping,$b['governorate'],'Sharqia');input(['batch_id'=>(string)$batch,'quantity'=>$qty,'unit'=>'tonne','shipping_mode'=>$shipping,'destination'=>'PRIVATE_FACTORY_ADDRESS','governorate'=>'Sharqia','organization'=>'PRIVATE_FACTORY_ORGANIZATION','accept'=>'yes','expected_total'=>number_format($q['total']/100,2,'.','')]);return create_order();}
+function child_php_command(string $script,array $args=[],bool $withSessionPath=false): array {
+    $command=[PHP_BINARY,'-n'];
+    if($withSessionPath){$command[]='-d';$command[]='session.save_path='.sys_get_temp_dir();}
+    $command[]='-d';$command[]='extension_dir='.ini_get('extension_dir');
+    $extensions=PHP_OS_FAMILY==='Windows'
+        ? ['php_fileinfo.dll','php_mbstring.dll','php_pdo_mysql.dll','php_curl.dll']
+        : ['ctype.so','fileinfo.so','mbstring.so','pdo.so','mysqlnd.so','pdo_mysql.so','curl.so'];
+    foreach($extensions as $extension){$command[]='-d';$command[]='extension='.$extension;}
+    return [...$command,$script,...$args];
+}
 // This suite clears ONLY the dedicated _test database selected by test_boot.php.
 Db::run('SET FOREIGN_KEY_CHECKS=0');foreach(Db::all('SHOW TABLES') as $row){$table=array_values($row)[0];if(!preg_match('/^[a-z_]+$/',$table)){throw new RuntimeException('Unexpected table name');}Db::run('DROP TABLE `'.$table.'`');}Db::run('SET FOREIGN_KEY_CHECKS=1');
 Db::pdo()->exec(file_get_contents(dirname(__DIR__).'/htdocs/database/schema.sql'));
@@ -63,9 +73,9 @@ check(local_otp_allowed(),'Local test OTP allowed on loopback');$_SERVER['REMOTE
 Db::run('INSERT INTO otp_challenges(token,phone,code_hash,expires_at) VALUES(?,?,?,?)',[str_repeat('f',64),'+201212345678',password_hash('654321',PASSWORD_DEFAULT),gmdate('Y-m-d H:i:s',time()+600)]);unset($_SESSION['staff_id']);$_SESSION['otp']=['token'=>str_repeat('f',64),'name'=>'Test','type'=>'buyer'];input(['code'=>'123456']);rejects(fn()=>finish_phone_login(),'Wrong OTP is rejected');check((int)Db::scalar('SELECT attempts FROM otp_challenges WHERE token=?',[str_repeat('f',64)])===1,'Failed OTP attempt remains recorded');
 rate_limit('test-quota',1,900);rejects(fn()=>rate_limit('test-quota',1,900),'Persistent rate limit blocks a repeated attempt');
 check(csv_cell('=HYPERLINK("x")')[0]==="'",'Spreadsheet export neutralizes formulas');check(csv_cell('+201012345678')[0]==="'",'Spreadsheet export protects phone numbers');check(str_contains(spreadsheetml_document([['value'=>'=1+1']]),'Workbook'),'SpreadsheetML workbook is generated');
-function html_for(string $view,int $id=0,string $section='',int $member=2): string {global $render;$env=['HASAD_TEST_PORT'=>getenv('HASAD_TEST_PORT')?:'3306','HASAD_TEST_DB'=>getenv('HASAD_TEST_DB')?:'hasad_test','HASAD_TEST_HOST'=>getenv('HASAD_TEST_HOST')?:'127.0.0.1','HASAD_TEST_USER'=>getenv('HASAD_TEST_USER')?:'root','HASAD_TEST_PASSWORD'=>getenv('HASAD_TEST_PASSWORD')?:'','HASAD_TEST_MEMBER'=>(string)$member];$descriptors=[1=>['pipe','w'],2=>['pipe','w']];$proc=proc_open([PHP_BINARY,'-n','-d','extension_dir='.ini_get('extension_dir'),'-d','extension=ctype.so','-d','extension=fileinfo.so','-d','extension=mbstring.so','-d','extension=pdo.so','-d','extension=mysqlnd.so','-d','extension=pdo_mysql.so','-d','extension=curl.so',$render,$view,'en',(string)$id,$section],$descriptors,$pipes,null,array_merge(getenv(),$env));$html=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);$exit=proc_close($proc);if($exit!==0 || str_contains($html,'Warning:') || str_contains($html,'Fatal error:')){throw new RuntimeException('Render failed '.$view.' '.$section.' '.$error.' '.substr($html,0,500));}return $html;}
+function html_for(string $view,int $id=0,string $section='',int $member=2): string {global $render;$env=['HASAD_TEST_PORT'=>getenv('HASAD_TEST_PORT')?:'3306','HASAD_TEST_DB'=>getenv('HASAD_TEST_DB')?:'hasad_test','HASAD_TEST_HOST'=>getenv('HASAD_TEST_HOST')?:'127.0.0.1','HASAD_TEST_USER'=>getenv('HASAD_TEST_USER')?:'root','HASAD_TEST_PASSWORD'=>getenv('HASAD_TEST_PASSWORD')?:'','HASAD_TEST_MEMBER'=>(string)$member];$descriptors=[1=>['pipe','w'],2=>['pipe','w']];$proc=proc_open(child_php_command($render,[$view,'en',(string)$id,$section]),$descriptors,$pipes,null,array_merge(getenv(),$env));$html=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);$exit=proc_close($proc);if($exit!==0 || str_contains($html,'Warning:') || str_contains($html,'Fatal error:')){throw new RuntimeException('Render failed '.$view.' '.$section.' '.$error.' '.substr($html,0,500));}return $html;}
 function auth_child(string $mode,string $password=''): int {
- $cmd=[PHP_BINARY,'-n','-d','extension_dir='.ini_get('extension_dir'),'-d','extension=ctype.so','-d','extension=fileinfo.so','-d','extension=mbstring.so','-d','extension=pdo.so','-d','extension=mysqlnd.so','-d','extension=pdo_mysql.so','-d','extension=curl.so',__DIR__.'/auth_driver.php',$mode,$password];
+ $cmd=child_php_command(__DIR__.'/auth_driver.php',[$mode,$password]);
  $desc=[1=>['pipe','w'],2=>['pipe','w']];$proc=proc_open($cmd,$desc,$pipes,null,getenv());stream_get_contents($pipes[1]);stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);return proc_close($proc);
 }
 check(auth_child('otp')===0 && Db::scalar('SELECT status FROM otp_challenges WHERE token=?',[str_repeat('f',64)])==='used','Successful phone verification consumes its challenge');
@@ -83,7 +93,7 @@ check(true,'All public and ERP templates render without PHP errors');
 $workers=[];
 foreach([2,5] as $buyer){
  $desc=[1=>['pipe','w'],2=>['pipe','w']];
- $cmd=[PHP_BINARY,'-n','-d','session.save_path='.sys_get_temp_dir(),'-d','extension_dir='.ini_get('extension_dir'),'-d','extension=ctype.so','-d','extension=fileinfo.so','-d','extension=mbstring.so','-d','extension=pdo.so','-d','extension=mysqlnd.so','-d','extension=pdo_mysql.so','-d','extension=curl.so',__DIR__.'/reserve_driver.php',(string)$batch,(string)$buyer];
+ $cmd=child_php_command(__DIR__.'/reserve_driver.php',[(string)$batch,(string)$buyer],true);
  $proc=proc_open($cmd,$desc,$pipes,null,getenv());$workers[]=[$proc,$pipes];
 }
 $accepted=0;$rejected=0;
