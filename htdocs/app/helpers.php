@@ -21,6 +21,7 @@ function post(string $key, int $max = 500): string {
     return trim($value);
 }
 function required(string $key, int $max = 500): string { $v = post($key, $max); if ($v === '') { throw new DomainException(t('أكمل جميع الحقول المطلوبة.','Complete all required fields.')); } return $v; }
+function transfer_reference_value(string $value): string { $v=normalize_digits(trim($value));if(!preg_match('/^[A-Za-z0-9][A-Za-z0-9._\/-]{5,99}$/D',$v)){throw new DomainException(t('مرجع التحويل يجب أن يكون من ٦ إلى ١٠٠ حرف أو رقم، ويمكن استخدام الشرطة أو النقطة أو الشرطة المائلة.','The transfer reference must be 6–100 letters or digits; hyphens, dots, underscores and slashes are allowed.'));}return $v; }
 function id_input(string $key): int { $v = post($key, 20); if (!ctype_digit($v) || (int) $v < 1) { throw new DomainException(t('اختيار غير صالح.','Invalid selection.')); } return (int) $v; }
 function choice(string $key, array $allowed): string { $v = required($key, 80); if (!in_array($v, $allowed, true)) { throw new DomainException(t('اختيار غير صالح.','Invalid selection.')); } return $v; }
 function date_input(string $key, bool $optional = false): ?string { $v = post($key, 10); if (!$v && $optional) { return null; } $d = DateTimeImmutable::createFromFormat('!Y-m-d', $v); if (!$d || $d->format('Y-m-d') !== $v) { throw new DomainException(t('تاريخ غير صالح.','Invalid date.')); } return $v; }
